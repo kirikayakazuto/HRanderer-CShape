@@ -1,10 +1,9 @@
 using System;
 
 namespace HRenderer.Common {
-    public class Vector {
-    }
-
-    public class Vector2 {
+    public class Vector { }
+    
+    public class Vector2: Vector {
         public float x;
         public float y;
 
@@ -17,41 +16,41 @@ namespace HRenderer.Common {
             this.y = y;
         }
 
-        Vector2 AddSelf(Vector2 a) {
+        public Vector2 AddSelf(Vector2 a) {
             this.x += a.x;
             this.y += a.y;
             return this;
         }
 
-        Vector2 Add(Vector2 a) {
+        public Vector2 Add(Vector2 a) {
             return this.Clone().AddSelf(a);
         }
 
-        Vector2 SubSelf(Vector2 a) {
+        public Vector2 SubSelf(Vector2 a) {
             this.x -= a.x;
             this.y -= a.y;
             return this;
         }
 
-        Vector2 Sub(Vector2 a) {
+        public Vector2 Sub(Vector2 a) {
             return this.Clone().SubSelf(a);
         }
 
-        Vector2 MulSelf(Vector2 a) {
+        public Vector2 MulSelf(Vector2 a) {
             this.x *= a.x;
             this.y *= a.y;
             return this;
         }
 
-        Vector2 Mul(Vector2 a) {
+        public Vector2 Mul(Vector2 a) {
             return this.Clone().MulSelf(a);
         }
 
-        float Dot(Vector2 a) {
+        public float Dot(Vector2 a) {
             return this.x * a.x + this.y * a.y;
         }
         
-        float Corss(Vector2 a) {
+        public float Corss(Vector2 a) {
             return this.x * a.y - this.y * a.x;
         }
         
@@ -60,13 +59,13 @@ namespace HRenderer.Common {
         }
     }
 
-    public class Vector4 {
+    public class Vector4: Vector {
         public float x;
         public float y;
         public float z;
         public float w;
 
-        private Vector4(float x, float y, float z, float w) {
+        public Vector4(float x, float y, float z, float w) {
             this.x = x;
             this.y = y;
             this.z = z;

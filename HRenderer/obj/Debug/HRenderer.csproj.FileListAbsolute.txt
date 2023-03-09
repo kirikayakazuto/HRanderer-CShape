@@ -1,0 +1,6 @@
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/HRenderer.exe
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/HRenderer.pdb
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/HRenderer.csproj.AssemblyReference.cache
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/HRenderer.csproj.CoreCompileInputs.cache
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/HRenderer.exe
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/HRenderer.pdb
