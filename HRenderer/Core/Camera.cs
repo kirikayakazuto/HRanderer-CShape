@@ -4,7 +4,7 @@ using HRenderer.Common;
 namespace HRenderer.Core {
     public class Camera {
         // 位置
-        public Vector4 position;
+        public Vector4 position = Vector4.Create();
         public Vector4 up;
         public Vector4 lookat;
         
@@ -16,8 +16,12 @@ namespace HRenderer.Core {
         // 远平面
         public float far = 500;
         // 视图矩阵
-        public Matrix4 view;
+        public Matrix4 view = Matrix4.GetIdentify();
         // 投影矩阵
-        public Matrix4 projection;
+        public Matrix4 projection = Matrix4.GetIdentify();
+
+        public Camera() {
+            
+        }
     }
 }

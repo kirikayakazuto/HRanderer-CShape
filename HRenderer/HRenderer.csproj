@@ -12,6 +12,7 @@
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <LangVersion>7.3</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,12 +41,17 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Common\Color.cs" />
+        <Compile Include="Common\DataStream.cs" />
         <Compile Include="Common\Matrix4.cs" />
         <Compile Include="Common\Utils.cs" />
         <Compile Include="Common\Vector.cs" />
         <Compile Include="Core\Camera.cs" />
         <Compile Include="Core\FrameBuffer.cs" />
+        <Compile Include="Core\Material.cs" />
+        <Compile Include="Core\Mesh.cs" />
         <Compile Include="Core\Renderer.cs" />
+        <Compile Include="Core\Shader.cs" />
+        <Compile Include="Core\Texture.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
