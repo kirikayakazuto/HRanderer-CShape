@@ -23,5 +23,15 @@ namespace HRenderer.Core {
         public Camera() {
             
         }
+
+        public void UpdateLookAt() {
+            
+        }
+
+        public void ComputeLookat() {
+            var m = Matrix4.GetIdentify();
+            var w = this.lookat.Normalize();
+            var u = this.up.Cross(w).NormalizeSelf();
+        }
     }
 }

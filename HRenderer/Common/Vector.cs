@@ -50,7 +50,7 @@ namespace HRenderer.Common {
             return this.x * a.x + this.y * a.y;
         }
         
-        public float Corss(Vector2 a) {
+        public float Cross(Vector2 a) {
             return this.x * a.y - this.y * a.x;
         }
         
@@ -138,6 +138,20 @@ namespace HRenderer.Common {
 
         public Vector4 Clone() {
             return new Vector4(this.x, this.y, this.z, this.w);
+        }
+
+        public Vector4 CrossSelf(Vector4 v) {
+            var a = this.y * v.z - this.z * v.y;
+            var b = this.z * v.x - this.x * v.z;
+            var c = this.x * v.y - this.y * v.x;
+            this.x = a;
+            this.y = b;
+            this.z = c;
+            return this;
+        }
+
+        public Vector4 Cross(Vector4 v) {
+            return this.Clone().CrossSelf(v);
         }
     }
 }
