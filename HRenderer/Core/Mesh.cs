@@ -4,16 +4,39 @@ using HRenderer.Common;
 namespace HRenderer.Core {
     public class Mesh {
         // 顶点大小
-        public int vertexSize;
+        protected int _stride;
+        // 顶点描述
+        protected VertexFormat[] _attribInfo;
         // 顶点buffer
-        public float[] vertexBuffer;
+        protected DataStream _vertexBuffer;
         // 顶点索引buffer
-        public uint[] indiceBuffer;
+        protected uint[] _indiceBuffer;
 
-        private DataStream data;
+        public Mesh(VertexFormat[] attribInfo) {
+            this._attribInfo = attribInfo;
+            this._vertexBuffer = new DataStream(false);
+        }
+        
+    }
+    
+    public enum VertexType {
+        Float32,
+        UInt8,
+        Int32,
+    }
 
-        void test() {
-            
+    public class VertexFormat {
+        public string name;
+        public VertexType type;
+        public int num;
+        public bool normalize;
+
+        public VertexFormat(string name, VertexType type, int num, bool normalize = false) {
+            this.name = name;
+            this.type = type;
+            this.num = num;
+            this.normalize = normalize;
         }
     }
 }
+

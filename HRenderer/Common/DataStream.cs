@@ -3,36 +3,36 @@ using System.IO;
 
 namespace HRenderer.Common {
 	public class DataStream {
-		private BinaryReader mBinReader;
-		private BinaryWriter mBinWriter;
-		private MemoryStream mMemStream;
+		private BinaryReader _mBinReader;
+		private BinaryWriter _mBinWriter;
+		private MemoryStream _mMemStream;
 		private bool mBEMode; //big endian mode
 
 		public DataStream(bool isBigEndian) {
-			mMemStream = new MemoryStream();
-			InitWithMemoryStream(mMemStream, isBigEndian);
+			_mMemStream = new MemoryStream();
+			InitWithMemoryStream(_mMemStream, isBigEndian);
 		}
 
 		public DataStream(byte[] buffer, bool isBigEndian) {
-			mMemStream = new MemoryStream(buffer);
-			InitWithMemoryStream(mMemStream, isBigEndian);
+			_mMemStream = new MemoryStream(buffer);
+			InitWithMemoryStream(_mMemStream, isBigEndian);
 		}
 
 		public DataStream(byte[] buffer, int index, int count, bool isBigEndian) {
-			mMemStream = new MemoryStream(buffer, index, count);
-			InitWithMemoryStream(mMemStream, isBigEndian);
+			_mMemStream = new MemoryStream(buffer, index, count);
+			InitWithMemoryStream(_mMemStream, isBigEndian);
 		}
 
 		private void InitWithMemoryStream(MemoryStream ms, bool isBigEndian) {
-			mBinReader = new BinaryReader(mMemStream);
-			mBinWriter = new BinaryWriter(mMemStream);
+			_mBinReader = new BinaryReader(_mMemStream);
+			_mBinWriter = new BinaryWriter(_mMemStream);
 			mBEMode = isBigEndian;
 		}
 
 		public void Close() {
-			mMemStream.Close();
-			mBinReader.Close();
-			mBinWriter.Close();
+			_mMemStream.Close();
+			_mBinReader.Close();
+			_mBinWriter.Close();
 		}
 
 		public void SetBigEndian(bool isBigEndian) {
@@ -44,38 +44,36 @@ namespace HRenderer.Common {
 		}
 
 		public long Position {
-			get { return mMemStream.Position; }
-			set { mMemStream.Position = value; }
+			get { return _mMemStream.Position; }
+			set { _mMemStream.Position = value; }
 		}
 
 		public long Length {
-			get { return mMemStream.Length; }
+			get { return _mMemStream.Length; }
 		}
 
 		public byte[] ToByteArray() {
-			return mMemStream.ToArray();
+			return _mMemStream.ToArray();
 		}
-
-
-
+		
 		public long Seek(long offset, SeekOrigin loc) {
-			return mMemStream.Seek(offset, loc);
+			return _mMemStream.Seek(offset, loc);
 		}
 
 		public void WriteRaw(byte[] bytes) {
-			mBinWriter.Write(bytes);
+			_mBinWriter.Write(bytes);
 		}
 
 		public void WriteRaw(byte[] bytes, int offset, int count) {
-			mBinWriter.Write(bytes, offset, count);
+			_mBinWriter.Write(bytes, offset, count);
 		}
 
 		public void WriteByte(byte value) {
-			mBinWriter.Write(value);
+			_mBinWriter.Write(value);
 		}
 
 		public byte ReadByte() {
-			return mBinReader.ReadByte();
+			return _mBinReader.ReadByte();
 		}
 
 		public void WriteInt16(UInt16 value) {
@@ -83,7 +81,7 @@ namespace HRenderer.Common {
 		}
 
 		public UInt16 ReadInt16() {
-			UInt16 val = mBinReader.ReadUInt16();
+			UInt16 val = _mBinReader.ReadUInt16();
 			if (mBEMode)
 				return BitConverter.ToUInt16(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
@@ -94,18 +92,28 @@ namespace HRenderer.Common {
 		}
 
 		public UInt32 ReadInt32() {
-			UInt32 val = mBinReader.ReadUInt32();
+			UInt32 val = _mBinReader.ReadUInt32();
 			if (mBEMode)
 				return BitConverter.ToUInt32(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
 		}
+		
+		public void WriteFloat(float value) {
+			WriteInteger(BitConverter.GetBytes(value));
+		}
 
+		public float ReadFlot() {
+			var val = _mBinReader.ReadSingle();
+			if (mBEMode) val = BitConverter.ToSingle(FlipBytes(BitConverter.GetBytes(val)), 0);
+			return val;
+		}
+		
 		public void WriteInt64(UInt64 value) {
 			WriteInteger(BitConverter.GetBytes(value));
 		}
 
 		public UInt64 ReadInt64() {
-			UInt64 val = mBinReader.ReadUInt64();
+			UInt64 val = _mBinReader.ReadUInt64();
 			if (mBEMode)
 				return BitConverter.ToUInt64(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
@@ -114,13 +122,13 @@ namespace HRenderer.Common {
 		public void WriteString8(string value) {
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
 			byte[] bytes = encoding.GetBytes(value);
-			mBinWriter.Write((byte) bytes.Length);
-			mBinWriter.Write(bytes);
+			_mBinWriter.Write((byte) bytes.Length);
+			_mBinWriter.Write(bytes);
 		}
 
 		public string ReadString8() {
 			int len = ReadByte();
-			byte[] bytes = mBinReader.ReadBytes(len);
+			byte[] bytes = _mBinReader.ReadBytes(len);
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
 			return encoding.GetString(bytes);
 		}
@@ -129,19 +137,19 @@ namespace HRenderer.Common {
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
 			byte[] data = encoding.GetBytes(value);
 			WriteInteger(BitConverter.GetBytes((Int16) data.Length));
-			mBinWriter.Write(data);
+			_mBinWriter.Write(data);
 		}
 
 		public string ReadString16() {
 			ushort len = ReadInt16();
-			byte[] bytes = mBinReader.ReadBytes(len);
+			byte[] bytes = _mBinReader.ReadBytes(len);
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
 			return encoding.GetString(bytes);
 		}
 
 		private void WriteInteger(byte[] bytes) {
 			if (mBEMode) FlipBytes(bytes);
-			mBinWriter.Write(bytes);
+			_mBinWriter.Write(bytes);
 		}
 
 		private byte[] FlipBytes(byte[] bytes) {
@@ -152,27 +160,20 @@ namespace HRenderer.Common {
 		}
 
 		public void WriteSByte(sbyte value) {
-			mBinWriter.Write(value);
+			_mBinWriter.Write(value);
 		}
 
 		public sbyte ReadSByte() {
-			return mBinReader.ReadSByte();
+			return _mBinReader.ReadSByte();
 		}
-
-		public void WriteFloat(float value) {
-			// BitConverter.ToDouble()
-		}
-
-		public float ReadFlot() {
-			return 0;
-		}
+		
 
 		public void WriteSInt16(Int16 value) {
 			WriteInteger(BitConverter.GetBytes(value));
 		}
 
 		public Int16 ReadSInt16() {
-			Int16 val = mBinReader.ReadInt16();
+			Int16 val = _mBinReader.ReadInt16();
 			if (mBEMode) return BitConverter.ToInt16(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
 		}
@@ -182,7 +183,7 @@ namespace HRenderer.Common {
 		}
 
 		public Int32 ReadSInt32() {
-			Int32 val = mBinReader.ReadInt32();
+			Int32 val = _mBinReader.ReadInt32();
 			if (mBEMode) return BitConverter.ToInt32(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
 		}
@@ -192,17 +193,17 @@ namespace HRenderer.Common {
 		}
 
 		public Int64 ReadSInt64() {
-			Int64 val = mBinReader.ReadInt64();
+			Int64 val = _mBinReader.ReadInt64();
 			if (mBEMode) return BitConverter.ToInt64(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
 		}
 
 		public void WriteUByte(byte value) {
-			mBinWriter.Write(value);
+			_mBinWriter.Write(value);
 		}
 
 		public byte ReadUByte() {
-			return mBinReader.ReadByte();
+			return _mBinReader.ReadByte();
 		}
 
 		public void WriteUInt16(UInt16 value) {
@@ -210,7 +211,7 @@ namespace HRenderer.Common {
 		}
 
 		public UInt16 ReadUInt16() {
-			UInt16 val = mBinReader.ReadUInt16();
+			UInt16 val = _mBinReader.ReadUInt16();
 			if (mBEMode)
 				return BitConverter.ToUInt16(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
@@ -221,7 +222,7 @@ namespace HRenderer.Common {
 		}
 
 		public UInt32 ReadUInt32() {
-			UInt32 val = mBinReader.ReadUInt32();
+			UInt32 val = _mBinReader.ReadUInt32();
 			if (mBEMode) return BitConverter.ToUInt32(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;
 		}
@@ -231,7 +232,7 @@ namespace HRenderer.Common {
 		}
 
 		public UInt64 ReadUInt64() {
-			UInt64 val = mBinReader.ReadUInt64();
+			UInt64 val = _mBinReader.ReadUInt64();
 			if (mBEMode)
 				return BitConverter.ToUInt64(FlipBytes(BitConverter.GetBytes(val)), 0);
 			return val;

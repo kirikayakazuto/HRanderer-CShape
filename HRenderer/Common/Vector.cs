@@ -1,17 +1,28 @@
 using System;
 
 namespace HRenderer.Common {
-    public class Vector { }
+    public class Vector {
+        public float[] data;
+        public Vector(int length) {
+            this.data = new float[length];
+        }
+    }
     
     public class Vector2: Vector {
-        public float x;
-        public float y;
+        public float x {
+            get => this.data[0];
+            set => this.data[0] = value;
+        }
+        public float y {
+            get => this.data[1];
+            set => this.data[1] = value;
+        }
 
         public static Vector2 Create(float x = 0, float y = 0) {
             return new Vector2(x, y);
         } 
 
-        private Vector2(float x, float y) {
+        private Vector2(float x, float y): base(2) {
             this.x = x;
             this.y = y;
         }
@@ -60,12 +71,24 @@ namespace HRenderer.Common {
     }
 
     public class Vector4: Vector {
-        public float x;
-        public float y;
-        public float z;
-        public float w;
+        public float x {
+            get => this.data[0];
+            set => this.data[0] = value;
+        }
+        public float y {
+            get => this.data[1];
+            set => this.data[1] = value;
+        }
+        public float z {
+            get => this.data[2];
+            set => this.data[2] = value;
+        }
+        public float w {
+            get => this.data[3];
+            set => this.data[3] = value;
+        }
 
-        public Vector4(float x, float y, float z, float w) {
+        public Vector4(float x, float y, float z, float w): base(4) {
             this.x = x;
             this.y = y;
             this.z = z;

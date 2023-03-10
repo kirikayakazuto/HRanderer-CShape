@@ -40,6 +40,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Common\Buffer.cs" />
         <Compile Include="Common\Color.cs" />
         <Compile Include="Common\DataStream.cs" />
         <Compile Include="Common\Matrix4.cs" />
@@ -52,6 +53,7 @@
         <Compile Include="Core\Renderer.cs" />
         <Compile Include="Core\Shader.cs" />
         <Compile Include="Core\Texture.cs" />
+        <Compile Include="DrawTriangle\TextureMesh.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

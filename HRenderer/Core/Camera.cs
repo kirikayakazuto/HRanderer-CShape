@@ -28,10 +28,14 @@ namespace HRenderer.Core {
             
         }
 
-        public void ComputeLookat() {
+        public void ComputeLookAt() {
             var m = Matrix4.GetIdentify();
             var w = this.lookat.Normalize();
             var u = this.up.Cross(w).NormalizeSelf();
+            var v = w.Cross(u);
+
+            var d = m.data;
+            d[0] = u.x;
         }
     }
 }

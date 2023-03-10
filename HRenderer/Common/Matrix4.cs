@@ -3,18 +3,18 @@ using System.Runtime.CompilerServices;
 
 namespace HRenderer.Common {
     public class Matrix4 {
-        private float[] _data;
+        public float[] data;
 
         Matrix4() {
-            this._data = new float[16];
+            this.data = new float[16];
         }
 
         public static Matrix4 GetIdentify() {
             var m = new Matrix4();
-            m._data[0] = 1;
-            m._data[5] = 1;
-            m._data[10] = 1;
-            m._data[15] = 1;
+            m.data[0] = 1;
+            m.data[5] = 1;
+            m.data[10] = 1;
+            m.data[15] = 1;
             return m;
         }
 
@@ -22,24 +22,24 @@ namespace HRenderer.Common {
             var m = Matrix4.GetIdentify();
             var cos = (float)Math.Cos(angle);
             var sin = (float)Math.Sin(angle);
-            m._data[5] = cos;
-            m._data[6] = sin;
-            m._data[9] = -sin;
-            m._data[10] = cos;
+            m.data[5] = cos;
+            m.data[6] = sin;
+            m.data[9] = -sin;
+            m.data[10] = cos;
             return m;
         }
 
         public static Matrix4 Translation(float x = 0, float y = 0, float z = 0) {
             var m = Matrix4.GetIdentify();
-            m._data[12] = x;
-            m._data[13] = y;
-            m._data[14] = z;
+            m.data[12] = x;
+            m.data[13] = y;
+            m.data[14] = z;
             return m;
         }
 
         public Matrix4 MulSelf(Matrix4 m) {
-            var a = this._data;
-            var b = m._data;
+            var a = this.data;
+            var b = m.data;
             var _a00 = a[0]; var _a01 = a[1]; var _a02 = a[2]; var _a03 = a[3];
             var _a10 = a[4]; var _a11 = a[5]; var _a12 = a[6]; var _a13 = a[7];
             var _a20 = a[8]; var _a21 = a[9]; var _a22 = a[10]; var _a23 = a[11];
@@ -81,7 +81,7 @@ namespace HRenderer.Common {
 
         public Matrix4 Clone() {
             var m = Matrix4.Create();
-            Array.Copy(this._data, m._data, this._data.Length);
+            Array.Copy(this.data, m.data, this.data.Length);
             return m;
         }
 
