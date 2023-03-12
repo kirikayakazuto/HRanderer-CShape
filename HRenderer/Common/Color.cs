@@ -1,21 +1,57 @@
 using System;
+using System.Collections.Generic;
 
 namespace HRenderer.Common {
     public class Color {
-        public byte r;
-        public byte g;
-        public byte b;
-        public byte a;
+        private static Stack<Color> colors;
+        public byte[] data;
+
+        public byte r {
+            get => this.data[0];
+            set => this.data[0] = value;
+        }
+        public byte g {
+            get => this.data[1];
+            set => this.data[1] = value;
+        }
+        public byte b {
+            get => this.data[2];
+            set => this.data[2] = value;
+        }
+        public byte a {
+            get => this.data[3];
+            set => this.data[3] = value;
+        }
         
-        Color(byte r, byte g, byte b, byte a) {
+        private Color(byte r, byte g, byte b, byte a) {
+            this.data = new byte[4];
             this.r = r;
             this.g = g;
             this.b = b;
             this.a = a;
         }
-
+        
         public static Color Create(byte r, byte g, byte b, byte a) {
-            return new Color(r, g ,b, a);
+            Color c;
+            if (Color.colors.Count > 0) {
+                c = Color.colors.Pop();
+                c.SetColor(r, g, b, a);
+            }
+            else {
+                c = new Color(r, g ,b, a);
+            }
+            return c;
+        }
+
+        public static void Return(Color color) {
+            Color.colors.Push(color);
+        }
+
+        public void SetColor(byte r, byte g, byte b, byte a) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
         }
 
         public static byte Clamp(byte min, byte max, byte value) {

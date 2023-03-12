@@ -68,6 +68,10 @@ namespace HRenderer.Common {
         public Vector2 Clone() {
             return new Vector2(this.x, this.y);
         }
+        
+        public float Dot(Vector4 v) {
+            return this.x * v.x + this.y * v.y;
+        }
     }
 
     public class Vector4: Vector {
@@ -122,14 +126,14 @@ namespace HRenderer.Common {
             return this.Clone().SubSelf(v);
         }
 
-        public Vector4 MulSelf(Vector4 v) {
-            this.x *= v.x;
-            this.y *= v.y;
-            this.z *= v.z;
+        public Vector4 MulSelf(float v) {
+            this.x *= v;
+            this.y *= v;
+            this.z *= v;
             return this;
         }
 
-        public Vector4 Mul(Vector4 v) {
+        public Vector4 Mul(float v) {
             return this.Clone().MulSelf(v);
         }
 
@@ -175,6 +179,27 @@ namespace HRenderer.Common {
 
         public Vector4 Cross(Vector4 v) {
             return this.Clone().CrossSelf(v);
+        }
+
+        public float Dot(Vector4 v) {
+            return this.x * v.x + this.y * v.y + this.z * v.z;
+        }
+
+        public Vector4 TransformSelf(Matrix4 matrix4) {
+            var _x = this.x;
+            var _y = this.y;
+            var _z = this.z;
+            var _w = this.w;
+            var m = matrix4.data;
+            this.x = m[0] * _x + m[4] * _y + m[8]  * _z + m[12] * _w;
+            this.y = m[1] * _x + m[5] * _y + m[9]  * _z + m[13] * _w;
+            this.z = m[2] * _x + m[6] * _y + m[10] * _z + m[14] * _w;
+            this.w = m[3] * _x + m[7] * _y + m[11] * _z + m[15] * _w;
+            return this;
+        }
+
+        public Vector4 Transform(Matrix4 matrix4) {
+            return this.Clone().TransformSelf(matrix4);
         }
     }
 }
