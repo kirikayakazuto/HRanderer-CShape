@@ -1,5 +1,9 @@
 using System;
+using System.Runtime.CompilerServices;
 using HRenderer.Common;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using Color = HRenderer.Common.Color;
 
 namespace HRenderer.Core {
     public enum FilterMode {
@@ -18,10 +22,8 @@ namespace HRenderer.Core {
         public FilterMode filterMode;
         public WrapMode wrapMode;
         
-        public Texture(int width, int height, byte[] pixel) {
-            this.width = width;
-            this.height = height;
-            this.pixel = pixel;
+        public Texture(string path) {
+            this.ReadLocalImage(path);
         }
 
         public void SetFilterMode(FilterMode filter) {
@@ -108,6 +110,27 @@ namespace HRenderer.Core {
         private int Clamp(int min, int max, int value) {
             return Math.Min(max, Math.Max(min, value));
         }
+        
+        private void ReadLocalImage(string imagePath) {
+            var image = Image.Load<Rgba32>(imagePath);
+            var num = image.Width * image.Height * 4;
+            var metadata = new byte[num];
+            for (var y = 0; y < image.Height; y++) {
+                for (var x = 0; x < image.Width; x++) {
+                    var idx = (y * image.Width + x) * 4;
+                    var rgba = image[x, y];
+                    metadata[idx] = rgba.R;
+                    metadata[idx+1] = rgba.G;
+                    metadata[idx+2] = rgba.B;
+                    metadata[idx+3] = rgba.A;
+                }
+            }
+            this.width = image.Width;
+            this.height = image.Height;
+            this.pixel = metadata;
+        } 
+        
+        
     }
     
     

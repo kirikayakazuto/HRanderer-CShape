@@ -1,5 +1,4 @@
 using System;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace HRenderer.Common {
 
@@ -60,11 +59,7 @@ namespace HRenderer.Common {
             return Vector4.Create(alpha, beta, gamma, 1);
         }
 
-        public static byte[] ReadLocalImage(string imagePath) {
-            var image = SixLabors.ImageSharp.Image.Load(imagePath);
-            // var color = image.Metadata;
-            return null;
-        } 
+        
         
     }
 }
