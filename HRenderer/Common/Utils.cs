@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace HRenderer.Common {
 
@@ -59,7 +62,19 @@ namespace HRenderer.Common {
             return Vector4.Create(alpha, beta, gamma, 1);
         }
 
-        
-        
+        public static void SaveImage(int width, int height, byte[] data, int frame) {
+            var image = new Image<Rgba32>(width, height);
+            for (var y = 0; y < image.Height; y++) {
+                for (var x = 0; x < image.Width; x++) {
+                    var idx = (y * image.Width + x) * 4;
+                    image[x, y] = new Rgba32(data[idx], data[idx + 1], data[idx + 2], data[idx + 3]);
+                }
+            }
+
+            if (!Directory.Exists("./output")) {
+                Directory.CreateDirectory("./output");
+            }
+            image.SaveAsJpeg("./output/" + frame + ".jpg");
+        }
     }
 }

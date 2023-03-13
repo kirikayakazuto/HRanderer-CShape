@@ -61,5 +61,9 @@ namespace HRenderer.Core {
         public bool ZTest(int x, int y, float z) {
             return z < this.GetZ(x, y);
         }
+
+        public void SaveImageLocal(int frame) {
+            Utils.SaveImage(this._width, this._height, this.pixelBuffer, frame);
+        }
     }
 }

@@ -72,7 +72,6 @@
     <ItemGroup>
         <Compile Include="Common\Buffer.cs" />
         <Compile Include="Common\Color.cs" />
-        <Compile Include="Common\DataStream.cs" />
         <Compile Include="Common\Matrix4.cs" />
         <Compile Include="Common\Utils.cs" />
         <Compile Include="Common\Vector.cs" />
@@ -91,7 +90,9 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Assets\001.jpg" />
+        <Content Include="Assets\*" >
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
