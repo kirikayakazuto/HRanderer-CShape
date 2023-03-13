@@ -8,11 +8,9 @@ namespace HRenderer {
         public static void Main(string[] args) {
             Console.WriteLine("hello world");
             
-            var texture = new Texture("./Assets/001.jpg");
-            Console.WriteLine(texture.width);
-            Console.WriteLine(texture.height);
-            
-            texture.SaveImage();
+            Program.DoRender();
+
+            // texture.SaveImage();
             // 防止程序结束
             // Console.ReadLine();
         }

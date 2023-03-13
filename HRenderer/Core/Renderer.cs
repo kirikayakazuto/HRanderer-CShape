@@ -36,9 +36,11 @@ namespace HRenderer.Core {
 
         public void Render() {
             // 初始化定时器
-            this.InitTimer();
+            // this.InitTimer();
+            this.Draw(1);
         }
-        
+
+        private int _frame = 0;
         private void InitTimer() {
             this.aTimer = new System.Timers.Timer(500);
             this.aTimer.Elapsed += this.Loop;
@@ -49,17 +51,19 @@ namespace HRenderer.Core {
 
         private void Loop(Object source, System.Timers.ElapsedEventArgs e) {
             this.aTimer.Stop();
-            this.Draw();
+            this.Draw(this._frame);
+            this._frame++;
             this.aTimer.Start();
         }
         
         /**
          * 渲染
          */
-        private void Draw() {
+        private void Draw(int frame) {
             foreach (var material in this.materials) {
                 this.DrawMaterial(material);
             }
+            this.frameBuffer.SaveImageLocal(frame);
         }
 
         public void DrawMaterial(Material material) {
