@@ -9,8 +9,8 @@ namespace HRenderer.Core {
         
         // 位置
         public Vector4 position = Vector4.Create();
-        public Vector4 up;
-        public Vector4 lookat;
+        public Vector4 up = Vector4.Create();
+        public Vector4 lookat = Vector4.Create();
         
         public float aspect = 1;
         // fov
@@ -29,14 +29,12 @@ namespace HRenderer.Core {
         public Camera(int width, int height) {
             this.width = width;
             this.height = height;
-        }
-
-        public void UpdateLookAt() {
             
+            this.ComputeViewPort();
         }
-
+        
         public Matrix4 ComputeLookAt() {
-            var m = Matrix4.GetIdentify();
+            var m = this.view;
             var w = this.lookat.Normalize();
             var u = this.up.Cross(w).NormalizeSelf();
             var v = w.Cross(u);
@@ -67,8 +65,30 @@ namespace HRenderer.Core {
             return m;
         }
 
-        // public Matrix4 ComputeProjection() {
-        //     
-        // }
+        public Matrix4 ComputeProjection() {
+            var m = this.projection;
+            var n = near;
+            var f = far;
+
+            var h_n = (float)Math.Tan(fovY / 2);
+            var n_h = 1 / h_n;
+            var n_w = n_h / aspect;
+
+            m.data[0] = n_w;
+            m.data[5] = n_h;
+            m.data[10] = (n+f) / (n-f);
+            m.data[11] = 1;
+            m.data[14] = (2*f*n)/(f-n);
+            return m;
+        }
+
+        public Matrix4 ComputeViewPort() {
+            var m = this.viewPort;
+            m.data[0] = this.width / 2.0f;
+            m.data[5] = this.height / 2.0f;
+            m.data[12] = this.width / 2.0f;
+            m.data[13] = this.height / 2.0f;
+            return m;
+        }
     }
 }

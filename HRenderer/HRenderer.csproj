@@ -82,7 +82,8 @@
         <Compile Include="Core\Renderer.cs" />
         <Compile Include="Core\Shader.cs" />
         <Compile Include="Core\Texture.cs" />
-        <Compile Include="DrawTriangle\TextureMesh.cs" />
+        <Compile Include="DrawTriangle\SpriteShader.cs" />
+        <Compile Include="DrawTriangle\SpriteMesh.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
@@ -90,7 +91,7 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Assets\*" >
+        <Content Include="Assets\*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

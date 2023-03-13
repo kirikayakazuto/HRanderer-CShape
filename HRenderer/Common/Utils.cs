@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -27,6 +28,13 @@ namespace HRenderer.Common {
             vec.y = Utils.GetInterpValue3(v1.y, v2.y, v3.y, w.x, w.y, w.z);
             vec.z = Utils.GetInterpValue3(v1.z, v2.z, v3.z, w.x, w.y, w.z);
             vec.w = Utils.GetInterpValue3(v1.w, v2.w, v3.w, w.x, w.y, w.z);
+            return vec;
+        }
+        
+        public static Vector2 GetInterpVec2(Vector2 v1, Vector2 v2, Vector2 v3, Vector4 w) {
+            var vec = Vector2.Create();
+            vec.x = Utils.GetInterpValue3(v1.x, v2.x, v3.x, w.x, w.y, w.z);
+            vec.y = Utils.GetInterpValue3(v1.y, v2.y, v3.y, w.x, w.y, w.z);
             return vec;
         }
 
@@ -70,11 +78,14 @@ namespace HRenderer.Common {
                     image[x, y] = new Rgba32(data[idx], data[idx + 1], data[idx + 2], data[idx + 3]);
                 }
             }
-
             if (!Directory.Exists("./output")) {
                 Directory.CreateDirectory("./output");
             }
             image.SaveAsJpeg("./output/" + frame + ".jpg");
+        }
+
+        public static void AddDictionary() {
+            
         }
     }
 }

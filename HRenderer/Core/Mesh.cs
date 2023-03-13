@@ -23,8 +23,8 @@ namespace HRenderer.Core {
 
         public Mesh(VertexFormat[] attribInfo) {
             this._attribInfo = attribInfo;
-            for (var i = 0; i < attribInfo.Length; i++) {
-                this._stride += attribInfo[i].num;
+            foreach (var vertexFormat in attribInfo) {
+                this._stride += vertexFormat.num;
             }
         }
 
@@ -35,15 +35,21 @@ namespace HRenderer.Core {
             }
             return names;
         }
-        public void GetVertexAttribs(uint v, in Dictionary<string, Vector4> dict) {
+        public void GetVertexAttribs(uint v, in Dictionary<string, Vector4> vec4Dict, in Dictionary<string, Vector2> vec2Dict) {
             foreach (var attrib in this.attribInfo) {
-                var vec = Vector4.Create();
-                Array.Copy(this.vertexBuffer, v, vec.data, 0, attrib.num);
-                if (dict.ContainsKey(attrib.name)) {
-                    dict[attrib.name] = vec;
-                }
-                else {
-                    dict.Add(attrib.name, vec);    
+                switch (attrib.num) {
+                    case 4:
+                        var vec4 = Vector4.Create();
+                        Array.Copy(this.vertexBuffer, v, vec4.data, 0, 4);
+                        vec4Dict[attrib.name] = vec4;
+                        break;
+                    case 2:
+                        var vec2 = Vector2.Create();
+                        Array.Copy(this.vertexBuffer, v, vec2.data, 0, 2);
+                        vec2Dict[attrib.name] = vec2;
+                        break;
+                    default:
+                        break;
                 }
             }
         }

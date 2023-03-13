@@ -18,7 +18,7 @@ namespace HRenderer.Core {
         // 定时器
         private System.Timers.Timer aTimer;
 
-        public Material[] materials;
+        public List<Material> materials = new List<Material>();
 
         public Renderer(int width, int height) {
             this._width = width;
@@ -26,11 +26,19 @@ namespace HRenderer.Core {
             
             this.camera = new Camera(width, height);
             this.frameBuffer = new FrameBuffer(width, height);
-            
+        }
+
+        public void AddMaterial(Material material) {
+            this.materials.Add(material);
+        }
+
+        
+
+        public void Render() {
             // 初始化定时器
             this.InitTimer();
         }
-
+        
         private void InitTimer() {
             this.aTimer = new System.Timers.Timer(500);
             this.aTimer.Elapsed += this.Loop;
@@ -68,27 +76,38 @@ namespace HRenderer.Core {
             }
         }
 
-        private readonly Dictionary<string, Vector4> _tmpAttribs1 = new Dictionary<string, Vector4>();
-        private readonly Dictionary<string, Vector4> _tmpAttribs2 = new Dictionary<string, Vector4>();
-        private readonly Dictionary<string, Vector4> _tmpAttribs3 = new Dictionary<string, Vector4>();
+        // 缓存 vec4
+        private readonly Dictionary<string, Vector4> _tmpVec4Attribs1 = new Dictionary<string, Vector4>();
+        private readonly Dictionary<string, Vector4> _tmpVec4Attribs2 = new Dictionary<string, Vector4>();
+        private readonly Dictionary<string, Vector4> _tmpVec4Attribs3 = new Dictionary<string, Vector4>();
+        // 缓存 vec2
+        private readonly Dictionary<string, Vector2> _tmpVec2Attribs1 = new Dictionary<string, Vector2>();
+        private readonly Dictionary<string, Vector2> _tmpVec2Attribs2 = new Dictionary<string, Vector2>();
+        private readonly Dictionary<string, Vector2> _tmpVec2Attribs3 = new Dictionary<string, Vector2>();
+
+        private void ClearAttribs() {
+            this._tmpVec4Attribs1.Clear();
+            this._tmpVec4Attribs2.Clear();
+            this._tmpVec4Attribs3.Clear();
+            
+            this._tmpVec2Attribs1.Clear();
+            this._tmpVec2Attribs2.Clear();
+            this._tmpVec2Attribs3.Clear();
+        }
+        
         private void DrawTriangle(Material material, uint v1, uint v2, uint v3) {
             var mesh = material.mesh;
             var shader = material.shader;
             var texture = material.texture;
             
-            this._tmpAttribs1.Clear();
-            this._tmpAttribs2.Clear();
-            this._tmpAttribs3.Clear();
-
-            var attribNames = mesh.GetAttribNames(); 
-            mesh.GetVertexAttribs(v1, this._tmpAttribs1);
-            mesh.GetVertexAttribs(v2, this._tmpAttribs1);
-            mesh.GetVertexAttribs(v3, this._tmpAttribs1);
+            mesh.GetVertexAttribs(v1, this._tmpVec4Attribs1, this._tmpVec2Attribs1);
+            mesh.GetVertexAttribs(v2, this._tmpVec4Attribs2, this._tmpVec2Attribs2);
+            mesh.GetVertexAttribs(v3, this._tmpVec4Attribs3, this._tmpVec2Attribs3);
             
             // vertex shading
-            var position1 = shader.VertexShading(this._tmpAttribs1);
-            var position2 = shader.VertexShading(this._tmpAttribs1);
-            var position3 = shader.VertexShading(this._tmpAttribs1);
+            var position1 = shader.VertexShading(this._tmpVec4Attribs1, this._tmpVec2Attribs1);
+            var position2 = shader.VertexShading(this._tmpVec4Attribs2, this._tmpVec2Attribs2);
+            var position3 = shader.VertexShading(this._tmpVec4Attribs3, this._tmpVec2Attribs3);
 
             var near = this.camera.near;
             var far = this.camera.far;
@@ -99,7 +118,7 @@ namespace HRenderer.Core {
             position1.Homogenenize();
             position2.Homogenenize();
             position3.Homogenenize();
-
+            
             position1.Transform(this.camera.viewPort);
             position2.Transform(this.camera.viewPort);
             position3.Transform(this.camera.viewPort);
@@ -107,7 +126,9 @@ namespace HRenderer.Core {
             var pos1 = Vector2.Create(position1.x, position1.y); 
             var pos2 = Vector2.Create(position2.x, position2.y);
             var pos3 = Vector2.Create(position3.x, position3.y);
-
+            
+            // 设置uniform
+            shader.texture = texture;
             
             var bound = Utils.GetBoundingBox(position1, position2, position3);
             var p = Vector2.Create();
@@ -116,30 +137,44 @@ namespace HRenderer.Core {
                 for (var x = Math.Max(bound.minX, 0); x < Math.Min(bound.maxX, this._width); x++) {
                     p.x = x + 0.5f;
                     
+                    // 重心差值
                     var barycentric = Utils.GetBarycentric(p, pos1, pos2, pos3);
                     if(barycentric.x < 0 || barycentric.y < 0 || barycentric.z < 0) continue;
-
-                    // 计算差值
-                    foreach (var name in attribNames) {
-                        var v = Utils.GetInterpVec4(this._tmpAttribs1[name], this._tmpAttribs2[name], this._tmpAttribs3[name], barycentric);
-                        if (shader.dictionary.ContainsKey(name)) {
-                            shader.dictionary[name] = v;
-                        } else {
-                            shader.dictionary.Add(name, v);    
-                        }
-                    }
+                    // 计算attribInfo差值
+                    this.ComputeVectorVarying(mesh.attribInfo, shader, barycentric);
+                    // 计算z值
                     var z = Utils.GetInterpValue3(z1, z2, z3, barycentric.x, barycentric.y, barycentric.z);
-
-                    shader.texture = texture;
+                    
                     var color = shader.FragShading();
                     this.frameBuffer.SetColor(x, y, color, z);
                 }
             }
+            
+            // 清理attribs
+            this.ClearAttribs();
         }
 
         public void Clear() {
             this.aTimer.Stop();
             this.aTimer.Close();
+        }
+
+        private void ComputeVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, Vector4 barycentric) {
+            foreach (var vertexFormat in attribInfo) {
+                var name = vertexFormat.name;
+                switch (vertexFormat.num) {
+                    case 4:
+                        var vec4 = Utils.GetInterpVec4(this._tmpVec4Attribs1[name], this._tmpVec4Attribs2[name], this._tmpVec4Attribs3[name], barycentric);
+                        shader.varyVec4Dict[name] = vec4;
+                        break;
+                    case 2:
+                        var vec2 = Utils.GetInterpVec2(this._tmpVec2Attribs1[name], this._tmpVec2Attribs2[name], this._tmpVec2Attribs3[name], barycentric);
+                        shader.varyVec2Dict[name] = vec2;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
     }
