@@ -70,6 +70,10 @@ namespace HRenderer.Core {
             var mesh = material.mesh;
             var shader = material.shader;
             var texture = material.texture;
+
+            shader.view = this.camera.view;
+            shader.projection = this.camera.projection;
+            
             var indices = mesh.indiceBuffer;
             for (var i = 0; i < indices.Length; i += 3) {
                 var v1 = mesh.stride * indices[i];

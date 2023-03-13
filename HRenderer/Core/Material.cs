@@ -17,8 +17,6 @@ namespace HRenderer.Core {
             this.mesh = mesh;
             this.shader = shader;
         }
-        
 
-   
     }
 }

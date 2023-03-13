@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HRenderer.Common {
     public class Color {
-        private static Stack<Color> colors;
+        private static Stack<Color> colors = new Stack<Color>();
         public byte[] data;
 
         public byte r {

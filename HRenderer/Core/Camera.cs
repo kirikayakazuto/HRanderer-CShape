@@ -30,7 +30,12 @@ namespace HRenderer.Core {
             this.width = width;
             this.height = height;
             
+            this.position = Vector4.Create(0, 0, 0, 1);
+            this.up = Vector4.Create(0, 1, 0, 1);
+            this.lookat = Vector4.Create(0, 0, 1, 1);
             this.ComputeViewPort();
+            this.ComputeLookAt();
+            this.ComputeProjection();
         }
         
         public Matrix4 ComputeLookAt() {

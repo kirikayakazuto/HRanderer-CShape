@@ -4,15 +4,10 @@ using HRenderer.DrawTriangle;
 
 namespace HRenderer {
     internal class Program {
-        private static System.Timers.Timer aTimer;
         public static void Main(string[] args) {
             Console.WriteLine("hello world");
             
             Program.DoRender();
-
-            // texture.SaveImage();
-            // 防止程序结束
-            // Console.ReadLine();
         }
 
         /**

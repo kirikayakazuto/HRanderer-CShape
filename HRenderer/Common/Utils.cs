@@ -83,9 +83,5 @@ namespace HRenderer.Common {
             }
             image.SaveAsJpeg("./output/" + frame + ".jpg");
         }
-
-        public static void AddDictionary() {
-            
-        }
     }
 }
