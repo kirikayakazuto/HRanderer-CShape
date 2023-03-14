@@ -8,7 +8,11 @@ namespace HRenderer.Core {
         // 摄像机相关
         public Matrix4 view;
         public Matrix4 projection;
-        
+
+        public readonly Dictionary<string, float> uniformFloats = new Dictionary<string, float>();
+        public readonly Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
+        public readonly Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
+
         // 差值数据
         public readonly Dictionary<string, Vector4> varyVec4Dict = new Dictionary<string, Vector4>();
         public readonly Dictionary<string, Vector2> varyVec2Dict = new Dictionary<string, Vector2>();

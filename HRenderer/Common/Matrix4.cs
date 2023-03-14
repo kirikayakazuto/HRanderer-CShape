@@ -2,6 +2,15 @@ using System;
 using System.Runtime.CompilerServices;
 
 namespace HRenderer.Common {
+    /**
+     * 行矩阵
+     * 0, 1, 2, 3,
+     * 4, 5, 6, 7,
+     * 8, 9, 10, 11,
+     * 12, 13, 14, 15
+     * 
+     * 计算方式, 前行乘后列
+     */
     public class Matrix4 {
         public float[] data;
 
@@ -20,6 +29,7 @@ namespace HRenderer.Common {
 
         public static Matrix4 GetRotationX(float angle) {
             var m = Matrix4.GetIdentify();
+            angle = angle * (float)Math.PI / 180f;
             var cos = (float)Math.Cos(angle);
             var sin = (float)Math.Sin(angle);
             m.data[5] = cos;

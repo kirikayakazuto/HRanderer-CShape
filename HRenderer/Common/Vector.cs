@@ -96,6 +96,19 @@ namespace HRenderer.Common {
             set => this.data[3] = value;
         }
 
+        public void FromVec4(Vector4 v) {
+            this.x = v.x;
+            this.y = v.y;
+            this.z = v.z;
+            // this.w = v.w;
+        }
+
+        public void Set(float x, float y, float z, float w = 1) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
         public Vector4(float x, float y, float z, float w): base(4) {
             this.x = x;
             this.y = y;

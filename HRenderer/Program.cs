@@ -14,9 +14,8 @@ namespace HRenderer {
          * 渲染测试
          */
         public static void DoRender() {
-            var renderer = new Renderer(400, 400);
+            var renderer = new Renderer(500, 500);
             renderer.materials.Add(Program.GetMaterial());
-            
             renderer.Render();
         }
 

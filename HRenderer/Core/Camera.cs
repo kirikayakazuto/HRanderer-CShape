@@ -7,46 +7,73 @@ namespace HRenderer.Core {
         private int width;
         private int height;
         
-        // 位置
-        public Vector4 position = Vector4.Create();
-        public Vector4 up = Vector4.Create();
-        public Vector4 lookat = Vector4.Create();
+        // 位置, 上方向, 朝向 可以描述一个摄像机
+        private readonly Vector4 _position;
+        private readonly Vector4 _up;
+        private readonly Vector4 _toward;
         
         public float aspect = 1;
-        // fov
+        // fov 视角大小
         public float fovY = (float)Math.PI / 2;
         // 近平面
         public float near = 1;
         // 远平面
         public float far = 500;
-        // 视图矩阵
-        public Matrix4 view = Matrix4.GetIdentify();
-        // 投影矩阵
-        public Matrix4 projection = Matrix4.GetIdentify();
         
-        public Matrix4 viewPort = Matrix4.GetIdentify();
+        // 观察矩阵 / 摄像机矩阵  将摄像机放在0, 0, 0位置, 并看向-z方向
+        public readonly Matrix4 viewMat = Matrix4.GetIdentify();
+        
+        // 视图矩阵 / 屏幕矩阵  将 -1 ~ 1 空间的点 变换到 0 ~ width 和 0 ~ height 空间中;
+        public Matrix4 viewPortMat = Matrix4.GetIdentify();
+        
+        // 透视投影矩阵 
+        public Matrix4 OrthographicProjection = Matrix4.GetIdentify();
+
+        public Matrix4 projectionMat = Matrix4.GetIdentify();
+        public Matrix4 orthographicMat = Matrix4.GetIdentify();
 
         public Camera(int width, int height) {
             this.width = width;
             this.height = height;
             
-            this.position = Vector4.Create(0, 0, 0, 1);
-            this.up = Vector4.Create(0, 1, 0, 1);
-            this.lookat = Vector4.Create(0, 0, 1, 1);
+            // 初始化
+            this._position = Vector4.Create(0, 0, 0, 1);
+            this._up = Vector4.Create(0, 1, 0, 1);
+            this._toward = Vector4.Create(0, 0, 1, 1);
+            
+            // 初始化矩阵
             this.ComputeViewPort();
             this.ComputeLookAt();
-            this.ComputeProjection();
+            this.ComputeOrthographicProjection();
         }
         
+        public void SetPosition(float x, float y, float z) {
+            this._position.Set(x, y, z);
+            this.ComputeLookAt();
+            this.ComputeOrthographicProjection();
+        }
+        
+        /**
+         * 朝向某个点
+         */
+        public void LookAt(Vector4 v) {
+            this._toward.FromVec4(this._position.Sub(v));;
+            this._toward.NormalizeSelf();
+            this.ComputeLookAt();
+            this.ComputeOrthographicProjection();
+        }
+        
+        /**
+         * 计算lookat矩阵
+         */
         public Matrix4 ComputeLookAt() {
-            var m = this.view;
-            var w = this.lookat.Normalize();
-            var u = this.up.Cross(w).NormalizeSelf();
+            var w = this._toward.Normalize();
+            var u = this._up.Cross(w).NormalizeSelf();
             var v = w.Cross(u);
 
-            var pos = this.position.Mul(-1);
+            var pos = this._position.Mul(-1);
             
-            var d = m.data;
+            var d = this.viewMat.data;
             d[0] = u.x;
             d[4] = u.y;
             d[8] = u.z;
@@ -67,11 +94,11 @@ namespace HRenderer.Core {
             d[11] = 0;
             d[15] = 1;
 
-            return m;
+            return this.viewMat;
         }
 
-        public Matrix4 ComputeProjection() {
-            var m = this.projection;
+        public Matrix4 ComputeOrthographicProjection() {
+            var m = this.OrthographicProjection;
             var n = near;
             var f = far;
 
@@ -87,8 +114,43 @@ namespace HRenderer.Core {
             return m;
         }
 
+        /**
+         * 计算正交矩阵
+         * 将right-left, top-bottom, near-far 空间的点, 变换到 -1 ~ 1 的标准矩阵中
+         */
+        public Matrix4 ComputeOrthographic() {
+            var t = (float)Math.Tan(this.fovY/2) * this.near;
+            var b = -t;
+
+            var r = (float)this.width / (float)this.height * t;
+            var l = -r;
+
+            var n = this.near;
+            var f = this.far;
+            
+            this.orthographicMat.data = new float[] {
+                2 / (r - l), 0,           0,           -(r + l) / (r - l),
+                0,           2 / (t - b), 0,           -(t + b) / (t - b),
+                0,           0,           2 / (n - f), -(n + f) / (n - f),
+                0,           0,           0,            1,
+            };
+            return this.orthographicMat;
+        }
+
+        public Matrix4 ComputeProjection() {
+            var n = this.near;
+            var f = this.far;
+            this.projectionMat.data = new float[] {
+                n, 0, 0, 0,
+                0, n, 0, 0,
+                0, 0, n + f, -f * n,
+                0, 0, 1, 0,
+            };
+            return this.projectionMat;
+        }
+
         public Matrix4 ComputeViewPort() {
-            var m = this.viewPort;
+            var m = this.viewPortMat;
             m.data[0] = this.width / 2.0f;
             m.data[5] = this.height / 2.0f;
             m.data[12] = this.width / 2.0f;

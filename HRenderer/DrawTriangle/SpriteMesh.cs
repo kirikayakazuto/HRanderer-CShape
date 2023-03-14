@@ -7,9 +7,9 @@ namespace HRenderer.DrawTriangle {
             new VertexFormat("uv",  2)
         }) {
             this._vertexBuffer = new float[] {
-                -1, -1, 1.5f, 1, 0, 0,
+                -1, -1, 1f, 1, 0, 0,
                 1, -1, 1, 1, 1, 0,
-                1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1f, 1, 1,
                 -1, 1, 1, 1, 0, 1
             };
             this._indiceBuffer = new uint[] {0, 1, 2, 0, 2, 3};

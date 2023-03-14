@@ -17,7 +17,7 @@ namespace HRenderer.Core {
         public FrameBuffer frameBuffer;
         // 定时器
         private System.Timers.Timer aTimer;
-
+        // 待渲染的材质
         public List<Material> materials = new List<Material>();
 
         public Renderer(int width, int height) {
@@ -31,9 +31,7 @@ namespace HRenderer.Core {
         public void AddMaterial(Material material) {
             this.materials.Add(material);
         }
-
         
-
         public void Render() {
             // 初始化定时器
             // this.InitTimer();
@@ -71,8 +69,10 @@ namespace HRenderer.Core {
             var shader = material.shader;
             var texture = material.texture;
 
-            shader.view = this.camera.view;
-            shader.projection = this.camera.projection;
+            shader.view = this.camera.viewMat;
+            shader.projection = this.camera.OrthographicProjection;
+            
+            shader.uniformFloats["time"] = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             
             var indices = mesh.indiceBuffer;
             for (var i = 0; i < indices.Length; i += 3) {
@@ -116,6 +116,8 @@ namespace HRenderer.Core {
             var position1 = shader.VertexShading(this._tmpVec4Attribs1, this._tmpVec2Attribs1);
             var position2 = shader.VertexShading(this._tmpVec4Attribs2, this._tmpVec2Attribs2);
             var position3 = shader.VertexShading(this._tmpVec4Attribs3, this._tmpVec2Attribs3);
+            
+            Console.WriteLine(position1.ToString());
 
             var near = this.camera.near;
             var far = this.camera.far;
@@ -127,9 +129,9 @@ namespace HRenderer.Core {
             position2.Homogenenize();
             position3.Homogenenize();
             
-            position1.TransformSelf(this.camera.viewPort);
-            position2.TransformSelf(this.camera.viewPort);
-            position3.TransformSelf(this.camera.viewPort);
+            position1.TransformSelf(this.camera.viewPortMat);
+            position2.TransformSelf(this.camera.viewPortMat);
+            position3.TransformSelf(this.camera.viewPortMat);
             
             var pos1 = Vector2.Create(position1.x, position1.y); 
             var pos2 = Vector2.Create(position2.x, position2.y);
@@ -139,7 +141,6 @@ namespace HRenderer.Core {
             shader.texture = texture;
             
             var bound = Utils.GetBoundingBox(position1, position2, position3);
-            Console.WriteLine(bound.ToString());
             var p = Vector2.Create();
             for (var y = Math.Max(bound.minY, 0); y < Math.Min(bound.maxY, this._height); y++) {
                 p.y = y + 0.5f;
