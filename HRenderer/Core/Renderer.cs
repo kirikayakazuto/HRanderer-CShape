@@ -117,8 +117,6 @@ namespace HRenderer.Core {
             var position2 = shader.VertexShading(this._tmpVec4Attribs2, this._tmpVec2Attribs2);
             var position3 = shader.VertexShading(this._tmpVec4Attribs3, this._tmpVec2Attribs3);
             
-            Console.WriteLine(position1.ToString());
-
             var near = this.camera.near;
             var far = this.camera.far;
             var z1 = Utils.GetDepth(near, far, position1.z);

@@ -46,3 +46,7 @@
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/System.Text.Encoding.CodePages.xml
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/obj/Debug/HRenderer.exe.config
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/obj/Debug/HRenderer.csproj.CopyComplete
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/OpenTK.dll
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/System.Net.WebSockets.dll
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/OpenTK.pdb
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/OpenTK.xml
