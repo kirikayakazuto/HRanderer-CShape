@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1c1WpKtxCd1seIixaDIsmFpjVKmOZkX2k+SNHT2VsvDrN43EtnPfhWnSPSFUs6oey+MeZ0c/ghctd6qGE8T47g==",
+  "dgSpecHash": "XUkTGsHojBUD+UglKOwCorB6fx7ESZmuPnxVJi2hQ8ydxk/Puk3PfltdKQ9PYdbsf3dgFwFv5M0ZVkQzyMhlsw==",
   "success": true,
   "projectFilePath": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/HRenderer.csproj",
   "expectedPackageFiles": [
@@ -17,6 +17,7 @@
     "/Users/denglang/.nuget/packages/opentk.windowing.desktop/4.7.7/opentk.windowing.desktop.4.7.7.nupkg.sha512",
     "/Users/denglang/.nuget/packages/opentk.windowing.graphicslibraryframework/4.7.7/opentk.windowing.graphicslibraryframework.4.7.7.nupkg.sha512",
     "/Users/denglang/.nuget/packages/sixlabors.imagesharp/2.1.3/sixlabors.imagesharp.2.1.3.nupkg.sha512",
+    "/Users/denglang/.nuget/packages/stbimagesharp/2.27.13/stbimagesharp.2.27.13.nupkg.sha512",
     "/Users/denglang/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
     "/Users/denglang/.nuget/packages/system.text.encoding.codepages/5.0.0/system.text.encoding.codepages.5.0.0.nupkg.sha512"
   ],
