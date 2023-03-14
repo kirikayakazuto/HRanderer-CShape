@@ -43,7 +43,7 @@ namespace HRenderer.Core {
 
         public Color Sample(float u, float v) {
             var x = u * (this.width - 1) + 0.5;
-            var y = this.height - (v * (this.height - 1) + 0.5);
+            var y = v * (this.height - 1) + 0.5;
             switch (this.filterMode) {
                 case FilterMode.Nearest:
                     return this.Nearest(x, y);
@@ -66,10 +66,9 @@ namespace HRenderer.Core {
             var cy1 = (int) Math.Floor(y);
             var cx2 = (int) Math.Round(x);
             var cy2 = (int) Math.Round(y);
-
+            
             if (cx1 == cx2) cx2 = cx2 >= 1 ? cx2 - 1 : cx2;
             if (cy1 == cy2) cy2 = cy2 >= 1 ? cy2 - 1 : cy2;
-
             
             var c1 = this.GetIndex(cx1, cy1);
             var c2 = this.GetIndex(cx2, cy1);
@@ -105,7 +104,7 @@ namespace HRenderer.Core {
                 default:
                     break;
             }
-            return (y + this.width + x) * 4;
+            return (y * this.width + x) * 4;
         }
         
         

@@ -15,6 +15,10 @@ namespace HRenderer.Common {
 
         public int width;
         public int height;
+
+        public override string ToString() {
+            return "minX: " + minX + " maxX: " + maxX + " minY: " + minY + " maxY: " + maxY;
+        }
     }
     
     public class Utils {

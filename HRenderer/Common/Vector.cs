@@ -72,6 +72,10 @@ namespace HRenderer.Common {
         public float Dot(Vector4 v) {
             return this.x * v.x + this.y * v.y;
         }
+        
+        public override string ToString() {
+            return "x: " + this.x + " y: " + this.y;
+        }
     }
 
     public class Vector4: Vector {
@@ -142,6 +146,7 @@ namespace HRenderer.Common {
             this.x /= this.w;
             this.y /= this.w;
             this.z /= this.w;
+            this.w = 1;
             return this;
         }
 
@@ -200,6 +205,10 @@ namespace HRenderer.Common {
 
         public Vector4 Transform(Matrix4 matrix4) {
             return this.Clone().TransformSelf(matrix4);
+        }
+
+        public override string ToString() {
+            return "x: " + this.x + " y: " + this.y + " z: " + this.z + " w: " + this.w;
         }
     }
 }

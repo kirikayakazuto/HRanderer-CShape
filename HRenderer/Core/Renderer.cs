@@ -127,10 +127,10 @@ namespace HRenderer.Core {
             position2.Homogenenize();
             position3.Homogenenize();
             
-            position1.Transform(this.camera.viewPort);
-            position2.Transform(this.camera.viewPort);
-            position3.Transform(this.camera.viewPort);
-
+            position1.TransformSelf(this.camera.viewPort);
+            position2.TransformSelf(this.camera.viewPort);
+            position3.TransformSelf(this.camera.viewPort);
+            
             var pos1 = Vector2.Create(position1.x, position1.y); 
             var pos2 = Vector2.Create(position2.x, position2.y);
             var pos3 = Vector2.Create(position3.x, position3.y);
@@ -139,22 +139,24 @@ namespace HRenderer.Core {
             shader.texture = texture;
             
             var bound = Utils.GetBoundingBox(position1, position2, position3);
+            Console.WriteLine(bound.ToString());
             var p = Vector2.Create();
             for (var y = Math.Max(bound.minY, 0); y < Math.Min(bound.maxY, this._height); y++) {
                 p.y = y + 0.5f;
                 for (var x = Math.Max(bound.minX, 0); x < Math.Min(bound.maxX, this._width); x++) {
                     p.x = x + 0.5f;
-                    
                     // 重心差值
                     var barycentric = Utils.GetBarycentric(p, pos1, pos2, pos3);
                     if(barycentric.x < 0 || barycentric.y < 0 || barycentric.z < 0) continue;
+                    
                     // 计算attribInfo差值
                     this.ComputeVectorVarying(mesh.attribInfo, shader, barycentric);
                     // 计算z值
                     var z = Utils.GetInterpValue3(z1, z2, z3, barycentric.x, barycentric.y, barycentric.z);
                     
                     var color = shader.FragShading();
-                    this.frameBuffer.SetColor(x, y, color, z);
+                    
+                    this.frameBuffer.SetColor(x , y, color, z);
                 }
             }
             

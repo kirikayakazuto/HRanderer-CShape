@@ -36,21 +36,23 @@ namespace HRenderer.Core {
             return names;
         }
         public void GetVertexAttribs(uint v, in Dictionary<string, Vector4> vec4Dict, in Dictionary<string, Vector2> vec2Dict) {
+            uint offset = 0;
             foreach (var attrib in this.attribInfo) {
                 switch (attrib.num) {
                     case 4:
                         var vec4 = Vector4.Create();
-                        Array.Copy(this.vertexBuffer, v, vec4.data, 0, 4);
+                        Array.Copy(this.vertexBuffer, v + offset, vec4.data, 0, 4);
                         vec4Dict[attrib.name] = vec4;
                         break;
                     case 2:
                         var vec2 = Vector2.Create();
-                        Array.Copy(this.vertexBuffer, v, vec2.data, 0, 2);
+                        Array.Copy(this.vertexBuffer, v + offset, vec2.data, 0, 2);
                         vec2Dict[attrib.name] = vec2;
                         break;
                     default:
                         break;
                 }
+                offset += attrib.num;
             }
         }
     }

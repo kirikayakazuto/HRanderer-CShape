@@ -29,8 +29,8 @@ namespace HRenderer.Core {
         }
 
         public void SetColor(int x, int y, Vector4 color, float z) {
-            if(!this.ZTest(x, y, z)) return;
-            var idx = (x + y * this._height) * 4;
+            // if(!this.ZTest(x, y, z)) return;
+            var idx = (x + y * this._width) * 4;
             this.pixelBuffer[idx] = (byte)(color.x * 255);
             this.pixelBuffer[idx+1] = (byte)(color.y * 255);
             this.pixelBuffer[idx+2] = (byte)(color.z * 255);
