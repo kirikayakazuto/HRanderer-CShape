@@ -34,6 +34,8 @@ namespace HRenderer.Core {
 
         private float _time = 0;
         public void Render(double dt) {
+            Console.WriteLine(Vector4.newCount);
+            Vector4.newCount = 0;
             this.frameBuffer.Clear();
             
             this._time += (float)dt;
@@ -45,7 +47,6 @@ namespace HRenderer.Core {
         public void DrawMaterial(Material material) {
             var mesh = material.mesh;
             var shader = material.shader;
-            var texture = material.texture;
 
             shader.view = this.camera.viewMat;
             shader.projection = this.camera.OrthographicProjection;
@@ -111,19 +112,15 @@ namespace HRenderer.Core {
             // 设置uniform
             shader.texture = texture;
             
-            Console.WriteLine(position1.ToString());
-            Console.WriteLine(position2.ToString());
-            Console.WriteLine(position3.ToString());
-            Console.WriteLine();
-            
             var bound = Utils.GetBoundingBox(position1, position2, position3);
+            var barycentric = Vector4.Create();
             var p = Vector2.Create();
             for (var y = Math.Max(bound.minY, 0); y < Math.Min(bound.maxY, this._height); y++) {
                 p.y = y + 0.5f;
                 for (var x = Math.Max(bound.minX, 0); x < Math.Min(bound.maxX, this._width); x++) {
                     p.x = x + 0.5f;
                     // 重心差值
-                    var barycentric = Utils.GetBarycentric(p, position1, position2, position3);
+                    Utils.GetBarycentric(p, position1, position2, position3, barycentric);
                     if(barycentric.x < 0 || barycentric.y < 0 || barycentric.z < 0) continue;
                     
                     // 计算z值 线性的z
@@ -133,7 +130,7 @@ namespace HRenderer.Core {
                     barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
                     
                     // 计算attribInfo差值
-                    this.ComputeVectorVarying(mesh.attribInfo, shader, barycentric);
+                    this.ComputeShaderVectorVarying(mesh.attribInfo, shader, barycentric);
                     
                     // 计算非线性的z值
                     z = Utils.GetDepth(this.camera.near, this.camera.far, z);
@@ -143,11 +140,16 @@ namespace HRenderer.Core {
                     
                     // 输出颜色
                     this.frameBuffer.SetColor(x , y, color, z);
+                    Vector4.Return(color);
                 }
             }
             
             // 清理attribs
             this.ClearAttribs();
+            
+            Vector4.Return(position1);
+            Vector4.Return(position2);
+            Vector4.Return(position3);
         }
 
         public void Clear() {
@@ -155,16 +157,18 @@ namespace HRenderer.Core {
             this.aTimer.Close();
         }
 
-        private void ComputeVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, Vector4 barycentric) {
+        private void ComputeShaderVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, in Vector4 barycentric) {
             foreach (var vertexFormat in attribInfo) {
                 var name = vertexFormat.name;
                 switch (vertexFormat.num) {
                     case 4:
-                        var vec4 = Utils.GetInterpVec4(this._tmpVec4Attribs1[name], this._tmpVec4Attribs2[name], this._tmpVec4Attribs3[name], barycentric);
+                        var vec4 = shader.varyVec4Dict.ContainsKey(name) ? shader.varyVec4Dict[name] : Vector4.Create(); 
+                        Utils.GetInterpVec4(this._tmpVec4Attribs1[name], this._tmpVec4Attribs2[name], this._tmpVec4Attribs3[name], barycentric, vec4);
                         shader.varyVec4Dict[name] = vec4;
                         break;
                     case 2:
-                        var vec2 = Utils.GetInterpVec2(this._tmpVec2Attribs1[name], this._tmpVec2Attribs2[name], this._tmpVec2Attribs3[name], barycentric);
+                        var vec2 = shader.varyVec2Dict.ContainsKey(name) ? shader.varyVec2Dict[name] : Vector2.Create();
+                        Utils.GetInterpVec2(this._tmpVec2Attribs1[name], this._tmpVec2Attribs2[name], this._tmpVec2Attribs3[name], barycentric, vec2);
                         shader.varyVec2Dict[name] = vec2;
                         break;
                     default:

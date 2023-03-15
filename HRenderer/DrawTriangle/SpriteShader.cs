@@ -8,8 +8,6 @@ namespace HRenderer.DrawTriangle {
         public override Vector4 VertexShading(in Dictionary<string, Vector4> vector4s, in Dictionary<string, Vector2> vector2s) {
             var position = vector4s["position"];
             var r = Math.Sin(this.uniformFloats["time"]) * Math.PI;
-            
-            // position = position.Transform(Matrix4.GetRotationY((float)(30 * Math.PI / 180)));
             position = position.Transform(Matrix4.GetRotationY((float)r));
             var vpMat = this.projection.Mul(this.view);
             

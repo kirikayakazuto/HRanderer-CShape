@@ -26,8 +26,8 @@ namespace HRenderer.Common {
             return v1 * w1 + v2 * w2 + v3 * w3;
         }
         
-        public static Vector4 GetInterpVec4(Vector4 v1, Vector4 v2, Vector4 v3, Vector4 w) {
-            var vec = Vector4.Create();
+        public static Vector4 GetInterpVec4(Vector4 v1, Vector4 v2, Vector4 v3, Vector4 w, in Vector4 outVec) {
+            var vec = outVec;
             vec.x = Utils.GetInterpValue3(v1.x, v2.x, v3.x, w.x, w.y, w.z);
             vec.y = Utils.GetInterpValue3(v1.y, v2.y, v3.y, w.x, w.y, w.z);
             vec.z = Utils.GetInterpValue3(v1.z, v2.z, v3.z, w.x, w.y, w.z);
@@ -35,8 +35,8 @@ namespace HRenderer.Common {
             return vec;
         }
         
-        public static Vector2 GetInterpVec2(Vector2 v1, Vector2 v2, Vector2 v3, Vector4 w) {
-            var vec = Vector2.Create();
+        public static Vector2 GetInterpVec2(Vector2 v1, Vector2 v2, Vector2 v3, Vector4 w, in Vector2 outVec) {
+            var vec = outVec;
             vec.x = Utils.GetInterpValue3(v1.x, v2.x, v3.x, w.x, w.y, w.z);
             vec.y = Utils.GetInterpValue3(v1.y, v2.y, v3.y, w.x, w.y, w.z);
             return vec;
@@ -74,7 +74,7 @@ namespace HRenderer.Common {
             return barycentric;
         }
 
-        public static Vector4 GetBarycentric(Vector2 p, Vector4 position1, Vector4 position2, Vector4 position3) {
+        public static Vector4 GetBarycentric(Vector2 p, Vector4 position1, Vector4 position2, Vector4 position3, in Vector4 outVec) {
             var a = Vector2.Create(position1.x, position1.y);
             var b = Vector2.Create(position2.x, position2.y);
             var c = Vector2.Create(position3.x, position3.y);
@@ -90,7 +90,8 @@ namespace HRenderer.Common {
             var beta = pc.Cross(pa) / 2 / total;
             var gamma = 1 - alpha - beta;
 
-            return Vector4.Create(alpha, beta, gamma, 1);
+            outVec.Set(alpha, beta, gamma, 1);
+            return outVec;
         }
 
         public static void SaveImage(int width, int height, byte[] data, int frame) {

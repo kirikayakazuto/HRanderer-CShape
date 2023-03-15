@@ -79,6 +79,8 @@ namespace HRenderer.Common {
     }
 
     public class Vector4: Vector {
+        public static int newCount = 0;
+        private static Stack<Vector4> vector4s = new Stack<Vector4>();
         public float x {
             get => this.data[0];
             set => this.data[0] = value;
@@ -103,10 +105,17 @@ namespace HRenderer.Common {
             // this.w = v.w;
         }
 
-        public void Set(float x, float y, float z, float w = 1) {
+        public void Set(float x, float y, float z) {
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+        
+        public void Set(float x, float y, float z, float w) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
         }
 
         public Vector4(float x, float y, float z, float w): base(4) {
@@ -117,7 +126,16 @@ namespace HRenderer.Common {
         }
 
         public static Vector4 Create(float x = 0, float y = 0, float z = 0, float w = 0) {
-            return new Vector4(x, y, z, w);
+            if (Vector4.vector4s.Count <= 0) {
+                Vector4.newCount++;
+            }
+            var v = Vector4.vector4s.Count > 0 ? Vector4.vector4s.Pop() : new Vector4(x, y, z, w);
+            v.Set(x, y, z, w);
+            return v;
+        }
+
+        public static void Return(Vector4 v) {
+            Vector4.vector4s.Push(v);
         }
 
         public Vector4 AddSelf(Vector4 v) {

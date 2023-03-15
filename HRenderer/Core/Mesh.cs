@@ -40,12 +40,12 @@ namespace HRenderer.Core {
             foreach (var attrib in this.attribInfo) {
                 switch (attrib.num) {
                     case 4:
-                        var vec4 = Vector4.Create();
+                        var vec4 = vec4Dict.ContainsKey(attrib.name) ? vec4Dict[attrib.name] : Vector4.Create();
                         Array.Copy(this.vertexBuffer, v + offset, vec4.data, 0, 4);
                         vec4Dict[attrib.name] = vec4;
                         break;
                     case 2:
-                        var vec2 = Vector2.Create();
+                        var vec2 = vec2Dict.ContainsKey(attrib.name) ? vec2Dict[attrib.name] : Vector2.Create();
                         Array.Copy(this.vertexBuffer, v + offset, vec2.data, 0, 2);
                         vec2Dict[attrib.name] = vec2;
                         break;
