@@ -50,7 +50,7 @@ public class Window : GameWindow {
         GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
         // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
-        _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+        _shader = new Shader("Opengl/Shaders/shader.vert", "Opengl/Shaders/shader.frag");
         _shader.Use();
         
         var vertexLocation = _shader.GetAttribLocation("aPosition");
@@ -61,7 +61,7 @@ public class Window : GameWindow {
         GL.EnableVertexAttribArray(texCoordLocation);
         GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-        _texture = Texture.LoadFromFile("Resources/container.png");
+        _texture = Texture.LoadFromFile("Assets/001.jpg");
         _texture.Use(TextureUnit.Texture0);
     }
 

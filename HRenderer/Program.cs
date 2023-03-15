@@ -1,9 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using H_Renderer.Opengl;
-using HRenderer.Core;
-using HRenderer.DrawTriangle;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
