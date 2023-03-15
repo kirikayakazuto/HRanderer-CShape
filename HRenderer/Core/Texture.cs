@@ -24,7 +24,6 @@ namespace HRenderer.Core {
         public WrapMode wrapMode = WrapMode.Clamp;
         
         public Texture(string imagePath) {
-            // this.InitFromLocalImage(Path.Combine(Path.GetFullPath("../.."), imagePath));
             this.InitFromLocalImage(imagePath);
         }
 
@@ -43,7 +42,7 @@ namespace HRenderer.Core {
 
         public Color Sample(float u, float v) {
             var x = u * (this.width - 1) + 0.5;
-            var y = v * (this.height - 1) + 0.5;
+            var y = this.height - (v * (this.height - 1) + 0.5);
             switch (this.filterMode) {
                 case FilterMode.Nearest:
                     return this.Nearest(x, y);

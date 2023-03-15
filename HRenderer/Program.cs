@@ -1,25 +1,39 @@
-﻿using OpenTK.Mathematics;
+﻿using HRenderer.Core;
+using HRenderer.DrawTriangle;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
-Console.WriteLine("Hello, World!");
+var program = new HRenderer.Program();
 
-// var texture = new Texture("./Assets/001.jpg");
-// var mesh = new SpriteMesh();
-// var shader = new SpriteShader();
-// var material = new Material(texture, mesh, shader);
-//
-// var renderer = new Renderer(500, 500);
-// renderer.materials.Add(material);
-// renderer.Render();
+program.OpenWindow();
 
-var nativeWindowSettings = new NativeWindowSettings() {
-    Size = new Vector2i(800, 600),
-    Title = "LearnOpenTK - Textures",
-    // This is needed to run on macos
-    Flags = ContextFlags.ForwardCompatible,
-};
+namespace HRenderer {
+    public class Program {
 
-using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings)) {
-    window.Run();
+        private readonly Renderer _renderer;
+        public Program() {
+            var texture = new Texture("./Assets/001.jpg");
+            var mesh = new SpriteMesh();
+            var shader = new SpriteShader();
+            var material = new Material(texture, mesh, shader);
+            
+            this._renderer = new Renderer(500, 500);
+            this._renderer.materials.Add(material);
+            // this._renderer.Render();   
+        }
+
+        public void OpenWindow() {
+            var nativeWindowSettings = new NativeWindowSettings() {
+                Size = new Vector2i(500, 500),
+                Title = "HRenderer",
+                Flags = ContextFlags.ForwardCompatible,
+            };
+
+            var window = new Window(GameWindowSettings.Default, nativeWindowSettings, this._renderer);
+            window.Run();
+        }
+    }
 }
+
+

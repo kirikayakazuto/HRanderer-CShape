@@ -8,9 +8,8 @@ namespace HRenderer.Core {
      */
     public class Renderer {
         // size
-        private int _width = 0;
-        private int _height = 0;
-
+        private readonly int _width = 0;
+        private readonly int _height = 0;
         // 相机
         public Camera camera;
         // 画布
@@ -19,7 +18,8 @@ namespace HRenderer.Core {
         private System.Timers.Timer aTimer;
         // 待渲染的材质
         public List<Material> materials = new List<Material>();
-
+        
+        
         public Renderer(int width, int height) {
             this._width = width;
             this._height = height;
@@ -32,36 +32,19 @@ namespace HRenderer.Core {
             this.materials.Add(material);
         }
         
-        public void Render() {
+        public void Render(double dt) {
             // 初始化定时器
-            // this.InitTimer();
-            this.Draw(1);
+            this.Draw();
         }
 
-        private int _frame = 0;
-        private void InitTimer() {
-            this.aTimer = new System.Timers.Timer(500);
-            this.aTimer.Elapsed += this.Loop;
-            this.aTimer.AutoReset = true;
-            this.aTimer.Enabled = true;
-            this.aTimer.Start();
-        }
-
-        private void Loop(Object source, System.Timers.ElapsedEventArgs e) {
-            this.aTimer.Stop();
-            this.Draw(this._frame);
-            this._frame++;
-            this.aTimer.Start();
-        }
         
         /**
          * 渲染
          */
-        private void Draw(int frame) {
+        private void Draw() {
             foreach (var material in this.materials) {
                 this.DrawMaterial(material);
             }
-            this.frameBuffer.SaveImageLocal(frame);
         }
 
         public void DrawMaterial(Material material) {

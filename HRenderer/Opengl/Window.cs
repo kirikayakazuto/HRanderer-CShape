@@ -1,16 +1,18 @@
-using H_Renderer.Opengl;
+using HRenderer.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using Shader = HRenderer.Opengl.Shader;
+using Texture = HRenderer.Opengl.Texture;
 
 public class Window : GameWindow {
     private readonly float[] _vertices = {
         // Position         Texture coordinates
-         0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
+         1f,  1f, 0.0f, 1.0f, 1.0f, // top right
+         1f, -1f, 0.0f, 1.0f, 0.0f, // bottom right
+        -1f, -1f, 0.0f, 0.0f, 0.0f, // bottom left
+        -1f,  1f, 0.0f, 0.0f, 1.0f  // top left
     };
 
     private readonly uint[] _indices = {
@@ -29,10 +31,12 @@ public class Window : GameWindow {
     // For documentation on this, check Texture.cs.
     private Texture _texture;
 
-    public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
-        : base(gameWindowSettings, nativeWindowSettings) {
-    }
+    private Renderer _renderer;
 
+    public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, Renderer renderer): base(gameWindowSettings, nativeWindowSettings) {
+        this._renderer = renderer;
+    }
+    
     protected override void OnLoad() {
         base.OnLoad();
 
@@ -48,8 +52,7 @@ public class Window : GameWindow {
         _elementBufferObject = GL.GenBuffer();
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
         GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
-
-        // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
+        
         _shader = new Shader("Opengl/Shaders/shader.vert", "Opengl/Shaders/shader.frag");
         _shader.Use();
         
@@ -61,13 +64,16 @@ public class Window : GameWindow {
         GL.EnableVertexAttribArray(texCoordLocation);
         GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-        _texture = Texture.LoadFromFile("Assets/001.jpg");
+        _texture = new Texture();
         _texture.Use(TextureUnit.Texture0);
     }
 
-    protected override void OnRenderFrame(FrameEventArgs e)
-    {
+    protected override void OnRenderFrame(FrameEventArgs e) {
         base.OnRenderFrame(e);
+        
+        this._renderer.Render(e.Time);
+        var frame = this._renderer.frameBuffer;
+        this._texture.UpdateData(frame.Width, frame.Height, frame.Pixels);
 
         GL.Clear(ClearBufferMask.ColorBufferBit);
 
@@ -83,18 +89,9 @@ public class Window : GameWindow {
 
     protected override void OnUpdateFrame(FrameEventArgs e) {
         base.OnUpdateFrame(e);
-
         var input = KeyboardState;
-
-        if (input.IsKeyDown(Keys.Escape))
-        {
+        if (input.IsKeyDown(Keys.Escape)) {
             Close();
         }
-    }
-
-    protected override void OnResize(ResizeEventArgs e) {
-        base.OnResize(e);
-
-        GL.Viewport(0, 0, Size.X, Size.Y);
     }
 }

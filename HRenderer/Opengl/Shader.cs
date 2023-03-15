@@ -1,4 +1,4 @@
-namespace H_Renderer.Opengl; 
+namespace HRenderer.Opengl; 
 
 using System;
 using System.IO;
