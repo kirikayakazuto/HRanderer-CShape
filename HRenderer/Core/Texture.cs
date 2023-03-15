@@ -42,7 +42,8 @@ namespace HRenderer.Core {
 
         public Color Sample(float u, float v) {
             var x = u * (this.width - 1) + 0.5;
-            var y = this.height - (v * (this.height - 1) + 0.5);
+            // var y = this.height - (v * (this.height - 1) + 0.5);
+            var y =  v * (this.height - 1) + 0.5;
             switch (this.filterMode) {
                 case FilterMode.Nearest:
                     return this.Nearest(x, y);

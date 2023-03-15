@@ -86,6 +86,7 @@ namespace HRenderer.Core {
             var shader = material.shader;
             var texture = material.texture;
             
+            // 获取顶点信息
             mesh.GetVertexAttribs(v1, this._tmpVec4Attribs1, this._tmpVec2Attribs1);
             mesh.GetVertexAttribs(v2, this._tmpVec4Attribs2, this._tmpVec2Attribs2);
             mesh.GetVertexAttribs(v3, this._tmpVec4Attribs3, this._tmpVec2Attribs3);
@@ -95,26 +96,25 @@ namespace HRenderer.Core {
             var position2 = shader.VertexShading(this._tmpVec4Attribs2, this._tmpVec2Attribs2);
             var position3 = shader.VertexShading(this._tmpVec4Attribs3, this._tmpVec2Attribs3);
             
-            var near = this.camera.near;
-            var far = this.camera.far;
-            var z1 = Utils.GetDepth(near, far, position1.z);
-            var z2 = Utils.GetDepth(near, far, position2.z);
-            var z3 = Utils.GetDepth(near, far, position3.z);
+            position1.TransformSelf(this.camera.viewPortMat);
+            position2.TransformSelf(this.camera.viewPortMat);
+            position3.TransformSelf(this.camera.viewPortMat);
+            
+            var z1 = position1.w;
+            var z2 = position2.w;
+            var z3 = position3.w;
 
             position1.Homogenenize();
             position2.Homogenenize();
             position3.Homogenenize();
             
-            position1.TransformSelf(this.camera.viewPortMat);
-            position2.TransformSelf(this.camera.viewPortMat);
-            position3.TransformSelf(this.camera.viewPortMat);
-            
-            var pos1 = Vector2.Create(position1.x, position1.y); 
-            var pos2 = Vector2.Create(position2.x, position2.y);
-            var pos3 = Vector2.Create(position3.x, position3.y);
-            
             // 设置uniform
             shader.texture = texture;
+            
+            Console.WriteLine(position1.ToString());
+            Console.WriteLine(position2.ToString());
+            Console.WriteLine(position3.ToString());
+            Console.WriteLine();
             
             var bound = Utils.GetBoundingBox(position1, position2, position3);
             var p = Vector2.Create();
@@ -123,16 +123,25 @@ namespace HRenderer.Core {
                 for (var x = Math.Max(bound.minX, 0); x < Math.Min(bound.maxX, this._width); x++) {
                     p.x = x + 0.5f;
                     // 重心差值
-                    var barycentric = Utils.GetBarycentric(p, pos1, pos2, pos3);
+                    var barycentric = Utils.GetBarycentric(p, position1, position2, position3);
                     if(barycentric.x < 0 || barycentric.y < 0 || barycentric.z < 0) continue;
+                    
+                    // 计算z值 线性的z
+                    var z = Utils.GetInterpValue3(position1.z, position2.z, position3.z, barycentric.x, barycentric.y, barycentric.z);
+                    
+                    // 校正透视差值
+                    barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
                     
                     // 计算attribInfo差值
                     this.ComputeVectorVarying(mesh.attribInfo, shader, barycentric);
-                    // 计算z值
-                    var z = Utils.GetInterpValue3(z1, z2, z3, barycentric.x, barycentric.y, barycentric.z);
                     
+                    // 计算非线性的z值
+                    z = Utils.GetDepth(this.camera.near, this.camera.far, z);
+                    
+                    // frag shading
                     var color = shader.FragShading();
                     
+                    // 输出颜色
                     this.frameBuffer.SetColor(x , y, color, z);
                 }
             }

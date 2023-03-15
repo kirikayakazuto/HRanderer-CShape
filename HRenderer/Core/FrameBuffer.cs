@@ -74,6 +74,10 @@ namespace HRenderer.Core {
             for (var i = 0; i < this._pixelBuffer.Length; i++) {
                 this._pixelBuffer[i] = 0;
             }
+
+            for (var i = 0; i < this._zBuffer.Length; i++) {
+                this._zBuffer[i] = 1;
+            }
         }
     }
 }

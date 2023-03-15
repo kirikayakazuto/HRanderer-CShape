@@ -59,16 +59,35 @@ namespace HRenderer.Common {
             return new Rect() {minX = minX, maxX = maxX, minY = minY, maxY = maxY, width = maxX - minX, height = maxY - minY};
         }
 
-        public static Vector4 GetBarycentric(Vector2 p, Vector2 a, Vector2 b, Vector2 c) {
+        public static float Cross(float x1, float y1, float x2, float y2) {
+            return x1 * y2 - x2 * y1;
+        }
+
+        /**
+         * 校正重心差值
+         */
+        public static Vector4 AdjustBarycentric(Vector4 barycentric, float z1, float z2, float z3) {
+            var rz = 1 / (1 / z1 * barycentric.x + 1 / z2 * barycentric.y + 1 / z3 * barycentric.z);
+            barycentric.x = barycentric.x / z1 * rz;
+            barycentric.y = barycentric.y / z2 * rz;
+            barycentric.z = barycentric.z / z3 * rz;
+            return barycentric;
+        }
+
+        public static Vector4 GetBarycentric(Vector2 p, Vector4 position1, Vector4 position2, Vector4 position3) {
+            var a = Vector2.Create(position1.x, position1.y);
+            var b = Vector2.Create(position2.x, position2.y);
+            var c = Vector2.Create(position3.x, position3.y);
+            
             var ac = a.Sub(c);
             var ab = a.Sub(b);
             var pa = p.Sub(a);
             var pb = p.Sub(b);
             var pc = p.Sub(c);
 
-            var total = ab.Cross(ac);
-            var alpha = pb.Cross(pc) / total;
-            var beta = pc.Cross(pa) / total;
+            var total = ab.Cross(ac) / 2;
+            var alpha = pb.Cross(pc) / 2 / total;
+            var beta = pc.Cross(pa) / 2 / total;
             var gamma = 1 - alpha - beta;
 
             return Vector4.Create(alpha, beta, gamma, 1);

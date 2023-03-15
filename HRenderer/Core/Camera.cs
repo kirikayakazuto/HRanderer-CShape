@@ -37,19 +37,19 @@ namespace HRenderer.Core {
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 0, 0, 1);
+            this._position = Vector4.Create(0, 0, 3, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
             
             // 初始化矩阵
-            this.ComputeViewPort();
-            this.ComputeLookAt();
+            this.ComputeViewPortMatrix();
+            this.ComputeViewMatrix();
             this.ComputeOrthographicProjection();
         }
         
         public void SetPosition(float x, float y, float z) {
-            this._position.Set(x, y, z);
-            this.ComputeLookAt();
+            this._position.Set(x, y, z, 1);
+            this.ComputeViewMatrix();
             this.ComputeOrthographicProjection();
         }
         
@@ -59,17 +59,17 @@ namespace HRenderer.Core {
         public void LookAt(Vector4 v) {
             this._toward.FromVec4(this._position.Sub(v));;
             this._toward.NormalizeSelf();
-            this.ComputeLookAt();
+            this.ComputeViewMatrix();
             this.ComputeOrthographicProjection();
         }
         
         /**
          * 计算lookat矩阵
          */
-        public Matrix4 ComputeLookAt() {
-            var w = this._toward.Normalize();
+        public Matrix4 ComputeViewMatrix() {
+            var w = this._toward.NormalizeSelf();
             var u = this._up.Cross(w).NormalizeSelf();
-            var v = w.Cross(u);
+            var v = w.Cross(u).NormalizeSelf();
 
             var pos = this._position.Mul(-1);
             
@@ -97,6 +97,9 @@ namespace HRenderer.Core {
             return this.viewMat;
         }
 
+        /**
+         * 透视投影矩阵
+         */
         public Matrix4 ComputeOrthographicProjection() {
             var m = this.OrthographicProjection;
             var n = near;
@@ -109,8 +112,8 @@ namespace HRenderer.Core {
             m.data[0] = n_w;
             m.data[5] = n_h;
             m.data[10] = (n+f) / (n-f);
-            m.data[11] = 1;
-            m.data[14] = (2*f*n)/(f-n);
+            m.data[11] = (2*f*n)/(f-n);
+            m.data[14] = -1;
             return m;
         }
 
@@ -149,7 +152,7 @@ namespace HRenderer.Core {
             return this.projectionMat;
         }
 
-        public Matrix4 ComputeViewPort() {
+        public Matrix4 ComputeViewPortMatrix() {
             var m = this.viewPortMat;
             m.data[0] = this.width / 2.0f;
             m.data[5] = this.height / 2.0f;

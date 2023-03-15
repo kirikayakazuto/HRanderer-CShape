@@ -29,13 +29,34 @@ namespace HRenderer.Common {
 
         public static Matrix4 GetRotationX(float angle) {
             var m = Matrix4.GetIdentify();
-            // angle = angle * (float)Math.PI / 180f;
             var cos = (float)Math.Cos(angle);
             var sin = (float)Math.Sin(angle);
             m.data[5] = cos;
             m.data[6] = sin;
             m.data[9] = -sin;
             m.data[10] = cos;
+            return m;
+        }
+
+        public static Matrix4 GetRotationY(float angle) {
+            var m = Matrix4.GetIdentify();
+            var cos = (float)Math.Cos(angle);
+            var sin = (float)Math.Sin(angle);
+            m.data[0] = cos;
+            m.data[2] = -sin;
+            m.data[8] = sin;
+            m.data[10] = cos;
+            return m;
+        }
+
+        public static Matrix4 GetRotationZ(float angle) {
+            var m = Matrix4.GetIdentify();
+            var cos = (float)Math.Cos(angle);
+            var sin = (float)Math.Sin(angle);
+            m.data[0] = cos;
+            m.data[1] = sin;
+            m.data[4] = -sin;
+            m.data[5] = cos;
             return m;
         }
 
@@ -87,6 +108,21 @@ namespace HRenderer.Common {
 
         public Matrix4 Mul(Matrix4 m) {
             return this.Clone().MulSelf(m);
+        }
+        
+        public Vector4 Mul(Vector4 v) {
+            var a = this.data;
+            var _a00 = a[0]; var _a01 = a[1]; var _a02 = a[2]; var _a03 = a[3];
+            var _a10 = a[4]; var _a11 = a[5]; var _a12 = a[6]; var _a13 = a[7];
+            var _a20 = a[8]; var _a21 = a[9]; var _a22 = a[10]; var _a23 = a[11];
+            var _a30 = a[12]; var _a31 = a[13]; var _a32 = a[14]; var _a33 = a[15];
+            
+            var x = v.x * _a00 + v.y * _a01 + v.z * _a02 + v.w * _a03;
+            var y = v.x * _a10 + v.y * _a11 + v.z * _a12 + v.w * _a13;
+            var z = v.x * _a20 + v.y * _a21 + v.z * _a22 + v.w * _a23;
+            var w = v.x * _a30 + v.y * _a31 + v.z * _a32 + v.w * _a33;
+
+            return Vector4.Create(x, y, z, w);
         }
 
         public Matrix4 Clone() {
