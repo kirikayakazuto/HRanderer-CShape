@@ -31,22 +31,17 @@ namespace HRenderer.Core {
         public void AddMaterial(Material material) {
             this.materials.Add(material);
         }
-        
-        public void Render(double dt) {
-            // 初始化定时器
-            this.Draw();
-        }
 
-        
-        /**
-         * 渲染
-         */
-        private void Draw() {
+        private float _time = 0;
+        public void Render(double dt) {
+            this.frameBuffer.Clear();
+            
+            this._time += (float)dt;
             foreach (var material in this.materials) {
                 this.DrawMaterial(material);
             }
         }
-
+        
         public void DrawMaterial(Material material) {
             var mesh = material.mesh;
             var shader = material.shader;
@@ -55,7 +50,7 @@ namespace HRenderer.Core {
             shader.view = this.camera.viewMat;
             shader.projection = this.camera.OrthographicProjection;
             
-            shader.uniformFloats["time"] = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            shader.uniformFloats["time"] = this._time;
             
             var indices = mesh.indiceBuffer;
             for (var i = 0; i < indices.Length; i += 3) {

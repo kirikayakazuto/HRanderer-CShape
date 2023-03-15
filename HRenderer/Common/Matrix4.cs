@@ -29,7 +29,7 @@ namespace HRenderer.Common {
 
         public static Matrix4 GetRotationX(float angle) {
             var m = Matrix4.GetIdentify();
-            angle = angle * (float)Math.PI / 180f;
+            // angle = angle * (float)Math.PI / 180f;
             var cos = (float)Math.Cos(angle);
             var sin = (float)Math.Sin(angle);
             m.data[5] = cos;

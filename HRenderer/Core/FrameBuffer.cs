@@ -69,5 +69,11 @@ namespace HRenderer.Core {
         public void SaveImageLocal(int frame) {
             Utils.SaveImage(this._width, this._height, this._pixelBuffer, frame);
         }
+
+        public void Clear() {
+            for (var i = 0; i < this._pixelBuffer.Length; i++) {
+                this._pixelBuffer[i] = 0;
+            }
+        }
     }
 }
