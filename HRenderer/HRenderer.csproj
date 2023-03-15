@@ -18,6 +18,9 @@
         <Content Include="Assets\*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Assets\african\*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Opengl\Shaders\*">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

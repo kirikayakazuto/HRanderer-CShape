@@ -65,3 +65,10 @@
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/net7.0/ref/HRenderer.dll
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.frag
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.vert
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.frag
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.vert
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/StbImageSharp.dll
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/.DS_Store
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/african/african_head.obj
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/african/african_head_diffuse.png
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/african/african_head_nm.png

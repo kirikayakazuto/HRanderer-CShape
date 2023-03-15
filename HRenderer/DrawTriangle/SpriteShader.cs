@@ -16,7 +16,7 @@ namespace HRenderer.DrawTriangle {
 
         public override Vector4 FragShading() {
             var uv = this.varyVec2Dict["uv"];
-            return this.Texture2D(this.texture, uv);
+            return this.Texture2D(this.uniformTextures["mainTexture"], uv);
         }
     }
 }

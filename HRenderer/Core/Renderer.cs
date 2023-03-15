@@ -14,8 +14,6 @@ namespace HRenderer.Core {
         public Camera camera;
         // 画布
         public FrameBuffer frameBuffer;
-        // 定时器
-        private System.Timers.Timer aTimer;
         // 待渲染的材质
         public List<Material> materials = new List<Material>();
         
@@ -34,7 +32,6 @@ namespace HRenderer.Core {
 
         private float _time = 0;
         public void Render(double dt) {
-            Console.WriteLine(Vector4.newCount);
             Vector4.newCount = 0;
             this.frameBuffer.Clear();
             
@@ -51,9 +48,13 @@ namespace HRenderer.Core {
             shader.view = this.camera.viewMat;
             shader.projection = this.camera.OrthographicProjection;
             
+            // 设置uniform
+            shader.AddUniforms(material.uniformFloats);
+            shader.AddUniforms(material.uniformVec4);
+            shader.AddUniforms(material.uniformTextures);
             shader.uniformFloats["time"] = this._time;
             
-            var indices = mesh.indiceBuffer;
+            var indices = mesh.Ibo;
             for (var i = 0; i < indices.Length; i += 3) {
                 var v1 = mesh.stride * indices[i];
                 var v2 = mesh.stride * indices[i+1];
@@ -85,7 +86,6 @@ namespace HRenderer.Core {
         private void DrawTriangle(Material material, uint v1, uint v2, uint v3) {
             var mesh = material.mesh;
             var shader = material.shader;
-            var texture = material.texture;
             
             // 获取顶点信息
             mesh.GetVertexAttribs(v1, this._tmpVec4Attribs1, this._tmpVec2Attribs1);
@@ -108,9 +108,6 @@ namespace HRenderer.Core {
             position1.Homogenenize();
             position2.Homogenenize();
             position3.Homogenenize();
-            
-            // 设置uniform
-            shader.texture = texture;
             
             var bound = Utils.GetBoundingBox(position1, position2, position3);
             var barycentric = Vector4.Create();
@@ -151,12 +148,7 @@ namespace HRenderer.Core {
             Vector4.Return(position2);
             Vector4.Return(position3);
         }
-
-        public void Clear() {
-            this.aTimer.Stop();
-            this.aTimer.Close();
-        }
-
+        
         private void ComputeShaderVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, in Vector4 barycentric) {
             foreach (var vertexFormat in attribInfo) {
                 var name = vertexFormat.name;

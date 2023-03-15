@@ -6,13 +6,13 @@ namespace HRenderer.DrawTriangle {
             new VertexFormat("position",  4),
             new VertexFormat("uv",  2)
         }) {
-            this._vertexBuffer = new float[] {
+            this._vbo = new float[] {
                 -1, -1, 1, 1, 0, 0,
                 1, -1, 1, 1, 1, 0,
-                1, 1, 1, 1f, 1, 1,
+                1, 1, 1, 1, 1, 1,
                 -1, 1, 1, 1, 0, 1
             };
-            this._indiceBuffer = new uint[] {0, 1, 2, 0, 2, 3};
+            this._ibo = new uint[] {0, 1, 2, 0, 2, 3};
         }
     }
 }

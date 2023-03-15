@@ -11,13 +11,15 @@ namespace HRenderer.Core {
         public uint stride => this._stride;
         // 顶点描述
         protected VertexFormat[] _attribInfo;
+        
         // 顶点buffer
-        protected float[] _vertexBuffer;
+        protected float[] _vbo;
+        public float[] Vbo => this._vbo;
+        
         // 顶点索引buffer
-        protected uint[] _indiceBuffer;
-        // 
-        public uint[] indiceBuffer => this._indiceBuffer;
-        public float[] vertexBuffer => this._vertexBuffer;
+        protected uint[] _ibo;
+        public uint[] Ibo => this._ibo;
+        
 
         public VertexFormat[] attribInfo => this._attribInfo;
 
@@ -41,12 +43,12 @@ namespace HRenderer.Core {
                 switch (attrib.num) {
                     case 4:
                         var vec4 = vec4Dict.ContainsKey(attrib.name) ? vec4Dict[attrib.name] : Vector4.Create();
-                        Array.Copy(this.vertexBuffer, v + offset, vec4.data, 0, 4);
+                        Array.Copy(this.Vbo, v + offset, vec4.data, 0, 4);
                         vec4Dict[attrib.name] = vec4;
                         break;
                     case 2:
                         var vec2 = vec2Dict.ContainsKey(attrib.name) ? vec2Dict[attrib.name] : Vector2.Create();
-                        Array.Copy(this.vertexBuffer, v + offset, vec2.data, 0, 2);
+                        Array.Copy(this.Vbo, v + offset, vec2.data, 0, 2);
                         vec2Dict[attrib.name] = vec2;
                         break;
                     default:

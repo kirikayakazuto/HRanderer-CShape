@@ -9,17 +9,29 @@ namespace HRenderer.Core {
         public Matrix4 view;
         public Matrix4 projection;
 
-        public readonly Dictionary<string, float> uniformFloats = new Dictionary<string, float>();
-        public readonly Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
-        public readonly Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
+        public Dictionary<string, float> uniformFloats = new Dictionary<string, float>();
+        public Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
+        public Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
 
+        public void AddUniforms(Dictionary<string, float> dictionary) {
+            foreach (var keyValuePair in dictionary) {
+                this.uniformFloats[keyValuePair.Key] = keyValuePair.Value;
+            }
+        }
+        public void AddUniforms(Dictionary<string, Vector4> dictionary) {
+            foreach (var keyValuePair in dictionary) {
+                this.uniformVec4[keyValuePair.Key] = keyValuePair.Value;
+            }
+        }
+        public void AddUniforms(Dictionary<string, Texture> dictionary) {
+            foreach (var keyValuePair in dictionary) {
+                this.uniformTextures[keyValuePair.Key] = keyValuePair.Value;
+            }
+        }
+        
         // 差值数据
         public readonly Dictionary<string, Vector4> varyVec4Dict = new Dictionary<string, Vector4>();
         public readonly Dictionary<string, Vector2> varyVec2Dict = new Dictionary<string, Vector2>();
-        
-        // 默认贴图  应该放到uniforms里 
-        // todo
-        public Texture texture;
         
         /**
          * 顶点着色器
