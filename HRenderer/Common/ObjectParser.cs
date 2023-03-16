@@ -1,40 +1,57 @@
-namespace HRenderer.Common; 
+namespace HRenderer.Common;
+
+public class ObjectModel {
+    public int vertexCount;
+    public List<float> positions;
+    public List<float> uvs;
+    public List<uint> indices;
+}
 
 public class ObjectParser {
-    public static int VertexCount = 0;
-    private static List<float> _v = new List<float>();
-    public static List<float> v => _v;
-    private static List<float> _vt = new List<float>();
-    public static List<float> vt => _vt;
-    private static List<float> _vn = new List<float>();
-    public static List<float> vn => _vn;
-    private static List<float> _vp = new List<float>();
-    public static List<float> vp => _vp;
-
-    public static List<uint> f = new List<uint>();
-
-    public static void ParseObj(string objPath) {
+    
+    public static ObjectModel ParseObj(string objPath) {
         var lines = File.ReadAllLines(objPath);
+        var vLines = new List<string>();
+        var vtLines = new List<string>();
+        var vertexCount = 0;
+        var position = new List<float>();
+        var uv = new List<float>();
+        var indices = new List<uint>();
+        uint idx = 0;
         // vertexStrings
         foreach (var line in lines) {
             if (line.StartsWith("v ")) {
-                var strings = line.Substring(2).Split(' ');
-                foreach (var s in strings) {
-                    ObjectParser._v.Add(float.Parse(s));
-                }
-                ObjectParser.VertexCount++;
+                var l = line.Substring(2).Trim();
+                vLines.Add(l);;
             }else if (line.StartsWith("vt ")) {
-                var strings = line.Substring(4).Split(' ');
-                foreach (var s in strings) {
-                    ObjectParser._vt.Add(float.Parse(s));
-                }
+                var l = line.Substring(4).Trim();
+                vtLines.Add(l);
             }else if (line.StartsWith("f ")) {
+
                 var strings = line.Substring(2).Split(' ');
                 foreach (var s in strings) {
-                    ObjectParser.f.Add(uint.Parse(s.Split('/')[0]));
+                    var face = s.Split('/');
+                    var vIdx = int.Parse(face[0])-1;
+                    var vtIdx = int.Parse(face[1])-1;
+
+                    var vs = vLines[vIdx].Split(' ');
+                    foreach (var v in vs) {
+                        position.Add(float.Parse(v));
+                    }
+                    var vts = vtLines[vtIdx].Split(' ');
+                    foreach (var vt in vts) {
+                        uv.Add(float.Parse(vt));
+                    }
+                    
+                    vertexCount++;
+                    
+                    indices.Add(idx);
+                    idx++;
                 }
             }
         }
+
+        return new ObjectModel() {vertexCount = vertexCount, positions = position, uvs = uv, indices = indices};
     }
 }
 

@@ -72,3 +72,6 @@
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/african/african_head.obj
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/african/african_head_diffuse.png
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/african/african_head_nm.png
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/african/african_head.obj
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/african/african_head_diffuse.png
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/african/african_head_nm.png

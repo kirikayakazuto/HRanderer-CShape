@@ -109,6 +109,10 @@ namespace HRenderer.Core {
             position2.Homogenenize();
             position3.Homogenenize();
             
+            // Console.WriteLine(position1.ToString());
+            // Console.WriteLine(position2.ToString());
+            // Console.WriteLine(position3.ToString());
+            
             var bound = Utils.GetBoundingBox(position1, position2, position3);
             var barycentric = Vector4.Create();
             var p = Vector2.Create();
