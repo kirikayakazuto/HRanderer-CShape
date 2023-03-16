@@ -45,6 +45,9 @@ public class RenderPipeline {
 		var mesh = material.mesh;
 		var shader = material.shader;
 		
+		var near = shader.uniformFloats["CameraNear"];
+		var far = shader.uniformFloats["CameraFar"];
+		
 		// 顶点数据解析
 		mesh.GetVertexAttribs(v1, this._cacheData.Vec4Attribs1, this._cacheData.Vec2Attribs1);
 		mesh.GetVertexAttribs(v2, this._cacheData.Vec4Attribs2, this._cacheData.Vec2Attribs2);
@@ -99,7 +102,7 @@ public class RenderPipeline {
 				this.ComputeShaderVectorVarying(mesh.attribInfo, shader, barycentric);
 				
 				// 计算非线性的z值
-				z = Utils.GetDepth(1, 500, z);
+				z = Utils.GetDepth(near, far, z);
 				
 				// frag shading
 				var color = shader.FragShading();

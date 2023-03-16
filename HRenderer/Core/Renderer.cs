@@ -42,6 +42,12 @@ namespace HRenderer.Core {
 				shader.AddUniforms(material.uniformVec4);
 				shader.AddUniforms(material.uniformTextures);
 				shader.uniformFloats["time"] = this._time;
+				
+				shader.uniformMatrix4s["CameraView"] = this._camera.viewMat;
+				shader.uniformMatrix4s["CameraProjection"] = this._camera.OrthographicProjection;
+				shader.uniformVec4["CameraPosition"] = this._camera.GetPosition();
+				shader.uniformFloats["CameraNear"] = this._camera.near;
+				shader.uniformFloats["CameraFar"] = this._camera.far;
                 
 				this.pipeline.Draw(material);
 			}

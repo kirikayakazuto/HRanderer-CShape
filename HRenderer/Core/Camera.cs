@@ -24,13 +24,13 @@ namespace HRenderer.Core {
         public readonly Matrix4 viewMat = Matrix4.GetIdentify();
         
         // 视图矩阵 / 屏幕矩阵  将 -1 ~ 1 空间的点 变换到 0 ~ width 和 0 ~ height 空间中;
-        public Matrix4 viewPortMat = Matrix4.GetIdentify();
+        public readonly Matrix4 viewPortMat = Matrix4.GetIdentify();
         
         // 透视投影矩阵 
-        public Matrix4 OrthographicProjection = Matrix4.GetIdentify();
+        public readonly Matrix4 OrthographicProjection = Matrix4.GetIdentify();
 
-        public Matrix4 projectionMat = Matrix4.GetIdentify();
-        public Matrix4 orthographicMat = Matrix4.GetIdentify();
+        public readonly Matrix4 projectionMat = Matrix4.GetIdentify();
+        public readonly Matrix4 orthographicMat = Matrix4.GetIdentify();
 
         public Camera(int width, int height) {
             this.width = width;
@@ -51,6 +51,10 @@ namespace HRenderer.Core {
             this._position.Set(x, y, z, 1);
             this.ComputeViewMatrix();
             this.ComputeOrthographicProjection();
+        }
+
+        public Vector4 GetPosition() {
+            return this._position.Clone();
         }
         
         /**

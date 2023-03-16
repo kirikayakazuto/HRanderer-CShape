@@ -77,3 +77,4 @@
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/noises/noise.png
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.frag
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.vert
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/noises/noise.png
