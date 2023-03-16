@@ -6,7 +6,7 @@ namespace HRenderer.Core {
     /**
      * 渲染器
      */
-    public class Renderer {
+    public class Renderer2 {
         // size
         private readonly int _width = 0;
         private readonly int _height = 0;
@@ -16,9 +16,10 @@ namespace HRenderer.Core {
         public FrameBuffer frameBuffer;
         // 待渲染的材质
         public List<Material> materials = new List<Material>();
-        
-        
-        public Renderer(int width, int height) {
+
+        private RenderPipeline _pipeline = new RenderPipeline();
+
+        public Renderer2(int width, int height) {
             this._width = width;
             this._height = height;
             

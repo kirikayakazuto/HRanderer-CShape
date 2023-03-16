@@ -8,7 +8,6 @@ public class ModelMesh: Mesh {
         new VertexFormat("position",  4),
         new VertexFormat("uv",  2)
     }) {
-        // this._vbo
         var objectModel = ObjectParser.ParseObj("./Assets/african/african_head.obj");
         
         this._vbo = new float[objectModel.vertexCount * this.stride];
