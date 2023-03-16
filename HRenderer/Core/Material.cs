@@ -14,6 +14,8 @@ namespace HRenderer.Core {
         public Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
         public Dictionary<string, float> uniformFloats = new Dictionary<string, float>();
 
+        public bool useFaceCulling = false;
+
         public Material(Texture texture, Mesh mesh, Shader shader) {
             this.mesh = mesh;
             this.shader = shader;

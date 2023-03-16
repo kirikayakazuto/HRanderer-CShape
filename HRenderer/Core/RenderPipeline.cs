@@ -15,7 +15,7 @@ public class RenderPipeline {
 	private readonly CacheData _cacheData = new CacheData();
 
 	public FrameBuffer frameBuffer { get; }
-
+	
 	public RenderPipeline(int width, int height) {
 		this._width = width;
 		this._height = height;
@@ -28,7 +28,6 @@ public class RenderPipeline {
 	 */
 	public void Draw(Material material) {
 		var mesh = material.mesh;
-		
 		var indices = mesh.Ibo;
 		for (var i = 0; i < indices.Length; i += 3) {
 			var v1 = mesh.stride * indices[i];
@@ -76,6 +75,9 @@ public class RenderPipeline {
 		position2.Homogenenize();
 		position3.Homogenenize();
 		
+		// 背面剔除
+		if (material.useFaceCulling && this.isBackFace(position1, position2, position3)) return;
+
 		// 光栅化
 		var bound = Utils.GetBoundingBox(position1, position2, position3);
 		var barycentric = Vector4.Create();
@@ -136,6 +138,17 @@ public class RenderPipeline {
 					break;
 			}
 		}
+	}
+
+	/**
+	 * 背面剔除
+	 */
+	private bool isBackFace(Vector4 p1, Vector4 p2, Vector4 p3) {
+		var a = p2.x - p1.x;
+		var b = p2.y - p1.y;
+		var c = p3.x - p1.x;
+		var d = p3.y - p1.y;
+		return a * d - b * c < 0;
 	}
 	
     

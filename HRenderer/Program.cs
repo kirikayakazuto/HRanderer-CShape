@@ -14,8 +14,8 @@ namespace HRenderer {
 
         private readonly Renderer _renderer;
         public Program() {
-            this._renderer = new Renderer(500, 500);
-            this.RunScene3();
+            this._renderer = new Renderer(400, 400);
+            this.RunScene2();
         }
 
         public void RunScene1() {
@@ -47,7 +47,7 @@ namespace HRenderer {
 
         public void OpenWindow() {
             var nativeWindowSettings = new NativeWindowSettings() {
-                Size = new Vector2i(500, 500),
+                Size = new Vector2i(400, 400),
                 Title = "HRenderer",
                 Flags = ContextFlags.ForwardCompatible,
             };
