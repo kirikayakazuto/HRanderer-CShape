@@ -41,7 +41,6 @@ public class RenderPipeline {
 		this.frameBuffer.Clear();
 	}
 
-	
 	private void _drawTriangle(Material material, uint v1, uint v2, uint v3) {
 		var mesh = material.mesh;
 		var shader = material.shader;

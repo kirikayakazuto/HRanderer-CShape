@@ -1,7 +1,7 @@
 using HRenderer.Common;
 using HRenderer.Core;
 
-namespace HRenderer.DrawModel; 
+namespace HRenderer.Materials.ModelMaterial; 
 
 public class ModelShader: Shader {
     public override Vector4 VertexShading() {

@@ -15,15 +15,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Assets\*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="Assets\african\*">
+        <Content Include="Assets\**\*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Opengl\Shaders\*">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Materials" />
     </ItemGroup>
 
     

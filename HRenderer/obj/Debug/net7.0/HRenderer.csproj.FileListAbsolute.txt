@@ -63,8 +63,6 @@
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/net7.0/HRenderer.pdb
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/net7.0/HRenderer.genruntimeconfig.cache
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/Debug/net7.0/ref/HRenderer.dll
-/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.frag
-/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.vert
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.frag
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.vert
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/StbImageSharp.dll
@@ -75,3 +73,7 @@
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/african/african_head.obj
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/african/african_head_diffuse.png
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/african/african_head_nm.png
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/.DS_Store
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/noises/noise.png
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.frag
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Opengl/Shaders/shader.vert

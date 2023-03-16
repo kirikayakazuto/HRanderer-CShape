@@ -1,6 +1,6 @@
 using HRenderer.Core;
 
-namespace HRenderer.DrawTriangle {
+namespace HRenderer.Materials.SpriteMaterial {
     public class SpriteMesh: Mesh {
         public SpriteMesh(): base(new[] {
             new VertexFormat("position",  4),

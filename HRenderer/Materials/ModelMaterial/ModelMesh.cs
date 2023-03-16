@@ -1,7 +1,7 @@
 using HRenderer.Common;
 using HRenderer.Core;
 
-namespace HRenderer.DrawModel; 
+namespace HRenderer.Materials.ModelMaterial; 
 
 public class ModelMesh: Mesh {
     public ModelMesh(): base(new[] {
