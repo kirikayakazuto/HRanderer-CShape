@@ -7,6 +7,7 @@ namespace HRenderer.Common {
         public byte[] data;
 
         public byte r {
+            
             get => this.data[0];
             set => this.data[0] = value;
         }

@@ -5,8 +5,8 @@ using HRenderer.Core;
 
 namespace HRenderer.DrawTriangle {
     public class SpriteShader: Shader {
-        public override Vector4 VertexShading(in Dictionary<string, Vector4> vector4s, in Dictionary<string, Vector2> vector2s) {
-            var position = vector4s["position"];
+        public override Vector4 VertexShading() {
+            var position = this.attribsVec4Dict["position"];
             var r = Math.Sin(this.uniformFloats["time"]) * Math.PI;
             position = position.Transform(Matrix4.GetRotationY((float)r));
             var vpMat = this.projection.Mul(this.view);
@@ -15,7 +15,7 @@ namespace HRenderer.DrawTriangle {
         }
 
         public override Vector4 FragShading() {
-            var uv = this.varyVec2Dict["uv"];
+            var uv = this.attribsVec2Dict["uv"];
             return this.Texture2D(this.uniformTextures["mainTexture"], uv);
         }
     }

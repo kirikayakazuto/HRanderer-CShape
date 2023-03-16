@@ -23,7 +23,7 @@ namespace HRenderer {
             var mesh = new SpriteMesh();
             var shader = new SpriteShader();
             var material = new Material(texture, mesh, shader);
-            this._renderer.materials.Add(material);
+            this._renderer.AddMaterial(material);
         }
 
         public void RunScene2() {
@@ -31,7 +31,7 @@ namespace HRenderer {
             var mesh = new ModelMesh();
             var shader = new ModelShader();
             var material = new Material(texture, mesh, shader);
-            this._renderer.materials.Add(material);
+            this._renderer.AddMaterial(material);
         }
 
         public void OpenWindow() {

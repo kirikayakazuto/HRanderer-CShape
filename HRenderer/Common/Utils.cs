@@ -107,5 +107,14 @@ namespace HRenderer.Common {
             }
             image.SaveAsJpeg("./output/" + frame + ".jpg");
         }
+        
+        public static Matrix4 GetViewPortMatrix(int width, int height) {
+            var m = Matrix4.GetIdentify();
+            m.data[0] = width / 2.0f;
+            m.data[5] = height / 2.0f;
+            m.data[12] = width / 2.0f;
+            m.data[13] = height / 2.0f;
+            return m;
+        }
     }
 }

@@ -31,7 +31,7 @@ public class Window : GameWindow {
     // For documentation on this, check Texture.cs.
     private Texture _texture;
 
-    private Renderer _renderer;
+    private readonly Renderer _renderer;
 
     public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, Renderer renderer): base(gameWindowSettings, nativeWindowSettings) {
         this._renderer = renderer;
@@ -72,7 +72,7 @@ public class Window : GameWindow {
         base.OnRenderFrame(e);
         
         this._renderer.Render(e.Time);
-        var frame = this._renderer.frameBuffer;
+        var frame = this._renderer.pipeline.frameBuffer;
         this._texture.UpdateData(frame.Width, frame.Height, frame.Pixels);
 
         GL.Clear(ClearBufferMask.ColorBufferBit);
