@@ -33,7 +33,6 @@ namespace HRenderer.Core {
         protected Vector4 Texture2D(Texture t, Vector2 uv) {
             var color = t.Sample(uv.x, uv.y);
             var v = Vector4.Create(color.r / 256f, color.g / 256f, color.b / 256f, color.a / 256f);
-            // 回收
             Color.Return(color);
             return v;
         }

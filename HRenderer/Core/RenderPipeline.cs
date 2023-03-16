@@ -10,30 +10,27 @@ public class RenderPipeline {
 	private readonly int _width;
 	private readonly int _height;
 	private readonly Matrix4 _viewPortMat4;
-	// 
-	private readonly FrameBuffer _frameBuffer;
-	private Shader? _shader;
+	
 	// 缓存数据
 	private readonly CacheData _cacheData = new CacheData();
 
-	public FrameBuffer frameBuffer => this._frameBuffer;
-	
+	public FrameBuffer frameBuffer { get; }
+
 	public RenderPipeline(int width, int height) {
 		this._width = width;
 		this._height = height;
 		this._viewPortMat4 = Utils.GetViewPortMatrix(width, height);
-		this._frameBuffer = new FrameBuffer(width, height);
+		this.frameBuffer = new FrameBuffer(width, height);
 	}
 	
 	/**
-	 * material cpu向gpu提交的数据
+	 * material 渲染所需数据
 	 */
 	public void Draw(Material material) {
 		// 清理画布
-		this._frameBuffer.Clear();
+		this.frameBuffer.Clear();
 
 		var mesh = material.mesh;
-		this._shader = material.shader;
 		
 		var indices = mesh.Ibo;
 		for (var i = 0; i < indices.Length; i += 3) {
@@ -57,13 +54,13 @@ public class RenderPipeline {
 		// 第一个阶段, 顶点着色器
 		shader.AddAttribs(this._cacheData.Vec4Attribs1);
 		shader.AddAttribs(this._cacheData.Vec2Attribs1);
-		var position1 = this._shader.VertexShading();
+		var position1 = shader.VertexShading();
 		shader.AddAttribs(this._cacheData.Vec4Attribs2);
 		shader.AddAttribs(this._cacheData.Vec2Attribs2);
-		var position2 = this._shader.VertexShading();
+		var position2 = shader.VertexShading();
 		shader.AddAttribs(this._cacheData.Vec4Attribs3);
 		shader.AddAttribs(this._cacheData.Vec2Attribs3);
-		var position3 = this._shader.VertexShading();
+		var position3 = shader.VertexShading();
 		
 		// 转换到屏幕空间
 		position1.TransformSelf(this._viewPortMat4);
@@ -103,7 +100,7 @@ public class RenderPipeline {
 				z = Utils.GetDepth(1, 500, z);
 				
 				// frag shading
-				var color = this._shader.FragShading();
+				var color = shader.FragShading();
 
 				// 输出颜色
 				this.frameBuffer.SetColor(x , y, color, z);
