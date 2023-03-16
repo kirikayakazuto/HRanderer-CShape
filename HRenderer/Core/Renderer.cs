@@ -29,6 +29,8 @@ namespace HRenderer.Core {
 
 		private float _time = 0;
 		public void Render(double dt) {
+			this.pipeline.ClearFrameBuffer();
+			
 			Vector4.newCount = 0;
 			this._time += (float)dt;
 			foreach (var material in this._materials) {

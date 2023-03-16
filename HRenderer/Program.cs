@@ -15,23 +15,34 @@ namespace HRenderer {
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(500, 500);
-            this.RunScene2();
+            this.RunScene3();
         }
 
         public void RunScene1() {
-            var texture = new Texture("./Assets/001.jpg");
-            var mesh = new SpriteMesh();
-            var shader = new SpriteShader();
-            var material = new Material(texture, mesh, shader);
-            this._renderer.AddMaterial(material);
+            this._renderer.AddMaterial(this.GetMaterial1());
         }
 
         public void RunScene2() {
+            this._renderer.AddMaterial(this.GetMaterial2());
+        }
+
+        public void RunScene3() {
+            this._renderer.AddMaterial(this.GetMaterial1());
+            this._renderer.AddMaterial(this.GetMaterial2());
+        }
+
+        private Material GetMaterial1() {
+            var texture = new Texture("./Assets/001.jpg");
+            var mesh = new SpriteMesh();
+            var shader = new SpriteShader();
+            return new Material(texture, mesh, shader);
+        }
+        
+        private Material GetMaterial2() {
             var texture = new Texture("./Assets/african/african_head_diffuse.png");
             var mesh = new ModelMesh();
             var shader = new ModelShader();
-            var material = new Material(texture, mesh, shader);
-            this._renderer.AddMaterial(material);
+            return new Material(texture, mesh, shader);
         }
 
         public void OpenWindow() {

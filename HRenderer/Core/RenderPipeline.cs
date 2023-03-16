@@ -27,9 +27,6 @@ public class RenderPipeline {
 	 * material 渲染所需数据
 	 */
 	public void Draw(Material material) {
-		// 清理画布
-		this.frameBuffer.Clear();
-
 		var mesh = material.mesh;
 		
 		var indices = mesh.Ibo;
@@ -39,6 +36,10 @@ public class RenderPipeline {
 			var v3 = mesh.stride * indices[i+2];
 			this._drawTriangle(material, v1, v2, v3);
 		}
+	}
+
+	public void ClearFrameBuffer() {
+		this.frameBuffer.Clear();
 	}
 
 	
