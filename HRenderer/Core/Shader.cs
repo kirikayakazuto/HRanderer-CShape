@@ -23,6 +23,21 @@ namespace HRenderer.Core {
          * 顶点着色器
          */
         public abstract Vector4 VertexShading();
+
+        /**
+         * 外壳着色器
+         */
+        public void HullShader() { }
+
+        /**
+         * 域着色器
+         */
+        public void DomainShader() { }
+
+        /**
+         * 几何着色器
+         */
+        public void GeometryShader() {}
         
         /**
          * 片元着色器
