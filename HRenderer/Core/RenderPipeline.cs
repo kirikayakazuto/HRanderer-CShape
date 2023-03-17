@@ -29,12 +29,14 @@ public class RenderPipeline {
 	public void Draw(Material material) {
 		var mesh = material.mesh;
 		var indices = mesh.Ibo;
+		Vector4.newCount = 0;
 		for (var i = 0; i < indices.Length; i += 3) {
 			var v1 = mesh.stride * indices[i];
 			var v2 = mesh.stride * indices[i+1];
 			var v3 = mesh.stride * indices[i+2];
 			this._drawTriangle(material, v1, v2, v3);
 		}
+		// Console.WriteLine(Vector4.newCount);
 	}
 
 	public void ClearFrameBuffer() {
@@ -78,7 +80,7 @@ public class RenderPipeline {
 		position3.Homogenenize();
 		
 		// 背面剔除
-		if (material.useFaceCulling && this.isBackFace(position1, position2, position3)) return;
+		if (material.useFaceCulling && this.IsBackFace(position1, position2, position3)) return;
 
 		// 光栅化
 		var bound = Utils.GetBoundingBox(position1, position2, position3);
@@ -112,6 +114,9 @@ public class RenderPipeline {
 				Vector4.Return(color);
 			}
 		}
+		Vector4.Return(position1);
+		Vector4.Return(position2);
+		Vector4.Return(position3);
 	}
 	
 	private void ComputeShaderVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, in Vector4 barycentric) {
@@ -145,7 +150,7 @@ public class RenderPipeline {
 	/**
 	 * 背面剔除
 	 */
-	private bool isBackFace(Vector4 p1, Vector4 p2, Vector4 p3) {
+	private bool IsBackFace(Vector4 p1, Vector4 p2, Vector4 p3) {
 		var a = p2.x - p1.x;
 		var b = p2.y - p1.y;
 		var c = p3.x - p1.x;
