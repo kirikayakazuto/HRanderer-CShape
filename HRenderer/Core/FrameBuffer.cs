@@ -4,16 +4,17 @@ namespace HRenderer.Core {
     public class FrameBuffer {
         public int width { get; }
         public int height { get; }
+        
         // z buffer
-        private readonly double[,] _zBufferMsaa;
         private readonly double[] _zBuffer;
-
         // 像素buffer  r_g_b_a格式
         private readonly byte[] _pixelBuffer;
-        // 
-        private byte[] _pixelMsaas;
-        private bool _useMsaa;
         
+        // msaa
+        private readonly bool _useMsaa;
+        private readonly byte[] _pixelsMsaa;
+        private readonly double[,] _zBufferMsaa;
+
         public FrameBuffer(int width, int height, bool msaa = false) {
             this.width = width;
             this.height = height;
@@ -32,7 +33,7 @@ namespace HRenderer.Core {
                     this._zBufferMsaa[i, j] = 1;
                 }    
             }
-            this._pixelMsaas = new byte[width * height];
+            this._pixelsMsaa = new byte[width * height];
         }
 
         /**
@@ -107,19 +108,19 @@ namespace HRenderer.Core {
                     this._zBufferMsaa[i, j] = 1;
                 }    
             }
-            for (var i = 0; i < this._pixelMsaas.Length; i++) {
-                this._pixelMsaas[i] = 0;
+            for (var i = 0; i < this._pixelsMsaa.Length; i++) {
+                this._pixelsMsaa[i] = 0;
             }
         }
 
         public void AddMsaaCount(int x, int y) {
             var idx = x + y * this.width;
-            this._pixelMsaas[idx] ++;
+            this._pixelsMsaa[idx] ++;
         }
 
         public byte GetMsaaCount(int x, int y) {
             var idx = x + y * this.width;
-            return this._pixelMsaas[idx];
+            return this._pixelsMsaa[idx];
         }
 
         public void DoMsaa() {
@@ -127,7 +128,7 @@ namespace HRenderer.Core {
                 for (var x = 0; x < this.width; x++) {
                     var idx = (x + y * this.width) * 4;
                     
-                    var msaa = this._pixelMsaas[x + y * this.width];
+                    var msaa = this._pixelsMsaa[x + y * this.width];
                     var count = (double)msaa / 4.0f;
                     count = Math.Min(1, count);
                     
