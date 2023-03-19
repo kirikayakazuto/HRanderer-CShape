@@ -49,13 +49,19 @@ namespace HRenderer.Common {
         /**
          * 获取包围盒
          */
-        public static Rect GetBoundingBox(Vector4 p1, Vector4 p2, Vector4 p3) {
+        public static Rect GetBoundingBox(Vector4 p1, Vector4 p2, Vector4 p3, int width, int height) {
             var minX = (int) Math.Floor(Math.Min(Math.Min(p1.x, p2.x), p3.x));
             var maxX = (int) Math.Ceiling(Math.Max(Math.Max(p1.x, p2.x), p3.x));
             
             var minY = (int) Math.Floor(Math.Min(Math.Min(p1.y, p2.y), p3.y));
             var maxY = (int) Math.Ceiling(Math.Max(Math.Max(p1.y, p2.y), p3.y));
 
+            minX = Math.Max(minX, 0);
+            maxX = Math.Min(maxX, width);
+            
+            minY = Math.Max(minY, 0);
+            maxY = Math.Min(maxY, height);
+            
             return new Rect() {minX = minX, maxX = maxX, minY = minY, maxY = maxY, width = maxX - minX, height = maxY - minY};
         }
 
@@ -85,9 +91,9 @@ namespace HRenderer.Common {
             var pb = p.Sub(b);
             var pc = p.Sub(c);
 
-            var total = ab.Cross(ac) / 2;
-            var alpha = pb.Cross(pc) / 2 / total;
-            var beta = pc.Cross(pa) / 2 / total;
+            var total = ab.Cross(ac);
+            var alpha = pb.Cross(pc) / total;
+            var beta = pc.Cross(pa) / total;
             var gamma = 1 - alpha - beta;
 
             outVec.Set(alpha, beta, gamma, 1);

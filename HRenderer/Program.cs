@@ -12,13 +12,14 @@ program.OpenWindow();
 namespace HRenderer {
     public class Program {
 
-        private const int _width = 400;
-        private const int _height = 400;
+        private const int _width = 500;
+        private const int _height = 500;
+        private const float _scale = 1f;
 
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(_width, _height);
-            this.RunScene3();
+            this.RunScene2();
         }
 
         public void RunScene1() {
@@ -37,7 +38,7 @@ namespace HRenderer {
 
         public void OpenWindow() {
             var nativeWindowSettings = new NativeWindowSettings() {
-                Size = new Vector2i(_width, _height),
+                Size = new Vector2i((int)(_width * _scale), (int)(_height * _scale)),
                 Title = "HRenderer",
                 Flags = ContextFlags.ForwardCompatible,
             };

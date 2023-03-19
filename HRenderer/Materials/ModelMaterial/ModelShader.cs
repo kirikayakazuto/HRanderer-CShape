@@ -7,8 +7,10 @@ public class ModelShader: Shader {
     public override Vector4 VertexShading() {
         var position = this.attribsVec4Dict["position"];
         var r = Math.Sin(this.uniformFloats["time"]) * Math.PI;
+        // var r = Math.PI;
         position = position.Transform(Matrix4.GetRotationX((float)Math.PI));
         position.TransformSelf(Matrix4.GetRotationY((float)r));
+        position.TransformSelf(Matrix4.GetScale(2, 2, 2));
         var vpMat = this.projection.Mul(this.view);
         return position.TransformSelf(vpMat);
     }

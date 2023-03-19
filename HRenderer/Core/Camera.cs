@@ -14,9 +14,9 @@ namespace HRenderer.Core {
         
         public float aspect = 1;
         // fov 视角大小
-        public float fovY = (float)Math.PI / 2;
+        public float fovY = 90 * (float)Math.PI / 180;
         // 近平面
-        public float near = 1;
+        public float near = 1f;
         // 远平面
         public float far = 500;
         
@@ -37,7 +37,7 @@ namespace HRenderer.Core {
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 0, 2.5f, 1);
+            this._position = Vector4.Create(0, 0, 3f, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
             

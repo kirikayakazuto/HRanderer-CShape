@@ -8,9 +8,9 @@ namespace HRenderer.Materials.SpriteMaterial {
         
         public override Vector4 VertexShading() {
             var position = this.attribsVec4Dict["position"];
-            var r = Math.PI / 2;
-            position = position.Transform(Matrix4.GetRotationX((float)r));
-            position.y += 1f;
+            var r = Math.PI / 3f;
+            position = position.Transform(Matrix4.GetRotationZ((float)r));
+            // position.y += 1f;
             var vpMat = this.projection.Mul(this.view);
             
             return position.TransformSelf(vpMat);
@@ -18,11 +18,11 @@ namespace HRenderer.Materials.SpriteMaterial {
 
         public override Vector4 FragShading() {
             var uv = this.attribsVec2Dict["uv"];
-            var noiseColor = this.Texture2D(this.uniformTextures["noiseTexture"], uv);
+            // var noiseColor = this.Texture2D(this.uniformTextures["noiseTexture"], uv);
             var color = this.Texture2D(this.uniformTextures["mainTexture"], uv);
-            if (noiseColor.x < (Math.Sin(this.uniformFloats["time"]) + 1) / 2) {
-                color.Set(0, 0, 0, 0);
-            }
+            // if (noiseColor.x < (Math.Sin(this.uniformFloats["time"]) + 1) / 2) {
+            //     color.Set(0, 0, 0, 0);
+            // }
             return color;
         }
     }

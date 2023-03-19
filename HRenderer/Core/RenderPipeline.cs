@@ -1,6 +1,19 @@
 using HRenderer.Common;
 
-namespace HRenderer.Core; 
+namespace HRenderer.Core;
+
+public class Triangle {
+	public Vector4 position1 = Vector4.Create();
+	public Vector4 position2 = Vector4.Create();
+	public Vector4 position3 = Vector4.Create();
+
+	public void Clear() {
+		Vector4.Return(this.position1);
+		Vector4.Return(this.position2);
+		Vector4.Return(this.position3);
+	}
+}
+
 
 /**
  * 渲染管线
@@ -14,13 +27,26 @@ public class RenderPipeline {
 	// 缓存数据
 	private readonly CacheData _cacheData = new CacheData();
 
+	// 抗锯齿
+	private readonly bool _useMsaa = false;
+	
+	// 当前处理的三角形
+	private readonly Triangle _triangle = new Triangle();
+	
+	private readonly Vector2[] _msaaOffsetVec2 = new Vector2[] {
+		Vector2.Create(-0.25f, -0.25f),
+		Vector2.Create(-0.25f, 0.25f),
+		Vector2.Create(0.25f, -0.25f),
+		Vector2.Create(0.25f, 0.25f),
+	};
 	public FrameBuffer frameBuffer { get; }
 	
-	public RenderPipeline(int width, int height) {
+	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
 		this._height = height;
 		this._viewPortMat4 = Utils.GetViewPortMatrix(width, height);
-		this.frameBuffer = new FrameBuffer(width, height);
+		this.frameBuffer = new FrameBuffer(width, height, useMsaa);
+		this._useMsaa = useMsaa;
 	}
 	
 	/**
@@ -37,6 +63,8 @@ public class RenderPipeline {
 			this._drawTriangle(material, v1, v2, v3);
 		}
 		// Console.WriteLine(Vector4.newCount);
+		if (!this._useMsaa) return;
+		this.frameBuffer.DoMsaa();
 	}
 
 	public void ClearFrameBuffer() {
@@ -58,13 +86,13 @@ public class RenderPipeline {
 		// 第一个阶段, 顶点着色器
 		shader.AddAttribs(this._cacheData.Vec4Attribs1);
 		shader.AddAttribs(this._cacheData.Vec2Attribs1);
-		var position1 = shader.VertexShading();
+		var position1 = this._triangle.position1 = shader.VertexShading();
 		shader.AddAttribs(this._cacheData.Vec4Attribs2);
 		shader.AddAttribs(this._cacheData.Vec2Attribs2);
-		var position2 = shader.VertexShading();
+		var position2 = this._triangle.position2 = shader.VertexShading();
 		shader.AddAttribs(this._cacheData.Vec4Attribs3);
 		shader.AddAttribs(this._cacheData.Vec2Attribs3);
-		var position3 = shader.VertexShading();
+		var position3 = this._triangle.position3 = shader.VertexShading();
 		
 		// 转换到屏幕空间
 		position1.TransformSelf(this._viewPortMat4);
@@ -80,43 +108,48 @@ public class RenderPipeline {
 		position3.Homogenenize();
 		
 		// 背面剔除
-		if (material.useFaceCulling && this.IsBackFace(position1, position2, position3)) return;
+		if (material.useFaceCulling && this.IsBackFace()) return;
 
 		// 光栅化
-		var bound = Utils.GetBoundingBox(position1, position2, position3);
+		var bound = Utils.GetBoundingBox(position1, position2, position3, this._width, this._height);
 		var barycentric = Vector4.Create();
 		var p = Vector2.Create();
-		for (var y = Math.Max(bound.minY, 0); y < Math.Min(bound.maxY, this._height); y++) {
+		for (var y = bound.minY; y < bound.maxY; y++) {
 			p.y = y + 0.5f;
-			for (var x = Math.Max(bound.minX, 0); x < Math.Min(bound.maxX, this._width); x++) {
+			for (var x = bound.minX; x < bound.maxX; x++) {
 				p.x = x + 0.5f;
-				// 重心差值
-				Utils.GetBarycentric(p, position1, position2, position3, barycentric);
-				if(barycentric.x < 0 || barycentric.y < 0 || barycentric.z < 0) continue;
 				
-				// 计算z值 线性的z
-				var z = Utils.GetInterpValue3(position1.z, position2.z, position3.z, barycentric.x, barycentric.y, barycentric.z);
+				if (this._useMsaa && !this.CheckMsaa(x, y, p, barycentric, near, far)) continue;
+				
+				if(!this.CheckInTriangle(p, barycentric)) continue;
+				if(!this.CheckZ(x, y, barycentric, near, far)) continue;
+
+				Utils.GetBarycentric(p, position1, position2, position3, barycentric);
 				
 				// 校正透视差值
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
                     
 				// 计算attribs差值
 				this.ComputeShaderVectorVarying(mesh.attribInfo, shader, barycentric);
-				
-				// 计算非线性的z值
-				z = Utils.GetDepth(near, far, z);
-				
+
 				// frag shading
 				var color = shader.FragShading();
-
+				
 				// 输出颜色
-				this.frameBuffer.SetColor(x , y, color, z);
+				this.frameBuffer.SetColor(x , y, color);
 				Vector4.Return(color);
 			}
 		}
-		Vector4.Return(position1);
-		Vector4.Return(position2);
-		Vector4.Return(position3);
+		
+		this._triangle.Clear();
+	}
+	
+	private float GetInterpolationZ(in Vector4 barycentric, float near, float far) {
+		var z1 = this._triangle.position1.z;
+		var z2 = this._triangle.position2.z;
+		var z3 = this._triangle.position3.z;
+		var z = Utils.GetInterpValue3(z1, z2, z3, barycentric.x, barycentric.y, barycentric.z);
+		return Utils.GetDepth(near, far, z);
 	}
 	
 	private void ComputeShaderVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, in Vector4 barycentric) {
@@ -150,13 +183,51 @@ public class RenderPipeline {
 	/**
 	 * 背面剔除
 	 */
-	private bool IsBackFace(Vector4 p1, Vector4 p2, Vector4 p3) {
+	private bool IsBackFace() {
+		var p1 = this._triangle.position1;
+		var p2 = this._triangle.position2;
+		var p3 = this._triangle.position3;
 		var a = p2.x - p1.x;
 		var b = p2.y - p1.y;
 		var c = p3.x - p1.x;
 		var d = p3.y - p1.y;
 		return a * d - b * c < 0;
 	}
+
+	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, float near, float far) {
+		var pMsaa = Vector2.Create();
+		for (var i = 0; i < 4; i++) {
+			p.Add(this._msaaOffsetVec2[i], pMsaa);
+			// 是否在三角形内
+			if(!this.CheckInTriangle(pMsaa, barycentric)) continue;
+			// 深度通过
+			if(!this.CheckZ(x, y, barycentric, near, far, i)) continue;;
+			// 写入
+			this.frameBuffer.AddMsaaCount(x, y);
+		}
+		return this.frameBuffer.GetMsaaCount(x, y) != 0;
+	}
 	
+	private bool CheckInTriangle(in Vector2 p, in Vector4 barycentric) {
+		var position1 = this._triangle.position1;
+		var position2 = this._triangle.position2;
+		var position3 = this._triangle.position3;
+		Utils.GetBarycentric(p, position1, position2, position3, barycentric);
+		return barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0;
+	}
+	
+	private bool CheckZ(int x, int y, in Vector4 barycentric, float near, float far) {
+		var z = this.GetInterpolationZ(barycentric, near, far);
+		if (!this.frameBuffer.ZTest(x, y, -z)) return false;
+		this.frameBuffer.SetZ(x, y, -z);
+		return true;
+	}
+
+	private bool CheckZ(int x, int y, in Vector4 barycentric, float near, float far, int level) {
+		var z = this.GetInterpolationZ(barycentric, near, far);
+		if (!this.frameBuffer.ZTest(x, y, -z, level)) return false;
+		this.frameBuffer.SetZ(x, y, -z, level);
+		return true;
+	}
     
 }

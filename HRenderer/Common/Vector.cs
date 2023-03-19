@@ -36,6 +36,12 @@ namespace HRenderer.Common {
         public Vector2 Add(Vector2 a) {
             return this.Clone().AddSelf(a);
         }
+        
+        public Vector2 Add(Vector2 a, in Vector2 outVector2) {
+            outVector2.x = this.x;
+            outVector2.y = this.y;
+            return outVector2.AddSelf(a);
+        }
 
         public Vector2 SubSelf(Vector2 a) {
             this.x -= a.x;
@@ -71,6 +77,11 @@ namespace HRenderer.Common {
         
         public float Dot(Vector4 v) {
             return this.x * v.x + this.y * v.y;
+        }
+        
+        public void Set(float x, float y) {
+            this.x = x;
+            this.y = y;
         }
         
         public override string ToString() {
@@ -150,6 +161,16 @@ namespace HRenderer.Common {
             return this.Clone().AddSelf(v);
         }
 
+        public Vector4 Add(Vector2 v) {
+            return this.Clone().AddSelf(v);
+        }
+
+        public Vector4 AddSelf(Vector2 v) {
+            this.x += v.x;
+            this.y += v.y;
+            return this;
+        }
+
         public Vector4 SubSelf(Vector4 v) {
             this.x *= v.x;
             this.y *= v.y;
@@ -165,6 +186,7 @@ namespace HRenderer.Common {
             this.x *= v;
             this.y *= v;
             this.z *= v;
+            this.w *= v;
             return this;
         }
 

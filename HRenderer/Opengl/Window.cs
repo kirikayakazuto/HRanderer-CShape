@@ -73,7 +73,7 @@ public class Window : GameWindow {
         
         this._renderer.Render(e.Time);
         var frame = this._renderer.pipeline.frameBuffer;
-        this._texture.UpdateData(frame.Width, frame.Height, frame.Pixels);
+        this._texture.UpdateData(frame.width, frame.height, frame.GetPixels());
 
         GL.Clear(ClearBufferMask.ColorBufferBit);
 

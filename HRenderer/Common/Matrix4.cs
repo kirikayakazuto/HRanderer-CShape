@@ -68,6 +68,14 @@ namespace HRenderer.Common {
             return m;
         }
 
+        public static Matrix4 GetScale(float sacleX = 1, float scaleY = 1, float scaleZ = 1) {
+            var m = Matrix4.GetIdentify();
+            m.data[0] = sacleX;
+            m.data[5] = scaleY;
+            m.data[10] = scaleZ;
+            return m;
+        }
+
         public Matrix4 MulSelf(Matrix4 m) {
             var a = this.data;
             var b = m.data;
