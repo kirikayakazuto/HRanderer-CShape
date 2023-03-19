@@ -12,7 +12,7 @@ namespace HRenderer.Core {
         
         // msaa
         private readonly bool _useMsaa;
-        private readonly byte[] _pixelsMsaa;
+        private readonly byte[] _pixelsMsaaCoverage;
         private readonly double[,] _zBufferMsaa;
 
         public FrameBuffer(int width, int height, bool msaa = false) {
@@ -33,7 +33,7 @@ namespace HRenderer.Core {
                     this._zBufferMsaa[i, j] = 1;
                 }    
             }
-            this._pixelsMsaa = new byte[width * height];
+            this._pixelsMsaaCoverage = new byte[width * height];
         }
 
         /**
@@ -108,19 +108,19 @@ namespace HRenderer.Core {
                     this._zBufferMsaa[i, j] = 1;
                 }    
             }
-            for (var i = 0; i < this._pixelsMsaa.Length; i++) {
-                this._pixelsMsaa[i] = 0;
+            for (var i = 0; i < this._pixelsMsaaCoverage.Length; i++) {
+                this._pixelsMsaaCoverage[i] = 0;
             }
         }
 
         public void AddMsaaCount(int x, int y) {
             var idx = x + y * this.width;
-            this._pixelsMsaa[idx] ++;
+            this._pixelsMsaaCoverage[idx] ++;
         }
 
         public byte GetMsaaCount(int x, int y) {
             var idx = x + y * this.width;
-            return this._pixelsMsaa[idx];
+            return this._pixelsMsaaCoverage[idx];
         }
 
         public void DoMsaa() {
@@ -128,7 +128,7 @@ namespace HRenderer.Core {
                 for (var x = 0; x < this.width; x++) {
                     var idx = (x + y * this.width) * 4;
                     
-                    var msaa = this._pixelsMsaa[x + y * this.width];
+                    var msaa = this._pixelsMsaaCoverage[x + y * this.width];
                     var count = (double)msaa / 4.0f;
                     count = Math.Min(1, count);
                     
