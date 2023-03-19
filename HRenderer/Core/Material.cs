@@ -12,7 +12,7 @@ namespace HRenderer.Core {
         
         public Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
         public Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
-        public Dictionary<string, float> uniformFloats = new Dictionary<string, float>();
+        public Dictionary<string, double> uniformDoubles = new Dictionary<string, double>();
 
         public bool useFaceCulling = false;
 

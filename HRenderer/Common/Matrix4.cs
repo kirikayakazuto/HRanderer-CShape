@@ -12,10 +12,10 @@ namespace HRenderer.Common {
      * 计算方式, 前行乘后列
      */
     public class Matrix4 {
-        public float[] data;
+        public double[] data;
 
         Matrix4() {
-            this.data = new float[16];
+            this.data = new double[16];
         }
 
         public static Matrix4 GetIdentify() {
@@ -27,10 +27,10 @@ namespace HRenderer.Common {
             return m;
         }
 
-        public static Matrix4 GetRotationX(float angle) {
+        public static Matrix4 GetRotationX(double angle) {
             var m = Matrix4.GetIdentify();
-            var cos = (float)Math.Cos(angle);
-            var sin = (float)Math.Sin(angle);
+            var cos = (double)Math.Cos(angle);
+            var sin = (double)Math.Sin(angle);
             m.data[5] = cos;
             m.data[6] = sin;
             m.data[9] = -sin;
@@ -38,10 +38,10 @@ namespace HRenderer.Common {
             return m;
         }
 
-        public static Matrix4 GetRotationY(float angle) {
+        public static Matrix4 GetRotationY(double angle) {
             var m = Matrix4.GetIdentify();
-            var cos = (float)Math.Cos(angle);
-            var sin = (float)Math.Sin(angle);
+            var cos = (double)Math.Cos(angle);
+            var sin = (double)Math.Sin(angle);
             m.data[0] = cos;
             m.data[2] = -sin;
             m.data[8] = sin;
@@ -49,10 +49,10 @@ namespace HRenderer.Common {
             return m;
         }
 
-        public static Matrix4 GetRotationZ(float angle) {
+        public static Matrix4 GetRotationZ(double angle) {
             var m = Matrix4.GetIdentify();
-            var cos = (float)Math.Cos(angle);
-            var sin = (float)Math.Sin(angle);
+            var cos = (double)Math.Cos(angle);
+            var sin = (double)Math.Sin(angle);
             m.data[0] = cos;
             m.data[1] = sin;
             m.data[4] = -sin;
@@ -60,7 +60,7 @@ namespace HRenderer.Common {
             return m;
         }
 
-        public static Matrix4 Translation(float x = 0, float y = 0, float z = 0) {
+        public static Matrix4 Translation(double x = 0, double y = 0, double z = 0) {
             var m = Matrix4.GetIdentify();
             m.data[12] = x;
             m.data[13] = y;
@@ -68,7 +68,7 @@ namespace HRenderer.Common {
             return m;
         }
 
-        public static Matrix4 GetScale(float sacleX = 1, float scaleY = 1, float scaleZ = 1) {
+        public static Matrix4 GetScale(double sacleX = 1, double scaleY = 1, double scaleZ = 1) {
             var m = Matrix4.GetIdentify();
             m.data[0] = sacleX;
             m.data[5] = scaleY;

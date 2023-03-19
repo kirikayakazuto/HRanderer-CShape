@@ -2,27 +2,27 @@ using System;
 
 namespace HRenderer.Common {
     public class Vector {
-        public float[] data;
+        public double[] data;
         public Vector(int length) {
-            this.data = new float[length];
+            this.data = new double[length];
         }
     }
     
     public class Vector2: Vector {
-        public float x {
+        public double x {
             get => this.data[0];
             set => this.data[0] = value;
         }
-        public float y {
+        public double y {
             get => this.data[1];
             set => this.data[1] = value;
         }
 
-        public static Vector2 Create(float x = 0, float y = 0) {
+        public static Vector2 Create(double x = 0, double y = 0) {
             return new Vector2(x, y);
         } 
 
-        private Vector2(float x, float y): base(2) {
+        private Vector2(double x, double y): base(2) {
             this.x = x;
             this.y = y;
         }
@@ -63,11 +63,11 @@ namespace HRenderer.Common {
             return this.Clone().MulSelf(a);
         }
 
-        public float Dot(Vector2 a) {
+        public double Dot(Vector2 a) {
             return this.x * a.x + this.y * a.y;
         }
         
-        public float Cross(Vector2 a) {
+        public double Cross(Vector2 a) {
             return this.x * a.y - this.y * a.x;
         }
         
@@ -75,11 +75,11 @@ namespace HRenderer.Common {
             return new Vector2(this.x, this.y);
         }
         
-        public float Dot(Vector4 v) {
+        public double Dot(Vector4 v) {
             return this.x * v.x + this.y * v.y;
         }
         
-        public void Set(float x, float y) {
+        public void Set(double x, double y) {
             this.x = x;
             this.y = y;
         }
@@ -92,19 +92,19 @@ namespace HRenderer.Common {
     public class Vector4: Vector {
         public static int newCount = 0;
         private static Stack<Vector4> vector4s = new Stack<Vector4>();
-        public float x {
+        public double x {
             get => this.data[0];
             set => this.data[0] = value;
         }
-        public float y {
+        public double y {
             get => this.data[1];
             set => this.data[1] = value;
         }
-        public float z {
+        public double z {
             get => this.data[2];
             set => this.data[2] = value;
         }
-        public float w {
+        public double w {
             get => this.data[3];
             set => this.data[3] = value;
         }
@@ -116,27 +116,27 @@ namespace HRenderer.Common {
             // this.w = v.w;
         }
 
-        public void Set(float x, float y, float z) {
+        public void Set(double x, double y, double z) {
             this.x = x;
             this.y = y;
             this.z = z;
         }
         
-        public void Set(float x, float y, float z, float w) {
+        public void Set(double x, double y, double z, double w) {
             this.x = x;
             this.y = y;
             this.z = z;
             this.w = w;
         }
 
-        public Vector4(float x, float y, float z, float w): base(4) {
+        public Vector4(double x, double y, double z, double w): base(4) {
             this.x = x;
             this.y = y;
             this.z = z;
             this.w = w;
         }
 
-        public static Vector4 Create(float x = 0, float y = 0, float z = 0, float w = 0) {
+        public static Vector4 Create(double x = 0, double y = 0, double z = 0, double w = 0) {
             if (Vector4.vector4s.Count <= 0) {
                 Vector4.newCount++;
             }
@@ -182,7 +182,7 @@ namespace HRenderer.Common {
             return this.Clone().SubSelf(v);
         }
 
-        public Vector4 MulSelf(float v) {
+        public Vector4 MulSelf(double v) {
             this.x *= v;
             this.y *= v;
             this.z *= v;
@@ -190,7 +190,7 @@ namespace HRenderer.Common {
             return this;
         }
 
-        public Vector4 Mul(float v) {
+        public Vector4 Mul(double v) {
             return this.Clone().MulSelf(v);
         }
 
@@ -217,8 +217,8 @@ namespace HRenderer.Common {
             return this.Clone().NormalizeSelf();
         }
 
-        public float GetLength() {
-            return (float)Math.Sqrt(x * x + y * y + z * z);
+        public double GetLength() {
+            return (double)Math.Sqrt(x * x + y * y + z * z);
         }
 
         public Vector4 Clone() {
@@ -239,7 +239,7 @@ namespace HRenderer.Common {
             return this.Clone().CrossSelf(v);
         }
 
-        public float Dot(Vector4 v) {
+        public double Dot(Vector4 v) {
             return this.x * v.x + this.y * v.y + this.z * v.z;
         }
 

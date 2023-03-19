@@ -27,26 +27,26 @@ namespace HRenderer.Core {
 			this._materials.Add(material);
 		}
 
-		private float _time = 0;
+		private double _time = 0;
 		public void Render(double dt) {
 			this.pipeline.ClearFrameBuffer();
 			
-			this._time += (float)dt;
+			this._time += dt;
 			foreach (var material in this._materials) {
 				var shader = material.shader; 
 				shader.view = this._camera.viewMat;
 				shader.projection = this._camera.OrthographicProjection;
                 
-				shader.AddUniforms(material.uniformFloats);
+				shader.AddUniforms(material.uniformDoubles);
 				shader.AddUniforms(material.uniformVec4);
 				shader.AddUniforms(material.uniformTextures);
-				shader.uniformFloats["time"] = this._time;
+				shader.uniformDoubles["time"] = this._time;
 				
 				shader.uniformMatrix4s["CameraView"] = this._camera.viewMat;
 				shader.uniformMatrix4s["CameraProjection"] = this._camera.OrthographicProjection;
 				shader.uniformVec4["CameraPosition"] = this._camera.GetPosition();
-				shader.uniformFloats["CameraNear"] = this._camera.near;
-				shader.uniformFloats["CameraFar"] = this._camera.far;
+				shader.uniformDoubles["CameraNear"] = this._camera.near;
+				shader.uniformDoubles["CameraFar"] = this._camera.far;
                 
 				this.pipeline.Draw(material);
 			}

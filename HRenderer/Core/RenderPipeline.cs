@@ -34,14 +34,15 @@ public class RenderPipeline {
 	private readonly Triangle _triangle = new Triangle();
 	
 	private readonly Vector2[] _msaaOffsetVec2 = new Vector2[] {
-		Vector2.Create(-0.25f, -0.25f),
-		Vector2.Create(-0.25f, 0.25f),
-		Vector2.Create(0.25f, -0.25f),
-		Vector2.Create(0.25f, 0.25f),
+		Vector2.Create(0.375, 0.125),
+		Vector2.Create(0.125, -0.375),
+		Vector2.Create(-0.375, -0.125),
+		Vector2.Create(-0.125, -0.375),
+		
 	};
 	public FrameBuffer frameBuffer { get; }
 	
-	public RenderPipeline(int width, int height, bool useMsaa = false) {
+	public RenderPipeline(int width, int height, bool useMsaa = true) {
 		this._width = width;
 		this._height = height;
 		this._viewPortMat4 = Utils.GetViewPortMatrix(width, height);
@@ -75,8 +76,8 @@ public class RenderPipeline {
 		var mesh = material.mesh;
 		var shader = material.shader;
 		
-		var near = shader.uniformFloats["CameraNear"];
-		var far = shader.uniformFloats["CameraFar"];
+		var near = shader.uniformDoubles["CameraNear"];
+		var far = shader.uniformDoubles["CameraFar"];
 		
 		// 顶点数据解析
 		mesh.GetVertexAttribs(v1, this._cacheData.Vec4Attribs1, this._cacheData.Vec2Attribs1);
@@ -119,12 +120,10 @@ public class RenderPipeline {
 			for (var x = bound.minX; x < bound.maxX; x++) {
 				p.x = x + 0.5f;
 				
-				if (this._useMsaa && !this.CheckMsaa(x, y, p, barycentric, near, far)) continue;
+				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric, near, far);
 				
-				if(!this.CheckInTriangle(p, barycentric)) continue;
+				if (!this.CheckInTriangle(p, barycentric)) continue;
 				if(!this.CheckZ(x, y, barycentric, near, far)) continue;
-
-				Utils.GetBarycentric(p, position1, position2, position3, barycentric);
 				
 				// 校正透视差值
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
@@ -144,7 +143,7 @@ public class RenderPipeline {
 		this._triangle.Clear();
 	}
 	
-	private float GetInterpolationZ(in Vector4 barycentric, float near, float far) {
+	private double GetInterpolationZ(in Vector4 barycentric, double near, double far) {
 		var z1 = this._triangle.position1.z;
 		var z2 = this._triangle.position2.z;
 		var z3 = this._triangle.position3.z;
@@ -194,8 +193,9 @@ public class RenderPipeline {
 		return a * d - b * c < 0;
 	}
 
-	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, float near, float far) {
+	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, double near, double far) {
 		var pMsaa = Vector2.Create();
+		var msaa = 0;
 		for (var i = 0; i < 4; i++) {
 			p.Add(this._msaaOffsetVec2[i], pMsaa);
 			// 是否在三角形内
@@ -204,8 +204,10 @@ public class RenderPipeline {
 			if(!this.CheckZ(x, y, barycentric, near, far, i)) continue;;
 			// 写入
 			this.frameBuffer.AddMsaaCount(x, y);
+			msaa++;
 		}
-		return this.frameBuffer.GetMsaaCount(x, y) != 0;
+
+		return msaa != 0;
 	}
 	
 	private bool CheckInTriangle(in Vector2 p, in Vector4 barycentric) {
@@ -216,14 +218,14 @@ public class RenderPipeline {
 		return barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0;
 	}
 	
-	private bool CheckZ(int x, int y, in Vector4 barycentric, float near, float far) {
+	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far) {
 		var z = this.GetInterpolationZ(barycentric, near, far);
 		if (!this.frameBuffer.ZTest(x, y, -z)) return false;
 		this.frameBuffer.SetZ(x, y, -z);
 		return true;
 	}
 
-	private bool CheckZ(int x, int y, in Vector4 barycentric, float near, float far, int level) {
+	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far, int level) {
 		var z = this.GetInterpolationZ(barycentric, near, far);
 		if (!this.frameBuffer.ZTest(x, y, -z, level)) return false;
 		this.frameBuffer.SetZ(x, y, -z, level);

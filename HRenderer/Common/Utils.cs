@@ -22,7 +22,7 @@ namespace HRenderer.Common {
     }
     
     public class Utils {
-        public static float GetInterpValue3(float v1, float v2, float v3, float w1, float w2, float w3) {
+        public static double GetInterpValue3(double v1, double v2, double v3, double w1, double w2, double w3) {
             return v1 * w1 + v2 * w2 + v3 * w3;
         }
         
@@ -42,7 +42,7 @@ namespace HRenderer.Common {
             return vec;
         }
 
-        public static float GetDepth(float near, float far, float z) {
+        public static double GetDepth(double near, double far, double z) {
             return (1 / z - 1 / near) / (1 / far - 1 / near);
         }
 
@@ -65,14 +65,14 @@ namespace HRenderer.Common {
             return new Rect() {minX = minX, maxX = maxX, minY = minY, maxY = maxY, width = maxX - minX, height = maxY - minY};
         }
 
-        public static float Cross(float x1, float y1, float x2, float y2) {
+        public static double Cross(double x1, double y1, double x2, double y2) {
             return x1 * y2 - x2 * y1;
         }
 
         /**
          * 校正重心差值
          */
-        public static Vector4 AdjustBarycentric(Vector4 barycentric, float z1, float z2, float z3) {
+        public static Vector4 AdjustBarycentric(Vector4 barycentric, double z1, double z2, double z3) {
             var rz = 1 / (1 / z1 * barycentric.x + 1 / z2 * barycentric.y + 1 / z3 * barycentric.z);
             barycentric.x = barycentric.x / z1 * rz;
             barycentric.y = barycentric.y / z2 * rz;

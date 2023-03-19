@@ -11,7 +11,7 @@ namespace HRenderer.Core {
 
         // uniforms
         public readonly Dictionary<string, Matrix4> uniformMatrix4s = new Dictionary<string, Matrix4>();
-        public readonly Dictionary<string, float> uniformFloats = new Dictionary<string, float>();
+        public readonly Dictionary<string, double> uniformDoubles = new Dictionary<string, double>();
         public readonly Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
         public readonly Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
 
@@ -52,9 +52,9 @@ namespace HRenderer.Core {
             return v;
         }
         
-        public void AddUniforms(Dictionary<string, float> dictionary) {
+        public void AddUniforms(Dictionary<string, double> dictionary) {
 	        foreach (var keyValuePair in dictionary) {
-		        this.uniformFloats[keyValuePair.Key] = keyValuePair.Value;
+		        this.uniformDoubles[keyValuePair.Key] = keyValuePair.Value;
 	        }
         }
         public void AddUniforms(Dictionary<string, Vector4> dictionary) {

@@ -40,7 +40,7 @@ namespace HRenderer.Core {
             return Color.Create(this.pixel[idx], this.pixel[idx+1], this.pixel[idx+2], this.pixel[idx+3]);
         }
 
-        public Color Sample(float u, float v) {
+        public Color Sample(double u, double v) {
             var x = u * (this.width - 1) + 0.5;
             var y = this.height - (v * (this.height - 1) + 0.5);
             // var y =  v * (this.height - 1) + 0.5;

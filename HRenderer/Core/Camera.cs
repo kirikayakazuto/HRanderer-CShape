@@ -12,13 +12,13 @@ namespace HRenderer.Core {
         private readonly Vector4 _up;
         private readonly Vector4 _toward;
         
-        public float aspect = 1;
+        public double aspect = 1;
         // fov 视角大小
-        public float fovY = 90 * (float)Math.PI / 180;
+        public double fovY = 90 * (double)Math.PI / 180;
         // 近平面
-        public float near = 1f;
+        public double near = 1f;
         // 远平面
-        public float far = 500;
+        public double far = 500;
         
         // 观察矩阵 / 摄像机矩阵  将摄像机放在0, 0, 0位置, 并看向-z方向
         public readonly Matrix4 viewMat = Matrix4.GetIdentify();
@@ -47,7 +47,7 @@ namespace HRenderer.Core {
             this.ComputeOrthographicProjection();
         }
         
-        public void SetPosition(float x, float y, float z) {
+        public void SetPosition(double x, double y, double z) {
             this._position.Set(x, y, z, 1);
             this.ComputeViewMatrix();
             this.ComputeOrthographicProjection();
@@ -109,7 +109,7 @@ namespace HRenderer.Core {
             var n = near;
             var f = far;
 
-            var h_n = (float)Math.Tan(fovY / 2);
+            var h_n = (double)Math.Tan(fovY / 2);
             var n_h = 1 / h_n;
             var n_w = n_h / aspect;
 
@@ -126,16 +126,16 @@ namespace HRenderer.Core {
          * 将right-left, top-bottom, near-far 空间的点, 变换到 -1 ~ 1 的标准矩阵中
          */
         public Matrix4 ComputeOrthographic() {
-            var t = (float)Math.Tan(this.fovY/2) * this.near;
+            var t = (double)Math.Tan(this.fovY/2) * this.near;
             var b = -t;
 
-            var r = (float)this.width / (float)this.height * t;
+            var r = (double)this.width / (double)this.height * t;
             var l = -r;
 
             var n = this.near;
             var f = this.far;
             
-            this.orthographicMat.data = new float[] {
+            this.orthographicMat.data = new double[] {
                 2 / (r - l), 0,           0,           -(r + l) / (r - l),
                 0,           2 / (t - b), 0,           -(t + b) / (t - b),
                 0,           0,           2 / (n - f), -(n + f) / (n - f),
@@ -147,7 +147,7 @@ namespace HRenderer.Core {
         public Matrix4 ComputeProjection() {
             var n = this.near;
             var f = this.far;
-            this.projectionMat.data = new float[] {
+            this.projectionMat.data = new double[] {
                 n, 0, 0, 0,
                 0, n, 0, 0,
                 0, 0, n + f, -f * n,
