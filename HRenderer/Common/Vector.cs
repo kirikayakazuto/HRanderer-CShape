@@ -9,6 +9,7 @@ namespace HRenderer.Common {
     }
     
     public class Vector2: Vector {
+        private static Stack<Vector2> vector2s = new Stack<Vector2>();
         public double x {
             get => this.data[0];
             set => this.data[0] = value;
@@ -19,8 +20,14 @@ namespace HRenderer.Common {
         }
 
         public static Vector2 Create(double x = 0, double y = 0) {
-            return new Vector2(x, y);
-        } 
+            var v = Vector2.vector2s.Count > 0 ? Vector2.vector2s.Pop() : new Vector2(x, y);
+            v.Set(x, y);
+            return v;
+        }
+
+        public static void Return(Vector2 v) {
+            Vector2.vector2s.Push(v);
+        }
 
         private Vector2(double x, double y): base(2) {
             this.x = x;

@@ -95,6 +95,10 @@ namespace HRenderer.Common {
             var alpha = pb.Cross(pc) / total;
             var beta = pc.Cross(pa) / total;
             var gamma = 1 - alpha - beta;
+            
+            Vector2.Return(a);
+            Vector2.Return(b);
+            Vector2.Return(c);
 
             outVec.Set(alpha, beta, gamma, 1);
             return outVec;

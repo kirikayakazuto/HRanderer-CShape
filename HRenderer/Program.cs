@@ -12,14 +12,14 @@ program.OpenWindow();
 namespace HRenderer {
     public class Program {
 
-        private const int _width = 500;
-        private const int _height = 500;
+        private const int _width = 600;
+        private const int _height = 600;
         private const float _scale = 1f;
 
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(_width, _height);
-            this.RunScene2();
+            this.RunScene3();
         }
 
         public void RunScene1() {

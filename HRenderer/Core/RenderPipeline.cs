@@ -42,7 +42,7 @@ public class RenderPipeline {
 	};
 	public FrameBuffer frameBuffer { get; }
 	
-	public RenderPipeline(int width, int height, bool useMsaa = true) {
+	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
 		this._height = height;
 		this._viewPortMat4 = Utils.GetViewPortMatrix(width, height);
@@ -139,6 +139,7 @@ public class RenderPipeline {
 				Vector4.Return(color);
 			}
 		}
+		Vector2.Return(p);
 		
 		this._triangle.Clear();
 	}
@@ -206,7 +207,7 @@ public class RenderPipeline {
 			this.frameBuffer.AddMsaaCount(x, y);
 			msaa++;
 		}
-
+		Vector2.Return(pMsaa);
 		return msaa != 0;
 	}
 	
