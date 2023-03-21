@@ -32,7 +32,7 @@ namespace HRenderer.Common {
             this.a = a;
         }
         
-        public static Color Create(byte r, byte g, byte b, byte a) {
+        public static Color Create(byte r=0, byte g=0, byte b=0, byte a=0) {
             Color c;
             if (Color.colors.Count > 0) {
                 c = Color.colors.Pop();
