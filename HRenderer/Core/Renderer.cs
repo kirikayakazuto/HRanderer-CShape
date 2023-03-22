@@ -15,7 +15,7 @@ namespace HRenderer.Core {
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
 		
-		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(-2, -2, -2, 1).NormalizeSelf());
+		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
 
 		public List<Material> materials => this._materials;
 
@@ -37,10 +37,10 @@ namespace HRenderer.Core {
 			
 			this._time += dt;
 
-			var r = Math.Sin(this._time) * Math.PI;
+			var r = Math.Sin(this._time * 0.5) * Math.PI;
 			var lightPos = this._directionLight.position;
-			lightPos = lightPos.Transform(Matrix4.GetRotationX(r));
-			lightPos.TransformSelf(Matrix4.GetRotationY(r));
+			// lightPos = lightPos.Transform(Matrix4.GetRotationX(r));
+			lightPos = lightPos.Transform(Matrix4.GetRotationY(r));
 			
 			foreach (var material in this._materials) {
 				var shader = material.shader; 

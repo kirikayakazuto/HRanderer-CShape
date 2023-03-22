@@ -179,9 +179,9 @@ namespace HRenderer.Common {
         }
 
         public Vector4 SubSelf(Vector4 v) {
-            this.x *= v.x;
-            this.y *= v.y;
-            this.z *= v.z;
+            this.x -= v.x;
+            this.y -= v.y;
+            this.z -= v.z;
             return this;
         }
 
@@ -199,6 +199,18 @@ namespace HRenderer.Common {
 
         public Vector4 Mul(double v) {
             return this.Clone().MulSelf(v);
+        }
+
+        public Vector4 Mul(Vector4 v) {
+            return this.Clone().MulSelf(v);
+        }
+
+        public Vector4 MulSelf(Vector4 v) {
+            this.x *= v.x;
+            this.y *= v.y;
+            this.z *= v.z;
+            this.w = 1;
+            return this;
         }
 
         public Vector4 Homogenenize() {
@@ -269,6 +281,14 @@ namespace HRenderer.Common {
 
         public override string ToString() {
             return "x: " + this.x + " y: " + this.y + " z: " + this.z + " w: " + this.w;
+        }
+
+        public Vector4 Clamp() {
+            this.x = Math.Min(this.x, 1);
+            this.y = Math.Min(this.y, 1);
+            this.z = Math.Min(this.z, 1);
+            this.w = Math.Min(this.w, 1);
+            return this;
         }
     }
 }

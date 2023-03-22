@@ -110,6 +110,7 @@ public class RenderPipeline {
 		
 		// 背面剔除
 		if (material.useFaceCulling && this.IsBackFace()) return;
+		
 
 		// 光栅化
 		var bound = Utils.GetBoundingBox(position1, position2, position3, this._width, this._height);
