@@ -19,6 +19,10 @@ public class CubeShader: Shader {
 	public override Vector4 FragShading() {
 		// var uv = this.attribsVec2Dict["uv"];
 		// return this.Texture2D(this.uniformTextures["mainTexture"], uv);
-		return Vector4.Create(0.2, 0, 0, 1);
+		var lightDir = this.uniformVec4["Light.Position"].Sub(this.attribsVec4Dict["a_position"]);
+		var norm = this.attribsVec4Dict["a_normal"];
+
+		var diff = Math.Max(norm.Dot(lightDir), 0);
+		return Vector4.Create(0.2, 0, 0, 1).Mul(diff);
 	}
 }
