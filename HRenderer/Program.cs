@@ -1,5 +1,6 @@
 ﻿using HRenderer.Core;
 using HRenderer.Materials.CubeMaterial;
+using HRenderer.Materials.LightMaterial;
 using HRenderer.Materials.SpriteMaterial;
 using HRenderer.Materials.ModelMaterial;
 using OpenTK.Mathematics;
@@ -20,7 +21,11 @@ namespace HRenderer {
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(_width, _height);
-            // this.RunScene3();
+            this.RunScene4();
+        }
+
+        public void RunScene4() {
+            this._renderer.AddMaterial(LightMaterial.GetMaterial());
             this._renderer.AddMaterial(CubeMaterial.GetMaterial());
         }
 

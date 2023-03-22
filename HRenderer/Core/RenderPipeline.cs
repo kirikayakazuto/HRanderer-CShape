@@ -23,7 +23,7 @@ public class RenderPipeline {
 	private readonly int _width;
 	private readonly int _height;
 	private readonly Matrix4 _viewPortMat4;
-	
+
 	// 缓存数据
 	private readonly CacheData _cacheData = new CacheData();
 

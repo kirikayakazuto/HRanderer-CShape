@@ -14,7 +14,11 @@ namespace HRenderer.Core {
 		private readonly List<Material> _materials = new List<Material>();
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
-        
+		
+		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-3, -3, -3, 1), Common.Vector4.Create(-3, -3, -3, 1).NormalizeSelf());
+
+		public List<Material> materials => this._materials;
+
 		public Renderer(int width, int height) {
 			this._width = width;
 			this._height = height;
@@ -32,6 +36,11 @@ namespace HRenderer.Core {
 			this.pipeline.ClearFrameBuffer();
 			
 			this._time += dt;
+
+			var r = Math.Sin(this._time) * Math.PI;
+			var lightPos = this._directionLight.position.Transform(Matrix4.GetRotationX(r));
+			lightPos.TransformSelf(Matrix4.GetRotationY(r));
+			
 			foreach (var material in this._materials) {
 				var shader = material.shader; 
 				shader.view = this._camera.viewMat;
@@ -47,6 +56,10 @@ namespace HRenderer.Core {
 				shader.uniformVec4["CameraPosition"] = this._camera.GetPosition();
 				shader.uniformDoubles["CameraNear"] = this._camera.near;
 				shader.uniformDoubles["CameraFar"] = this._camera.far;
+				
+				shader.uniformVec4["Light.Position"] = lightPos;
+				shader.uniformVec4["Light.Direction"] = this._directionLight.direction;
+				shader.uniformVec4["Light.Color"] = this._directionLight.color;
                 
 				this.pipeline.Draw(material);
 			}
