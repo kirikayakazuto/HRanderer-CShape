@@ -12,6 +12,8 @@ public struct DirectionLight {
 	public Vector4 direction = Vector4.Create();
 	// 光颜色
 	public Vector4 color = Vector4.Create();
+
+	public double ambientStrength = 0.1;
 	// 光强度
 	public double intersity = 1;
 	
@@ -22,7 +24,10 @@ public struct DirectionLight {
 	// public Vector4 diffuse = Vector4.Create();
 	// // 镜面反射颜色
 	// public Vector4 specular = Vector4.Create();
-	
+
+	DirectionLight(Vector4 position) {
+		this.position = position;
+	}
 	
 	
 }
@@ -37,4 +42,8 @@ public struct PointLight {
 	public double range = 1;
 	// 衰减
 	public double attenuation = 1;
+
+	PointLight(Vector4 position) {
+		this.position = position;
+	}
 }

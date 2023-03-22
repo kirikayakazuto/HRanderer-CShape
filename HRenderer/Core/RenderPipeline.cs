@@ -83,7 +83,7 @@ public class RenderPipeline {
 		mesh.GetVertexAttribs(v1, this._cacheData.Vec4Attribs1, this._cacheData.Vec2Attribs1);
 		mesh.GetVertexAttribs(v2, this._cacheData.Vec4Attribs2, this._cacheData.Vec2Attribs2);
 		mesh.GetVertexAttribs(v3, this._cacheData.Vec4Attribs3, this._cacheData.Vec2Attribs3);
-
+		
 		// 第一个阶段, 顶点着色器
 		shader.AddAttribs(this._cacheData.Vec4Attribs1);
 		shader.AddAttribs(this._cacheData.Vec2Attribs1);
