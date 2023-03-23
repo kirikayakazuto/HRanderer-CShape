@@ -21,7 +21,7 @@ namespace HRenderer {
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(_width, _height);
-            this.RunScene4();
+            this.RunScene2();
         }
 
         public void RunScene4() {
@@ -34,6 +34,7 @@ namespace HRenderer {
         }
 
         public void RunScene2() {
+            this._renderer.AddMaterial(LightMaterial.GetMaterial());
             this._renderer.AddMaterial(ModelMaterial.GetMaterial());
         }
 

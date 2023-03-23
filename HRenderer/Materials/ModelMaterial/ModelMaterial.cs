@@ -7,6 +7,9 @@ public class ModelMaterial {
 		var texture = new Texture("./Assets/african/african_head_diffuse.png");
 		var mesh = new ModelMesh();
 		var shader = new ModelShader();
-		return new Material(texture, mesh, shader) {useFaceCulling = true};
+		var normalTexture = new Texture("./Assets/african/african_head_nm.png");
+		var m = new Material(texture, mesh, shader) {useFaceCulling = true};
+		m.uniformTextures["normalTexture"] = normalTexture;
+		return m;
 	}
 }
