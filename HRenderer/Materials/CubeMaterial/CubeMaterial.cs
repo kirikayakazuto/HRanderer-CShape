@@ -4,9 +4,14 @@ namespace HRenderer.Materials.CubeMaterial;
 
 public class CubeMaterial {
 	public static Material GetMaterial() {
-		var texture = new Texture("./Assets/001.jpg");
+		var texture = new Texture("./Assets/container2/container2_diffuse.png");
 		var mesh = new CubeMesh();
 		var shader = new CubeShader();
-		return new Material(texture, mesh, shader);
+		
+		var specular = new Texture("./Assets/container2/container2_specular.png");
+		var m = new Material(texture, mesh, shader);
+		m.uniformTextures["specularTexture"] = specular;
+		return m;
+
 	}
 }

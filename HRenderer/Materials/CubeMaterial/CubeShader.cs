@@ -18,32 +18,41 @@ public class CubeShader: Shader {
 		var v_position = position.Clone();
 		varyingDict.Vec4Dict["v_position"] = v_position;
 
+		var v_uv = attribsDict.Vec2Dict["a_uv"];
+		varyingDict.Vec2Dict["v_uv"] = v_uv;
+
 		var vpMat = this.projection.Mul(this.view);
 		return position.TransformSelf(vpMat);
 	}
 
 	public override Vector4 FragShading() {
-		var lightDir = this.uniformVec4["Light.Position"].Sub(this.varyingVec4Dict["v_position"]).NormalizeSelf();
-		var norm = this.varyingVec4Dict["v_normal"].Normalize();
-		var diff = Math.Max(norm.Dot(lightDir), 0);
-		var diffuse = this.uniformVec4["Light.Color"].Mul(diff);
-
 		var lightColor = this.uniformVec4["Light.Color"];
 		
-		var ambientStrength = 0.1;
-		var ambient = this.uniformVec4["Light.Color"].Mul(ambientStrength);
-
+		var uv = this.varyingVec2Dict["v_uv"];
+		var lightDir = this.uniformVec4["Light.Position"].Sub(this.varyingVec4Dict["v_position"]).NormalizeSelf();
+		var norm = this.varyingVec4Dict["v_normal"].Normalize();
 		var cameraPos = this.uniformVec4["Camera.Position"];
-		var specularStrength = 0.5;
-		
 		var viewDir = cameraPos.Sub(this.varyingVec4Dict["v_position"]).NormalizeSelf();
 		var reflectDir = Utils.Reflect(lightDir.Mul(-1), norm);
-
+		
+		// 环境光
+		const double ambientStrength = 0.2;
+		// var ambient = this.uniformVec4["Light.Color"].Mul(ambientStrength);
+		var ambient = lightColor.Mul(this.Texture2D(this.uniformTextures["mainTexture"], uv)).Mul(ambientStrength);
+		
+		// 漫反射
+		var diff = Math.Max(norm.Dot(lightDir), 0);
+		// var diffuse = this.uniformVec4["Light.Color"].Mul(diff);
+		var diffuse = this.Texture2D(this.uniformTextures["mainTexture"], uv).Mul(lightColor).Mul(diff);
+		
+		// 镜面反射
 		var spec = Math.Pow(Math.Max(viewDir.Dot(reflectDir), 0.0), 32);
-		var specular = lightColor.Mul(specularStrength * spec); 
+		const double specularStrength = 0.9;
+		// var specular = lightColor.Mul(specularStrength * spec);
+		var specular = lightColor.Mul(this.Texture2D(this.uniformTextures["specularTexture"], uv)).Mul(spec * specularStrength);
 		
-		var objectColor = Vector4.Create(1, 0.5, 0.31, 1);
-		
-		return ambient.AddSelf(diffuse).AddSelf(specular).Clamp().Mul(objectColor);
+		// var objectColor = Vector4.Create(1, 0.5, 0.31, 1);
+
+		return ambient.AddSelf(diffuse).AddSelf(specular).Clamp();
 	}
 }

@@ -15,7 +15,7 @@ namespace HRenderer.Core {
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
 		
-		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-2, -0, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
+		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
 
 		public List<Material> materials => this._materials;
 
