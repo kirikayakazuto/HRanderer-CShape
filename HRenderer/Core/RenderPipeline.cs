@@ -25,7 +25,8 @@ public class RenderPipeline {
 	private readonly Matrix4 _viewPortMat4;
 
 	// 缓存数据
-	private readonly CacheData _cacheData = new CacheData();
+	private readonly AttribsData _attribsData = new AttribsData();
+	private readonly VaryingData _varyingData = new VaryingData();
 
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
@@ -80,20 +81,14 @@ public class RenderPipeline {
 		var far = shader.uniformDoubles["CameraFar"];
 		
 		// 顶点数据解析
-		mesh.GetVertexAttribs(v1, this._cacheData.Vec4Attribs1, this._cacheData.Vec2Attribs1);
-		mesh.GetVertexAttribs(v2, this._cacheData.Vec4Attribs2, this._cacheData.Vec2Attribs2);
-		mesh.GetVertexAttribs(v3, this._cacheData.Vec4Attribs3, this._cacheData.Vec2Attribs3);
+		mesh.GetVertexAttribs(v1, this._attribsData.VectorDict1);
+		mesh.GetVertexAttribs(v2, this._attribsData.VectorDict2);
+		mesh.GetVertexAttribs(v3, this._attribsData.VectorDict3);
 		
 		// 第一个阶段, 顶点着色器
-		shader.AddAttribs(this._cacheData.Vec4Attribs1);
-		shader.AddAttribs(this._cacheData.Vec2Attribs1);
-		var position1 = this._triangle.position1 = shader.VertexShading();
-		shader.AddAttribs(this._cacheData.Vec4Attribs2);
-		shader.AddAttribs(this._cacheData.Vec2Attribs2);
-		var position2 = this._triangle.position2 = shader.VertexShading();
-		shader.AddAttribs(this._cacheData.Vec4Attribs3);
-		shader.AddAttribs(this._cacheData.Vec2Attribs3);
-		var position3 = this._triangle.position3 = shader.VertexShading();
+		var position1 = this._triangle.position1 = shader.VertexShading(this._attribsData.VectorDict1, this._varyingData.VectorDict1);
+		var position2 = this._triangle.position2 = shader.VertexShading(this._attribsData.VectorDict2, this._varyingData.VectorDict2);
+		var position3 = this._triangle.position3 = shader.VertexShading(this._attribsData.VectorDict3, this._varyingData.VectorDict3);
 		
 		// 转换到屏幕空间
 		position1.TransformSelf(this._viewPortMat4);
@@ -130,7 +125,7 @@ public class RenderPipeline {
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
                     
 				// 计算attribs差值
-				this.ComputeShaderVectorVarying(mesh.attribInfo, shader, barycentric);
+				this.ComputeShaderVectorVarying(shader, barycentric);
 
 				// frag shading
 				var color = shader.FragShading();
@@ -153,32 +148,8 @@ public class RenderPipeline {
 		return Utils.GetDepth(near, far, z);
 	}
 	
-	private void ComputeShaderVectorVarying(IEnumerable<VertexFormat> attribInfo, Shader shader, in Vector4 barycentric) {
-		var attribs1Vec4 = this._cacheData.Vec4Attribs1;
-		var attribs2Vec4 = this._cacheData.Vec4Attribs2;
-		var attribs3Vec4 = this._cacheData.Vec4Attribs3;
-
-		var attribs1Vec2 = this._cacheData.Vec2Attribs1;
-		var attribs2Vec2 = this._cacheData.Vec2Attribs2;
-		var attribs3Vec2 = this._cacheData.Vec2Attribs3;
-		
-		foreach (var vertexFormat in attribInfo) {
-			var name = vertexFormat.name;
-			switch (vertexFormat.num) {
-				case 4:
-					var vec4 = shader.attribsVec4Dict.ContainsKey(name) ? shader.attribsVec4Dict[name] : Vector4.Create(); 
-					Utils.GetInterpVec4(attribs1Vec4[name], attribs2Vec4[name], attribs3Vec4[name], barycentric, vec4);
-					shader.attribsVec4Dict[name] = vec4;
-					break;
-				case 2:
-					var vec2 = shader.attribsVec2Dict.ContainsKey(name) ? shader.attribsVec2Dict[name] : Vector2.Create();
-					Utils.GetInterpVec2(attribs1Vec2[name], attribs2Vec2[name], attribs3Vec2[name], barycentric, vec2);
-					shader.attribsVec2Dict[name] = vec2;
-					break;
-				default:
-					break;
-			}
-		}
+	private void ComputeShaderVectorVarying(Shader shader, in Vector4 barycentric) {
+		this._varyingData.DoVarying(shader, barycentric);
 	}
 
 	/**

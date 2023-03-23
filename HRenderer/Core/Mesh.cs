@@ -37,7 +37,9 @@ namespace HRenderer.Core {
             }
             return names;
         }
-        public void GetVertexAttribs(uint v, in Dictionary<string, Vector4> vec4Dict, in Dictionary<string, Vector2> vec2Dict) {
+        public void GetVertexAttribs(uint v, VectorDict vectorDict) {
+            var vec4Dict = vectorDict.Vec4Dict;
+            var vec2Dict = vectorDict.Vec2Dict;
             uint offset = 0;
             foreach (var attrib in this.attribInfo) {
                 switch (attrib.num) {

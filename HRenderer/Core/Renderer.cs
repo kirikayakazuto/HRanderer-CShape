@@ -40,7 +40,7 @@ namespace HRenderer.Core {
 			var r = Math.Sin(this._time * 0.5) * Math.PI;
 			var lightPos = this._directionLight.position;
 			// lightPos = lightPos.Transform(Matrix4.GetRotationX(r));
-			lightPos = lightPos.Transform(Matrix4.GetRotationY(r));
+			// lightPos = lightPos.Transform(Matrix4.GetRotationY(r));
 			
 			foreach (var material in this._materials) {
 				var shader = material.shader; 

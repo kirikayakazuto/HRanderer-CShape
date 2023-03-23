@@ -14,15 +14,15 @@ namespace HRenderer.Core {
         public readonly Dictionary<string, double> uniformDoubles = new Dictionary<string, double>();
         public readonly Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
         public readonly Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
-
-        // 差值数据
-        public readonly Dictionary<string, Vector4> attribsVec4Dict = new Dictionary<string, Vector4>();
-        public readonly Dictionary<string, Vector2> attribsVec2Dict = new Dictionary<string, Vector2>();
         
+        // 差值数据
+        public readonly Dictionary<string, Vector4> varyingVec4Dict = new Dictionary<string, Vector4>();
+        public readonly Dictionary<string, Vector2> varyingVec2Dict = new Dictionary<string, Vector2>();
+
         /**
          * 顶点着色器
          */
-        public abstract Vector4 VertexShading();
+        public abstract Vector4 VertexShading(VectorDict attribsDict, VectorDict varyingDict);
 
         /**
          * 外壳着色器
@@ -65,18 +65,6 @@ namespace HRenderer.Core {
         public void AddUniforms(Dictionary<string, Texture> dictionary) {
 	        foreach (var keyValuePair in dictionary) {
 		        this.uniformTextures[keyValuePair.Key] = keyValuePair.Value;
-	        }
-        }
-
-        public void AddAttribs(Dictionary<string, Vector4> dictionary) {
-	        foreach (var keyValuePair in dictionary) {
-		        this.attribsVec4Dict[keyValuePair.Key] = keyValuePair.Value.Clone();
-	        }
-        }
-        
-        public void AddAttribs(Dictionary<string, Vector2> dictionary) {
-	        foreach (var keyValuePair in dictionary) {
-		        this.attribsVec2Dict[keyValuePair.Key] = keyValuePair.Value.Clone();
 	        }
         }
     }
