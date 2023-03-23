@@ -77,8 +77,8 @@ public class RenderPipeline {
 		var mesh = material.mesh;
 		var shader = material.shader;
 		
-		var near = shader.uniformDoubles["CameraNear"];
-		var far = shader.uniformDoubles["CameraFar"];
+		var near = shader.uniformDoubles["Camera.Near"];
+		var far = shader.uniformDoubles["Camera.Far"];
 		
 		// 顶点数据解析
 		mesh.GetVertexAttribs(v1, this._attribsData.VectorDict1);

@@ -69,6 +69,10 @@ namespace HRenderer.Common {
             return x1 * y2 - x2 * y1;
         }
 
+        public static Vector4 Reflect(Vector4 i, Vector4 n) {
+            return i.Sub(n.Mul(n.Dot(i)).Mul(2.0));
+        }
+
         /**
          * 校正重心差值
          */

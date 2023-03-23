@@ -27,11 +27,23 @@ public class CubeShader: Shader {
 		var norm = this.varyingVec4Dict["v_normal"].Normalize();
 		var diff = Math.Max(norm.Dot(lightDir), 0);
 		var diffuse = this.uniformVec4["Light.Color"].Mul(diff);
+
+		var lightColor = this.uniformVec4["Light.Color"];
 		
 		var ambientStrength = 0.1;
 		var ambient = this.uniformVec4["Light.Color"].Mul(ambientStrength);
+
+		var cameraPos = this.uniformVec4["Camera.Position"];
+		var specularStrength = 0.5;
+		
+		var viewDir = cameraPos.Sub(this.varyingVec4Dict["v_position"]).NormalizeSelf();
+		var reflectDir = Utils.Reflect(lightDir.Mul(-1), norm);
+
+		var spec = Math.Pow(Math.Max(viewDir.Dot(reflectDir), 0.0), 32);
+		var specular = lightColor.Mul(specularStrength * spec); 
 		
 		var objectColor = Vector4.Create(1, 0.5, 0.31, 1);
-		return ambient.AddSelf(diffuse).Clamp().Mul(objectColor);
+		
+		return ambient.AddSelf(diffuse).AddSelf(specular).Clamp().Mul(objectColor);
 	}
 }

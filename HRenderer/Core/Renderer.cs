@@ -15,7 +15,7 @@ namespace HRenderer.Core {
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
 		
-		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
+		private DirectionLight _directionLight = new DirectionLight(Common.Vector4.Create(-2, -0, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
 
 		public List<Material> materials => this._materials;
 
@@ -52,12 +52,14 @@ namespace HRenderer.Core {
 				shader.AddUniforms(material.uniformTextures);
 				shader.uniformDoubles["time"] = this._time;
 				
-				shader.uniformMatrix4s["CameraView"] = this._camera.viewMat;
-				shader.uniformMatrix4s["CameraProjection"] = this._camera.OrthographicProjection;
-				shader.uniformVec4["CameraPosition"] = this._camera.GetPosition();
-				shader.uniformDoubles["CameraNear"] = this._camera.near;
-				shader.uniformDoubles["CameraFar"] = this._camera.far;
+				shader.uniformDoubles["Camera.Near"] = this._camera.near;
+				shader.uniformDoubles["Camera.Far"] = this._camera.far;
 				
+				shader.uniformMatrix4s["Camera.View"] = this._camera.viewMat;
+				shader.uniformMatrix4s["Camera.Projection"] = this._camera.OrthographicProjection;
+				
+				shader.uniformVec4["Camera.Position"] = this._camera.GetPosition();
+
 				shader.uniformVec4["Light.Position"] = lightPos;
 				shader.uniformVec4["Light.Direction"] = this._directionLight.direction;
 				shader.uniformVec4["Light.Color"] = this._directionLight.color;
