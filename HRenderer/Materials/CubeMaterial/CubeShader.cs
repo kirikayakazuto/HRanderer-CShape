@@ -11,12 +11,11 @@ public class CubeShader: Shader {
 		// var r = Math.PI / 4;
 		// position = position.Transform(Matrix4.GetRotationX(Math.PI));
 		position = position.Transform(Matrix4.GetRotationY((float)r));
-		position =	position.Transform(Matrix4.GetScale(2, 2, 2));
-
+		position =	position.Transform(Matrix4.GetScale(3, 3, 3));
 		
 		var normal = attribsDict.Vec4Dict["a_normal"].Transform(Matrix4.GetRotationY((float)r));
 		varyingDict.Vec4Dict["v_normal"] = normal;
-		var v_position = attribsDict.Vec4Dict["a_position"].Clone();
+		var v_position = position.Clone();
 		varyingDict.Vec4Dict["v_position"] = v_position;
 
 		var vpMat = this.projection.Mul(this.view);

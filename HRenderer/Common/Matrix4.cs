@@ -142,5 +142,10 @@ namespace HRenderer.Common {
         public static Matrix4 Create() {
             return new Matrix4();
         }
+
+        public Matrix4 Inverse() {
+            // 伴生矩阵除法
+            return Matrix4.GetIdentify();
+        }
     }
 }
