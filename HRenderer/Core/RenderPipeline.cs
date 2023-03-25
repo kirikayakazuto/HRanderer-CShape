@@ -27,6 +27,9 @@ public class RenderPipeline {
 	// 缓存数据
 	private readonly AttribsData _attribsData = new AttribsData();
 	private readonly VaryingData _varyingData = new VaryingData();
+	// 
+	private readonly List<Vector4> gl_in = new List<Vector4>();
+	private readonly List<Vector4> gl_out = new List<Vector4>();
 
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
