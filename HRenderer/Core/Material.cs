@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HRenderer.Common;
+using HRenderer.Core.RenderingPipelineLibs;
 
 namespace HRenderer.Core {
     /**

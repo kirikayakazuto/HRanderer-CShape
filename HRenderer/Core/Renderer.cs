@@ -50,19 +50,19 @@ namespace HRenderer.Core {
 				shader.AddUniforms(material.uniformDoubles);
 				shader.AddUniforms(material.uniformVec4);
 				shader.AddUniforms(material.uniformTextures);
-				shader.uniformDoubles["time"] = this._time;
+				shader.uniformData.Doubles["time"] = this._time;
 				
-				shader.uniformDoubles["Camera.Near"] = this._camera.near;
-				shader.uniformDoubles["Camera.Far"] = this._camera.far;
+				shader.uniformData.Doubles["Camera.Near"] = this._camera.near;
+				shader.uniformData.Doubles["Camera.Far"] = this._camera.far;
 				
-				shader.uniformMatrix4s["Camera.View"] = this._camera.viewMat;
-				shader.uniformMatrix4s["Camera.Projection"] = this._camera.OrthographicProjection;
+				shader.uniformData.Matrix4s["Camera.View"] = this._camera.viewMat;
+				shader.uniformData.Matrix4s["Camera.Projection"] = this._camera.OrthographicProjection;
 				
-				shader.uniformVec4["Camera.Position"] = this._camera.GetPosition();
+				shader.uniformData.Vec4s["Camera.Position"] = this._camera.GetPosition();
 
-				shader.uniformVec4["Light.Position"] = lightPos;
-				shader.uniformVec4["Light.Direction"] = this._directionLight.direction;
-				shader.uniformVec4["Light.Color"] = this._directionLight.color;
+				shader.uniformData.Vec4s["Light.Position"] = lightPos;
+				shader.uniformData.Vec4s["Light.Direction"] = this._directionLight.direction;
+				shader.uniformData.Vec4s["Light.Color"] = this._directionLight.color;
                 
 				this.pipeline.Draw(material);
 			}

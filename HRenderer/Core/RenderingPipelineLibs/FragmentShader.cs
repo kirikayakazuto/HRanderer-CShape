@@ -7,4 +7,6 @@ namespace HRenderer.Core.RenderingPipelineLibs;
  */
 public abstract class FragmentShader {
 	public abstract Vector4 Run();
+    
+    
 }

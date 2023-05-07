@@ -1,71 +1,58 @@
-using System.Collections.Generic;
 using HRenderer.Common;
 
-namespace HRenderer.Core {
-    
-    public abstract class Shader {
+namespace HRenderer.Core; 
 
-        // 摄像机相关
-        public Matrix4 view;
-        public Matrix4 projection;
+public abstract class Shader {
+	
+	// 摄像机相关
+	public Matrix4 view;
+	public Matrix4 projection;
+	
+    // uniforms
+    public readonly UniformData uniformData = new UniformData();
 
-        // uniforms
-        public readonly Dictionary<string, Matrix4> uniformMatrix4s = new Dictionary<string, Matrix4>();
-        public readonly Dictionary<string, double> uniformDoubles = new Dictionary<string, double>();
-        public readonly Dictionary<string, Texture> uniformTextures = new Dictionary<string, Texture>();
-        public readonly Dictionary<string, Vector4> uniformVec4 = new Dictionary<string, Vector4>();
-        
-        // 差值数据
-        public readonly Dictionary<string, Vector4> varyingVec4Dict = new Dictionary<string, Vector4>();
-        public readonly Dictionary<string, Vector2> varyingVec2Dict = new Dictionary<string, Vector2>();
+    public readonly VectorDict varyingDict = new VectorDict();
+    /**
+     * 顶点着色器
+     */
+    public abstract Vector4 VertexShading(GlData glData);
 
-        /**
-         * 顶点着色器
-         */
-        public abstract Vector4 VertexShading(VectorDict attribsDict, VectorDict varyingDict);
-
-        /**
-         * 外壳着色器
-         */
-        public void HullShader() { }
-
-        /**
-         * 域着色器
-         */
-        public void DomainShader() { }
-
-        /**
-         * 几何着色器
-         */
-        public void GeometryShader() {}
-        
-        /**
-         * 片元着色器
-         */
-        public abstract Vector4 FragShading();
-        
-        
-        protected Vector4 Texture2D(Texture t, Vector2 uv) {
-            var color = t.Sample(uv.x, uv.y);
-            var v = Vector4.Create(color.r / 256f, color.g / 256f, color.b / 256f, color.a / 256f);
-            Color.Return(color);
-            return v;
-        }
-        
-        public void AddUniforms(Dictionary<string, double> dictionary) {
-	        foreach (var keyValuePair in dictionary) {
-		        this.uniformDoubles[keyValuePair.Key] = keyValuePair.Value;
-	        }
-        }
-        public void AddUniforms(Dictionary<string, Vector4> dictionary) {
-	        foreach (var keyValuePair in dictionary) {
-		        this.uniformVec4[keyValuePair.Key] = keyValuePair.Value;
-	        }
-        }
-        public void AddUniforms(Dictionary<string, Texture> dictionary) {
-	        foreach (var keyValuePair in dictionary) {
-		        this.uniformTextures[keyValuePair.Key] = keyValuePair.Value;
-	        }
-        }
+    /**
+     * 几何着色器
+     */
+    public void GeometryShader(GlData glData) {
+	    
     }
+    
+    /**
+     * 片元着色器
+     */
+    public abstract Vector4 FragShading();
+    
+    /**
+     * 纹理采样
+     */
+    protected Vector4 Texture2D(Texture t, Vector2 uv) {
+        var color = t.Sample(uv.x, uv.y);
+        var v = Vector4.Create(color.r / 256f, color.g / 256f, color.b / 256f, color.a / 256f);
+        Color.Return(color);
+        return v;
+    }
+    
+    public void AddUniforms(Dictionary<string, double> dictionary) {
+	    foreach (var keyValuePair in dictionary) {
+		    this.uniformData.Doubles[keyValuePair.Key] = keyValuePair.Value;
+	    }
+	}
+	public void AddUniforms(Dictionary<string, Vector4> dictionary) {
+		foreach (var keyValuePair in dictionary) {
+			this.uniformData.Vec4s[keyValuePair.Key] = keyValuePair.Value;
+		}
+	}
+	public void AddUniforms(Dictionary<string, Texture> dictionary) {
+		foreach (var keyValuePair in dictionary) {
+			this.uniformData.Textures[keyValuePair.Key] = keyValuePair.Value;
+		}
+	}
+    
 }

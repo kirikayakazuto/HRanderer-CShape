@@ -1,46 +1,37 @@
 using HRenderer.Common;
 
-namespace HRenderer.Core;
+namespace HRenderer.Core; 
+
 
 public enum RenderMode {
 	Triangle,
 	Line,
 	Point
 }
-
 /**
  * 渲染管线
  */
 public class RenderPipeline {
-	// 屏幕大小
 	private readonly int _width;
 	private readonly int _height;
 	private readonly Matrix4 _viewPortMat4;
-
-	// 缓存数据
-	private readonly AttribsData _attribsData = new AttribsData();
-	private readonly VaryingData _varyingData = new VaryingData();
-	// 
+	// gl缓存数据
+	private readonly List<GlData> _glDatas = new List<GlData>();
+	private readonly List<Vector4> _positions = new List<Vector4>();
 	private readonly List<Vector4> gl_in = new List<Vector4>();
 	private readonly List<Vector4> gl_out = new List<Vector4>();
-
-	private RenderMode _renderMode = RenderMode.Triangle;
-
-	// 抗锯齿
-	private readonly bool _useMsaa = false;
 	
 	// 当前处理的三角形
 	private readonly Triangle _triangle = new Triangle();
 	
-	private readonly Vector2[] _msaaOffsetVec2 = new Vector2[] {
-		Vector2.Create(0.375, 0.125),
-		Vector2.Create(0.125, -0.375),
-		Vector2.Create(-0.375, -0.125),
-		Vector2.Create(-0.125, -0.375),
-		
-	};
+	// 输出
 	public FrameBuffer frameBuffer { get; }
 	
+	// 抗锯齿
+	private readonly bool _useMsaa = false;
+
+	private RenderMode _renderMode = RenderMode.Triangle;
+
 	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
 		this._height = height;
@@ -48,72 +39,96 @@ public class RenderPipeline {
 		this.frameBuffer = new FrameBuffer(width, height, useMsaa);
 		this._useMsaa = useMsaa;
 	}
-	
-	/**
-	 * material 渲染所需数据
-	 */
+
 	public void Draw(Material material) {
 		var mesh = material.mesh;
+		var shader = material.shader;
+		
 		var indices = mesh.Ibo;
-		Vector4.newCount = 0;
-		for (var i = 0; i < indices.Length; i += 3) {
-			var v1 = mesh.stride * indices[i];
-			var v2 = mesh.stride * indices[i+1];
-			var v3 = mesh.stride * indices[i+2];
+		
+		this._glDatas.Clear();
+		this._positions.Clear();
+		
+		for (uint i = 0; i < mesh.Vbo.Length; i+=mesh.stride) {
+			var glData = new GlData();
+			
+			// 处理attribute
+			mesh.GetVertexAttribs(i, glData.attributes);
+			
+			// 顶点着色器
+			var position = shader.VertexShading(glData);
 
-			this._drawTriangle(material, v1, v2, v3);
+			// 转换到屏幕坐标
+			position.TransformSelf(this._viewPortMat4);
+			
+			this._glDatas.Add(glData);
+			this._positions.Add(position);
 		}
-		// Console.WriteLine(Vector4.newCount);
-		if (!this._useMsaa) return;
+
+		for (var i = 0; i < indices.Length; i += 3) {
+
+			var v1 = this._triangle.v1 = indices[i];
+			var v2 = this._triangle.v2 = indices[i+1];
+			var v3 = this._triangle.v3 = indices[i+2];
+			
+			var position1 = this._triangle.position1 = this._positions[(int)v1].Clone();
+			var position2 = this._triangle.position2 = this._positions[(int)v2].Clone();
+			var position3 = this._triangle.position3 = this._positions[(int)v3].Clone();
+
+			this._triangle.z1 = position1.w;
+			this._triangle.z2 = position2.w;
+			this._triangle.z3 = position3.w;
+
+			position1.Homogenenize();
+			position2.Homogenenize();
+			position3.Homogenenize();
+
+			switch (this._renderMode) {
+				case RenderMode.Triangle:
+					this._rasterByTriangle(material); 
+					break;
+				case RenderMode.Line:
+					this._rasterByLine(material);
+					break;
+				case RenderMode.Point:
+					this._rasterByPoint(material);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			
+		}
+	
+		if(!this._useMsaa) return;
 		this.frameBuffer.DoMsaa();
 	}
-
+	
 	public void ClearFrameBuffer() {
 		this.frameBuffer.Clear();
 	}
 
-	private void _drawLine(uint v1, uint v2, uint v3) {
-		
-	}
-
-	private void _drawPoint(uint v1, uint v2, uint v3) {
-		
-	}
-
-	private void _drawTriangle(Material material, uint v1, uint v2, uint v3) {
-		var mesh = material.mesh;
+	/**
+	 * 三角形光栅化
+	 */
+	private void _rasterByTriangle(Material material) {
 		var shader = material.shader;
-		
-		var near = shader.uniformDoubles["Camera.Near"];
-		var far = shader.uniformDoubles["Camera.Far"];
-		
-		// 顶点数据解析
-		mesh.GetVertexAttribs(v1, this._attribsData.VectorDict1);
-		mesh.GetVertexAttribs(v2, this._attribsData.VectorDict2);
-		mesh.GetVertexAttribs(v3, this._attribsData.VectorDict3);
-		
-		// 第一个阶段, 顶点着色器
-		var position1 = this._triangle.position1 = shader.VertexShading(this._attribsData.VectorDict1, this._varyingData.VectorDict1);
-		var position2 = this._triangle.position2 = shader.VertexShading(this._attribsData.VectorDict2, this._varyingData.VectorDict2);
-		var position3 = this._triangle.position3 = shader.VertexShading(this._attribsData.VectorDict3, this._varyingData.VectorDict3);
-		
-		// 转换到屏幕空间
-		position1.TransformSelf(this._viewPortMat4);
-		position2.TransformSelf(this._viewPortMat4);
-		position3.TransformSelf(this._viewPortMat4);
-		
-		var z1 = position1.w;
-		var z2 = position2.w;
-		var z3 = position3.w;
-		
-		position1.Homogenenize();
-		position2.Homogenenize();
-		position3.Homogenenize();
-		
-		// 背面剔除
-		if (material.useFaceCulling && this.IsBackFace()) return;
-		
 
+		var v1 = this._triangle.v1;
+		var v2 = this._triangle.v2;
+		var v3 = this._triangle.v3;
+		
+		var position1 = this._triangle.position1;
+		var position2 = this._triangle.position2;
+		var position3 = this._triangle.position3;
+
+		var z1 = this._triangle.z1;
+		var z2 = this._triangle.z2;
+		var z3 = this._triangle.z3;
+
+		
+		var near = shader.uniformData.Doubles["Camera.Near"];
+		var far = shader.uniformData.Doubles["Camera.Far"];
+		
 		// 光栅化
 		var bound = Utils.GetBoundingBox(position1, position2, position3, this._width, this._height);
 		var barycentric = Vector4.Create();
@@ -132,7 +147,7 @@ public class RenderPipeline {
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
                     
 				// 计算attribs差值
-				this.ComputeShaderVectorVarying(shader, barycentric);
+				this.ComputeShaderVectorVarying(shader, barycentric, v1, v2, v3);
 
 				// frag shading
 				var color = shader.FragShading();
@@ -142,9 +157,20 @@ public class RenderPipeline {
 				Vector4.Return(color);
 			}
 		}
-		Vector2.Return(p);
 		
-		this._triangle.Clear();
+		
+	}
+
+	private void _rasterByLine(Material material) { }
+	
+	private void _rasterByPoint(Material material) { }
+	
+	private bool CheckInTriangle(in Vector2 p, in Vector4 barycentric) {
+		var position1 = this._triangle.position1;
+		var position2 = this._triangle.position2;
+		var position3 = this._triangle.position3;
+		Utils.GetBarycentric(p, position1, position2, position3, barycentric);
+		return barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0;
 	}
 	
 	private double GetInterpolationZ(in Vector4 barycentric, double near, double far) {
@@ -155,47 +181,26 @@ public class RenderPipeline {
 		return Utils.GetDepth(near, far, z);
 	}
 	
-	private void ComputeShaderVectorVarying(Shader shader, in Vector4 barycentric) {
-		this._varyingData.DoVarying(shader, barycentric);
-	}
-
 	/**
-	 * 背面剔除
+	 * 计算差值
 	 */
-	private bool IsBackFace() {
-		var p1 = this._triangle.position1;
-		var p2 = this._triangle.position2;
-		var p3 = this._triangle.position3;
-		var a = p2.x - p1.x;
-		var b = p2.y - p1.y;
-		var c = p3.x - p1.x;
-		var d = p3.y - p1.y;
-		return a * d - b * c < 0;
-	}
-
-	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, double near, double far) {
-		var pMsaa = Vector2.Create();
-		var msaa = 0;
-		for (var i = 0; i < 4; i++) {
-			p.Add(this._msaaOffsetVec2[i], pMsaa);
-			// 是否在三角形内
-			if(!this.CheckInTriangle(pMsaa, barycentric)) continue;
-			// 深度通过
-			if(!this.CheckZ(x, y, barycentric, near, far, i)) continue;;
-			// 写入
-			this.frameBuffer.AddMsaaCount(x, y);
-			msaa++;
+	private void ComputeShaderVectorVarying(Shader shader, in Vector4 barycentric, uint v1, uint v2, uint v3) {
+		// gl data
+		var glData1 = this._glDatas[(int) v1];
+		var glData2 = this._glDatas[(int) v2];
+		var glData3 = this._glDatas[(int) v3];
+		var vec4keys = glData1.varyingDict.Vec4s.Keys;
+		foreach (var key in vec4keys) {
+			var vec4 = shader.varyingDict.Vec4s.ContainsKey(key) ? shader.varyingDict.Vec4s[key] : Vector4.Create(); 
+			Utils.GetInterpVec4(glData1.varyingDict.Vec4s[key], glData2.varyingDict.Vec4s[key], glData3.varyingDict.Vec4s[key], barycentric, vec4);
+			shader.varyingDict.Vec4s[key] = vec4;
 		}
-		Vector2.Return(pMsaa);
-		return msaa != 0;
-	}
-	
-	private bool CheckInTriangle(in Vector2 p, in Vector4 barycentric) {
-		var position1 = this._triangle.position1;
-		var position2 = this._triangle.position2;
-		var position3 = this._triangle.position3;
-		Utils.GetBarycentric(p, position1, position2, position3, barycentric);
-		return barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0;
+		var vec2keys = glData1.varyingDict.Vec2s.Keys;
+		foreach (var key in vec2keys) {
+			var vec2 = shader.varyingDict.Vec2s.ContainsKey(key) ? shader.varyingDict.Vec2s[key] : Vector2.Create(); 
+			Utils.GetInterpVec2(glData1.varyingDict.Vec2s[key], glData2.varyingDict.Vec2s[key], glData3.varyingDict.Vec2s[key], barycentric, vec2);
+			shader.varyingDict.Vec2s[key] = vec2;
+		}
 	}
 	
 	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far) {
@@ -211,5 +216,22 @@ public class RenderPipeline {
 		this.frameBuffer.SetZ(x, y, -z, level);
 		return true;
 	}
-    
+	
+	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, double near, double far) {
+		var pMsaa = Vector2.Create();
+		var msaa = 0;
+		for (var i = 0; i < 4; i++) {
+			p.Add(Const.MsaaOffsetVec2[i], pMsaa);
+			// 是否在三角形内
+			if(!this.CheckInTriangle(pMsaa, barycentric)) continue;
+			// 深度通过
+			if(!this.CheckZ(x, y, barycentric, near, far, i)) continue;;
+			// 写入
+			this.frameBuffer.AddMsaaCount(x, y);
+			msaa++;
+		}
+		Vector2.Return(pMsaa);
+		return msaa != 0;
+	}
+	
 }
