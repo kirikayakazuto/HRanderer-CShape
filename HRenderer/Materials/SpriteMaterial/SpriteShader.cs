@@ -7,13 +7,13 @@ namespace HRenderer.Materials.SpriteMaterial {
     public class SpriteShader: Shader {
         
         public override Vector4 VertexShading(VectorDict attribsDict, VectorDict varyingDict) {
-            var position = attribsDict.Vec4Dict["position"];
+            var position = attribsDict.Vec4s["position"];
             var r = Math.PI / 2f;
             position = position.Transform(Matrix4.GetRotationX(r));
             position.y += 1f;
             var vpMat = this.projection.Mul(this.view);
             
-            varyingDict.Vec2Dict["uv"] = attribsDict.Vec2Dict["uv"];
+            varyingDict.Vec2s["uv"] = attribsDict.Vec2s["uv"];
             
             return position.TransformSelf(vpMat);
         }

@@ -5,15 +5,15 @@ namespace HRenderer.Materials.ModelMaterial;
 
 public class ModelShader: Shader {
     public override Vector4 VertexShading(VectorDict attribsDict, VectorDict varyingDict) {
-        var position = attribsDict.Vec4Dict["position"];
+        var position = attribsDict.Vec4s["position"];
         var r = Math.Sin(this.uniformDoubles["time"]) * Math.PI;
         // var r = Math.PI;
         position = position.Transform(Matrix4.GetRotationX(Math.PI));
         position.TransformSelf(Matrix4.GetRotationY(Math.PI));
         position.TransformSelf(Matrix4.GetScale(2, 2, 2));
         
-        varyingDict.Vec4Dict["v_position"] = position.Clone();
-        varyingDict.Vec2Dict["v_uv"] = attribsDict.Vec2Dict["uv"];
+        varyingDict.Vec4s["v_position"] = position.Clone();
+        varyingDict.Vec2s["v_uv"] = attribsDict.Vec2s["uv"];
         
         var vpMat = this.projection.Mul(this.view);
         return position.TransformSelf(vpMat);

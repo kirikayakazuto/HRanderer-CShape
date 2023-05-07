@@ -2,18 +2,11 @@ using HRenderer.Common;
 
 namespace HRenderer.Core;
 
-public class Triangle {
-	public Vector4 position1 = Vector4.Create();
-	public Vector4 position2 = Vector4.Create();
-	public Vector4 position3 = Vector4.Create();
-
-	public void Clear() {
-		Vector4.Return(this.position1);
-		Vector4.Return(this.position2);
-		Vector4.Return(this.position3);
-	}
+public enum RenderMode {
+	Triangle,
+	Line,
+	Point
 }
-
 
 /**
  * 渲染管线
@@ -30,6 +23,8 @@ public class RenderPipeline {
 	// 
 	private readonly List<Vector4> gl_in = new List<Vector4>();
 	private readonly List<Vector4> gl_out = new List<Vector4>();
+
+	private RenderMode _renderMode = RenderMode.Triangle;
 
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
@@ -65,6 +60,7 @@ public class RenderPipeline {
 			var v1 = mesh.stride * indices[i];
 			var v2 = mesh.stride * indices[i+1];
 			var v3 = mesh.stride * indices[i+2];
+
 			this._drawTriangle(material, v1, v2, v3);
 		}
 		// Console.WriteLine(Vector4.newCount);
@@ -74,6 +70,14 @@ public class RenderPipeline {
 
 	public void ClearFrameBuffer() {
 		this.frameBuffer.Clear();
+	}
+
+	private void _drawLine(uint v1, uint v2, uint v3) {
+		
+	}
+
+	private void _drawPoint(uint v1, uint v2, uint v3) {
+		
 	}
 
 	private void _drawTriangle(Material material, uint v1, uint v2, uint v3) {

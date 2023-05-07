@@ -37,9 +37,17 @@ namespace HRenderer.Core {
             }
             return names;
         }
+
+        public void GetVertexs() {
+            for (var i = 0; i < this._vbo.Length; i += (int)this._stride) {
+                var vertex = new float[this._stride];
+                Array.Copy(this._vbo, i, vertex, 0, _stride);
+            }
+        }
+        
         public void GetVertexAttribs(uint v, VectorDict vectorDict) {
-            var vec4Dict = vectorDict.Vec4Dict;
-            var vec2Dict = vectorDict.Vec2Dict;
+            var vec4Dict = vectorDict.Vec4s;
+            var vec2Dict = vectorDict.Vec2s;
             uint offset = 0;
             foreach (var attrib in this.attribInfo) {
                 switch (attrib.num) {

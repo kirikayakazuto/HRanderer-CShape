@@ -6,20 +6,20 @@ namespace HRenderer.Materials.CubeMaterial;
 
 public class CubeShader: Shader {
 	public override Vector4 VertexShading(VectorDict attribsDict, VectorDict varyingDict) {
-		var position = attribsDict.Vec4Dict["a_position"];
+		var position = attribsDict.Vec4s["a_position"];
 		var r = Math.Sin(this.uniformDoubles["time"]) * Math.PI;
 		// var r = Math.PI / 4;
 		// position = position.Transform(Matrix4.GetRotationX(Math.PI));
 		position = position.Transform(Matrix4.GetRotationY((float)r));
 		position =	position.Transform(Matrix4.GetScale(3, 3, 3));
 		
-		var normal = attribsDict.Vec4Dict["a_normal"].Transform(Matrix4.GetRotationY((float)r));
-		varyingDict.Vec4Dict["v_normal"] = normal;
+		var normal = attribsDict.Vec4s["a_normal"].Transform(Matrix4.GetRotationY((float)r));
+		varyingDict.Vec4s["v_normal"] = normal;
 		var v_position = position.Clone();
-		varyingDict.Vec4Dict["v_position"] = v_position;
+		varyingDict.Vec4s["v_position"] = v_position;
 
-		var v_uv = attribsDict.Vec2Dict["a_uv"];
-		varyingDict.Vec2Dict["v_uv"] = v_uv;
+		var v_uv = attribsDict.Vec2s["a_uv"];
+		varyingDict.Vec2s["v_uv"] = v_uv;
 
 		var vpMat = this.projection.Mul(this.view);
 		return position.TransformSelf(vpMat);
