@@ -44,6 +44,8 @@ namespace HRenderer.Core {
         }
 
         public void SetColor(int x, int y, Vector4 color) {
+            if(x<0 || x>=this.width) return;
+            if(y<0 || y>=this.height) return;
             var idx = (x + y * this.width) * 4;
             this._pixelBuffer[idx] = (byte)(color.x * 255);
             this._pixelBuffer[idx+1] = (byte)(color.y * 255);

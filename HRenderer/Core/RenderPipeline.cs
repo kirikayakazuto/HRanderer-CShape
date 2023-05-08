@@ -42,7 +42,7 @@ public class RenderPipeline {
 	private readonly bool _useMsaa = false;
 
 	// 渲染模式
-	private RenderMode _renderMode = RenderMode.Triangle;
+	private RenderMode _renderMode = RenderMode.Line;
 
 	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
@@ -94,6 +94,8 @@ public class RenderPipeline {
 			this._triangle.position1.Homogenenize();
 			this._triangle.position2.Homogenenize();
 			this._triangle.position3.Homogenenize();
+			
+			if(material.useFaceCulling && this.IsBackFace()) continue;
 
 			switch (this._renderMode) {
 				case RenderMode.Triangle:
@@ -108,7 +110,6 @@ public class RenderPipeline {
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-			
 		}
 	
 		if(!this._useMsaa) return;
@@ -136,7 +137,6 @@ public class RenderPipeline {
 		var z1 = this._triangle.z1;
 		var z2 = this._triangle.z2;
 		var z3 = this._triangle.z3;
-
 		
 		var near = shader.uniformData.Doubles["Camera.Near"];
 		var far = shader.uniformData.Doubles["Camera.Far"];
@@ -173,7 +173,56 @@ public class RenderPipeline {
 		
 	}
 
-	private void _rasterByLine(Material material) { }
+	private void _rasterByLine(Material material) {
+		var shader = material.shader;
+
+		var v1 = this._triangle.v1;
+		var v2 = this._triangle.v2;
+		var v3 = this._triangle.v3;
+		
+		var position1 = this._triangle.position1;
+		var position2 = this._triangle.position2;
+		var position3 = this._triangle.position3;
+
+		var z1 = this._triangle.z1;
+		var z2 = this._triangle.z2;
+		var z3 = this._triangle.z3;
+		
+		this._drawLine(position1, position2);
+		this._drawLine(position1, position3);
+		this._drawLine(position2, position3);
+	}
+
+	private void _drawLine(Vector4 p1, Vector4 p2) {
+		var x1 = (int)Math.Round(p1.x);
+		var y1 = (int)Math.Round(p1.y);
+		
+		var x2 = (int)Math.Round(p2.x);
+		var y2 = (int)Math.Round(p2.y);
+		
+		var steep = Math.Abs(y2 - y1) > Math.Abs(x2 - x1);
+		if (steep) {
+			(x1, y1) = (y1, x1);
+			(x2, y2) = (y2, x2);
+		}
+		if (x1 > x2) {
+			(x1, x2) = (x2, x1);
+			(y1, y2) = (y2, y1);
+		}
+		var deltaX = x2 - x1;
+		var error = deltaX / 2;
+		var deltaY = Math.Abs(y2 - y1);
+		var yStep = y1 < y2 ? 1 : -1;
+
+		var y = y1;
+		for (var x = x1; x < x2; x++) {
+			this.frameBuffer.SetColor(steep ? y : x , steep ? x : y, Vector4.Create(1, 1, 1, 1));
+			error -= deltaY;
+			if (error >= 0) continue;
+			y += yStep;
+			error += deltaX;
+		}
+	}
 	
 	private void _rasterByPoint(Material material) { }
 	
@@ -245,5 +294,17 @@ public class RenderPipeline {
 		Vector2.Return(pMsaa);
 		return msaa != 0;
 	}
-	
+
+	private bool IsBackFace() {
+		var p1 = this._triangle.position1;
+		var p2 = this._triangle.position2;
+		var p3 = this._triangle.position3;
+		var a = p2.x - p1.x;
+		var b = p2.y - p1.y;
+		var c = p3.x - p1.x;
+		var d = p3.y - p1.y;
+		
+		return a * d - b * c < 0;
+	}
+
 }
