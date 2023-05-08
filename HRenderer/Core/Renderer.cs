@@ -47,9 +47,9 @@ namespace HRenderer.Core {
 				shader.view = this._camera.viewMat;
 				shader.projection = this._camera.OrthographicProjection;
                 
-				shader.AddUniforms(material.uniformDoubles);
-				shader.AddUniforms(material.uniformVec4);
-				shader.AddUniforms(material.uniformTextures);
+				// 添加材质自带的uniforms
+				shader.AddUniforms(material.uniformData);
+				
 				shader.uniformData.Doubles["time"] = this._time;
 				
 				shader.uniformData.Doubles["Camera.Near"] = this._camera.near;

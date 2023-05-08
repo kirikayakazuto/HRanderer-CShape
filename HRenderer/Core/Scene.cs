@@ -26,9 +26,9 @@ public class Scene {
 		this._materials.Add(CubeMaterial.GetMaterial());
 		var materials = this._materials;
 		foreach (var material in materials) {
-			material.uniformVec4["Light.Position"] = this._directionLight.position;
-			material.uniformVec4["Light.Direction"] = this._directionLight.direction;
-			material.uniformVec4["Light.Color"] = this._directionLight.color;	
+			material.uniformData.Vec4s["Light.Position"] = this._directionLight.position;
+			material.uniformData.Vec4s["Light.Direction"] = this._directionLight.direction;
+			material.uniformData.Vec4s["Light.Color"] = this._directionLight.color;	
 		}
 	}
 	

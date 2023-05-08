@@ -8,7 +8,7 @@ public class SpriteMaterial {
 		var mesh = new SpriteMesh();
 		var shader = new SpriteShader();
 		var m = new Material(texture, mesh, shader);
-		m.uniformTextures["noiseTexture"] = new Texture("./Assets/noises/noise.png");
+		m.uniformData.Textures["noiseTexture"] = new Texture("./Assets/noises/noise.png");
 		return m;
 	}
 }

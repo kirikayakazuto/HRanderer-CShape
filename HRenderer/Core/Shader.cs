@@ -38,21 +38,20 @@ public abstract class Shader {
         Color.Return(color);
         return v;
     }
-    
-    public void AddUniforms(Dictionary<string, double> dictionary) {
-	    foreach (var keyValuePair in dictionary) {
+
+
+    public void AddUniforms(UniformData uniformDatas) {
+	    foreach (var keyValuePair in uniformDatas.Doubles) {
 		    this.uniformData.Doubles[keyValuePair.Key] = keyValuePair.Value;
 	    }
-	}
-	public void AddUniforms(Dictionary<string, Vector4> dictionary) {
-		foreach (var keyValuePair in dictionary) {
-			this.uniformData.Vec4s[keyValuePair.Key] = keyValuePair.Value;
-		}
-	}
-	public void AddUniforms(Dictionary<string, Texture> dictionary) {
-		foreach (var keyValuePair in dictionary) {
-			this.uniformData.Textures[keyValuePair.Key] = keyValuePair.Value;
-		}
-	}
-    
+	    foreach (var keyValuePair in uniformDatas.Vec4s) {
+		    this.uniformData.Vec4s[keyValuePair.Key] = keyValuePair.Value;
+	    }
+	    foreach (var keyValuePair in uniformDatas.Matrix4s) {
+		    this.uniformData.Matrix4s[keyValuePair.Key] = keyValuePair.Value;
+	    }
+	    foreach (var keyValuePair in uniformDatas.Textures) {
+		    this.uniformData.Textures[keyValuePair.Key] = keyValuePair.Value;
+	    }
+    }
 }

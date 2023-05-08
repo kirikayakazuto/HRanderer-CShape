@@ -4,17 +4,28 @@ namespace HRenderer.Core;
 
 
 public enum RenderMode {
+	/**
+	 * 正常三角形光栅化
+	 */
 	Triangle,
+	/**
+	 * 线段模式
+	 */
 	Line,
+	/**
+	 * 点模式
+	 */
 	Point
 }
 /**
  * 渲染管线
  */
 public class RenderPipeline {
+	// 窗口相关数据
 	private readonly int _width;
 	private readonly int _height;
 	private readonly Matrix4 _viewPortMat4;
+	
 	// gl缓存数据
 	private readonly List<GlData> _glDatas = new List<GlData>();
 	private readonly List<Vector4> _positions = new List<Vector4>();
@@ -30,6 +41,7 @@ public class RenderPipeline {
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
 
+	// 渲染模式
 	private RenderMode _renderMode = RenderMode.Triangle;
 
 	public RenderPipeline(int width, int height, bool useMsaa = false) {
