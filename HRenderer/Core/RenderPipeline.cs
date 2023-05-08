@@ -193,6 +193,9 @@ public class RenderPipeline {
 		this._drawLine(position2, position3);
 	}
 
+	/**
+	 * Bresenham算法
+	 */
 	private void _drawLine(Vector4 p1, Vector4 p2) {
 		var x1 = (int)Math.Round(p1.x);
 		var y1 = (int)Math.Round(p1.y);
@@ -210,21 +213,39 @@ public class RenderPipeline {
 			(y1, y2) = (y2, y1);
 		}
 		var deltaX = x2 - x1;
-		var error = deltaX / 2;
+		var offset = deltaX / 2;
 		var deltaY = Math.Abs(y2 - y1);
 		var yStep = y1 < y2 ? 1 : -1;
 
 		var y = y1;
 		for (var x = x1; x < x2; x++) {
 			this.frameBuffer.SetColor(steep ? y : x , steep ? x : y, Vector4.Create(1, 1, 1, 1));
-			error -= deltaY;
-			if (error >= 0) continue;
+			offset -= deltaY;
+			if (offset >= 0) continue;
 			y += yStep;
-			error += deltaX;
+			offset += deltaX;
 		}
 	}
-	
-	private void _rasterByPoint(Material material) { }
+
+	private void _rasterByPoint(Material material) {
+		var shader = material.shader;
+
+		var v1 = this._triangle.v1;
+		var v2 = this._triangle.v2;
+		var v3 = this._triangle.v3;
+		
+		var position1 = this._triangle.position1;
+		var position2 = this._triangle.position2;
+		var position3 = this._triangle.position3;
+		
+		this._drawPoint(position1);
+		this._drawPoint(position2);
+		this._drawPoint(position3);
+	}
+
+	private void _drawPoint(Vector4 p) {
+		
+	}
 	
 	private bool CheckInTriangle(in Vector2 p, in Vector4 barycentric) {
 		var position1 = this._triangle.position1;
