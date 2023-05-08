@@ -1,5 +1,3 @@
-using HRenderer.Common;
-
 namespace HRenderer.Core; 
 
 public class GlData {

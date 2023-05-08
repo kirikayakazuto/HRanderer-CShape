@@ -71,17 +71,17 @@ public class RenderPipeline {
 			var v2 = this._triangle.v2 = indices[i+1];
 			var v3 = this._triangle.v3 = indices[i+2];
 			
-			var position1 = this._triangle.position1 = this._positions[(int)v1].Clone();
-			var position2 = this._triangle.position2 = this._positions[(int)v2].Clone();
-			var position3 = this._triangle.position3 = this._positions[(int)v3].Clone();
+			this._triangle.position1 = this._positions[(int)v1].Clone();
+			this._triangle.position2 = this._positions[(int)v2].Clone();
+			this._triangle.position3 = this._positions[(int)v3].Clone();
 
-			this._triangle.z1 = position1.w;
-			this._triangle.z2 = position2.w;
-			this._triangle.z3 = position3.w;
+			this._triangle.z1 = this._triangle.position1.w;
+			this._triangle.z2 = this._triangle.position2.w;
+			this._triangle.z3 = this._triangle.position3.w;
 
-			position1.Homogenenize();
-			position2.Homogenenize();
-			position3.Homogenenize();
+			this._triangle.position1.Homogenenize();
+			this._triangle.position2.Homogenenize();
+			this._triangle.position3.Homogenenize();
 
 			switch (this._renderMode) {
 				case RenderMode.Triangle:
