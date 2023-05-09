@@ -61,6 +61,7 @@ public class RenderPipeline {
 		this._glDatas.Clear();
 		this._positions.Clear();
 		
+		// 顶点着色器工作
 		for (uint i = 0; i < mesh.Vbo.Length; i+=mesh.stride) {
 			var glData = new GlData();
 			
@@ -76,7 +77,10 @@ public class RenderPipeline {
 			this._glDatas.Add(glData);
 			this._positions.Add(position);
 		}
+		
+		
 
+		// 片元着色器工作
 		for (var i = 0; i < indices.Length; i += 3) {
 
 			var v1 = this._triangle.v1 = indices[i];

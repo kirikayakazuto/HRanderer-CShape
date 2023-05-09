@@ -37,7 +37,7 @@ namespace HRenderer.Core {
 			
 			this._time += dt;
 
-			var r = Math.Sin(this._time * 0.5) * Math.PI;
+			var r = (Math.Sin(this._time * 0.8) / 2 + 0.5) * 0.7 * Math.PI;
 			var lightPos = this._directionLight.position;
 			// lightPos = lightPos.Transform(Matrix4.GetRotationX(r));
 			lightPos = lightPos.Transform(Matrix4.GetRotationY(r));

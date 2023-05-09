@@ -52,17 +52,7 @@ namespace HRenderer.Core {
             this._pixelBuffer[idx+2] = (byte)(color.z * 255);
             this._pixelBuffer[idx+3] = (byte)(color.w * 255);
         }
-
-        public void SetColor(int x, int y, Color color) {
-            var idx = (x + y * this.width) * 4;
-            this._pixelBuffer.CopyTo(color.data, idx);
-        }
-
-        public Color GetColor(int x, int y) {
-            var idx = x + y * this.width;
-            return Color.Create(this._pixelBuffer[idx], this._pixelBuffer[idx+1], this._pixelBuffer[idx+2], this._pixelBuffer[idx+3]);
-        }
-
+        
         public double GetZ(int x, int y) {
             var idx = x + y * this.width;
             return this._zBuffer[idx];
@@ -140,18 +130,7 @@ namespace HRenderer.Core {
                     this._pixelBuffer[idx+3] = (byte)Math.Floor(this._pixelBuffer[idx+3] * count);
                 }
             }
-            // for (var y = 0; y < this.height; y++) {
-            //     for (var x = 0; x < this.width; x++) {
-            //         var msaa = this._pixelMsaas[x + y * this.width];
-            //         Console.Write(msaa);
-            //     }
-            //     Console.WriteLine();
-            // }
-            // Console.WriteLine();
-            // Console.WriteLine();
-            // Console.WriteLine();
         }
-        
         
     }
 }
