@@ -42,7 +42,7 @@ public class RenderPipeline {
 	private readonly bool _useMsaa = false;
 
 	// 渲染模式
-	private RenderMode _renderMode = RenderMode.Line;
+	private RenderMode _renderMode = RenderMode.Triangle;
 
 	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
@@ -244,7 +244,7 @@ public class RenderPipeline {
 	}
 
 	private void _drawPoint(Vector4 p) {
-		
+		this.frameBuffer.SetColor((int)Math.Round(p.x), (int)Math.Round(p.y), Vector4.Create(1, 1, 1, 1));
 	}
 	
 	private bool CheckInTriangle(in Vector2 p, in Vector4 barycentric) {
