@@ -1,17 +1,23 @@
 namespace HRenderer.Core; 
 
+/**
+ * 模版buffer
+ */
 public class StencilBuffer {
-	public int width { get; }
-	public int height { get; }
-
-	private readonly byte[] _buffer;
+	
+	public readonly int width;
+	public readonly int height;
+	public readonly byte[] buffer;
 
 	public StencilBuffer(int width, int height) {
 		this.width = width;
 		this.height = height;
 
-		this._buffer = new byte[width * height];
+		this.buffer = new byte[width * height];
 	}
-	
+
+	public void Clear() {
+		
+	}
 	
 }

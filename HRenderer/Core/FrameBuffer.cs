@@ -2,38 +2,23 @@ using HRenderer.Common;
 
 namespace HRenderer.Core {
     public class FrameBuffer {
-        public int width { get; }
-        public int height { get; }
+        public readonly int width;
+        public readonly int height;
         
-        // z buffer
-        private readonly double[] _zBuffer;
         // 像素buffer  r_g_b_a格式
         private readonly byte[] _pixelBuffer;
-        
-        // msaa
-        private readonly bool _useMsaa;
-        private readonly byte[] _pixelsMsaaCoverage;
-        private readonly double[,] _zBufferMsaa;
 
-        public FrameBuffer(int width, int height, bool msaa = false) {
+        private readonly DepthBuffer _depthBuffer;
+        private readonly StencilBuffer _stencilBuffer;
+
+        public FrameBuffer(int width, int height, bool msaa) {
             this.width = width;
             this.height = height;
-            this._useMsaa = msaa;
 
             this._pixelBuffer = new byte[width * height * 4];
-            this._zBuffer = new double[width * height];
-            for (var i = 0; i < this._zBuffer.Length; i++) {
-                this._zBuffer[i] = 1;
-            }
-            
-            if (!msaa) return;
-            this._zBufferMsaa = new double[4, width * height];
-            for (var i = 0; i < this._zBufferMsaa.GetLength(0); i++) {
-                for (var j = 0; j < this._zBufferMsaa.GetLength(1); j++) {
-                    this._zBufferMsaa[i, j] = 1;
-                }    
-            }
-            this._pixelsMsaaCoverage = new byte[width * height];
+
+            this._depthBuffer = new DepthBuffer(width, height, msaa);
+            this._stencilBuffer = new StencilBuffer(width, height);
         }
 
         /**
@@ -53,34 +38,6 @@ namespace HRenderer.Core {
             this._pixelBuffer[idx+3] = (byte)(color.w * 255);
         }
         
-        public double GetZ(int x, int y) {
-            var idx = x + y * this.width;
-            return this._zBuffer[idx];
-        }
-        
-        public double GetZ(int x, int y, int level) {
-            var idx = x + y * this.width;
-            return this._zBufferMsaa[level, idx];
-        }
-        
-        public void SetZ(int x, int y, double z) {
-            var idx = x + y * this.width;
-            this._zBuffer[idx] = z;
-        }
-        
-        public void SetZ(int x, int y, double z, int level) {
-            var idx = x + y * this.width;
-            this._zBufferMsaa[level, idx] = z;
-        }
-
-        public bool ZTest(int x, int y, double z) {
-            return z < this.GetZ(x, y);
-        }
-
-        public bool ZTest(int x, int y, double z, int level) {
-            return z < this.GetZ(x, y, level);
-        }
-
         public void SaveImageLocal(int frame) {
             Utils.SaveImage(this.width, this.height, this._pixelBuffer, frame);
         }
@@ -90,38 +47,16 @@ namespace HRenderer.Core {
                 this._pixelBuffer[i] = 0;
             }
             
-            for (var i = 0; i < this._zBuffer.Length; i++) {
-                this._zBuffer[i] = 1;
-            }
-            
-            if (!this._useMsaa) return;
-            for (var i = 0; i < this._zBufferMsaa.GetLength(0); i++) {
-                for (var j = 0; j < this._zBufferMsaa.GetLength(1); j++) {
-                    this._zBufferMsaa[i, j] = 1;
-                }    
-            }
-            for (var i = 0; i < this._pixelsMsaaCoverage.Length; i++) {
-                this._pixelsMsaaCoverage[i] = 0;
-            }
+            this._depthBuffer.Clear();
+            this._stencilBuffer.Clear();
         }
-
-        public void AddMsaaCount(int x, int y) {
-            var idx = x + y * this.width;
-            this._pixelsMsaaCoverage[idx] ++;
-        }
-
-        public byte GetMsaaCount(int x, int y) {
-            var idx = x + y * this.width;
-            return this._pixelsMsaaCoverage[idx];
-        }
-
+        
         public void DoMsaa() {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var idx = (x + y * this.width) * 4;
                     
-                    var msaa = this._pixelsMsaaCoverage[x + y * this.width];
-                    var count = (double)msaa / 4.0f;
+                    var count = (double)this._depthBuffer.GetMsaaCount(x, y) / 4.0f;
                     count = Math.Min(1, count);
                     
                     this._pixelBuffer[idx]   = (byte)Math.Floor(this._pixelBuffer[idx] * count);
@@ -130,6 +65,22 @@ namespace HRenderer.Core {
                     this._pixelBuffer[idx+3] = (byte)Math.Floor(this._pixelBuffer[idx+3] * count);
                 }
             }
+        }
+
+        public bool CheckZ(int x, int y, double z) {
+            if (!this._depthBuffer.ZTest(x, y, z)) return false;
+            this._depthBuffer.SetZ(x, y, z);
+            return true;
+        }
+        
+        public bool CheckZ(int x, int y, double z, int level) {
+            if (!this._depthBuffer.ZTest(x, y, z, level)) return false;
+            this._depthBuffer.SetZ(x, y, z, level);
+            return true;
+        }
+
+        public void AddMsaaCount(int x, int y) {
+            this._depthBuffer.AddMsaaCount(x, y);
         }
         
     }
