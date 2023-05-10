@@ -33,8 +33,8 @@ namespace HRenderer.Core {
 
 		private double _time = 0;
 		public void Render(double dt) {
-			this.pipeline.ClearFrameBuffer();
-			
+			this.pipeline.ClearBuffer();
+
 			this._time += dt;
 
 			var r = (Math.Sin(this._time * 0.8) / 2 + 0.5) * 0.7 * Math.PI;

@@ -2,21 +2,6 @@ using HRenderer.Common;
 
 namespace HRenderer.Core; 
 
-
-public enum RenderMode {
-	/**
-	 * 正常三角形光栅化
-	 */
-	Triangle,
-	/**
-	 * 线段模式
-	 */
-	Line,
-	/**
-	 * 点模式
-	 */
-	Point
-}
 /**
  * 渲染管线
  */
@@ -37,6 +22,8 @@ public class RenderPipeline {
 	
 	// 输出
 	public readonly FrameBuffer frameBuffer;
+	private readonly DepthBuffer depthBuffer;
+	private readonly StencilBuffer stencilBuffer;
 
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
@@ -51,12 +38,16 @@ public class RenderPipeline {
 	// 渲染模式
 	private RenderMode _renderMode = RenderMode.Triangle;
 
-	public RenderPipeline(int width, int height, bool useMsaa = false) {
+	public RenderPipeline(int width, int height, bool useMsaa = true) {
 		this._width = width;
 		this._height = height;
 		this._viewPortMat4 = Utils.GetViewPortMatrix(width, height);
-		this.frameBuffer = new FrameBuffer(width, height, useMsaa);
+		
 		this._useMsaa = useMsaa;
+		
+		this.frameBuffer = new FrameBuffer(width, height);
+		this.depthBuffer = new DepthBuffer(width, height, useMsaa);
+		this.stencilBuffer = new StencilBuffer(width, height);
 	}
 
 	public void Draw(Material material) {
@@ -125,11 +116,13 @@ public class RenderPipeline {
 		}
 	
 		if(!this._useMsaa) return;
-		this.frameBuffer.DoMsaa();
+		this.frameBuffer.DoMsaa(this.depthBuffer.GetCoverages());
 	}
 	
-	public void ClearFrameBuffer() {
+	public void ClearBuffer() {
 		this.frameBuffer.Clear();
+		this.depthBuffer.Clear();
+		this.stencilBuffer.Clear();
 	}
 
 	/**
@@ -162,15 +155,16 @@ public class RenderPipeline {
 			for (var x = bound.minX; x < bound.maxX; x++) {
 				p.x = x + 0.5f;
 				
-				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric, near, far);
-				
-				if (!this.CheckInTriangle(p, barycentric)) continue;
+				// 模版测试
 				if (this._useStencil) {
-					if (this._writeStencil) {
-						// 
-					}
+					
 				}
-				
+					
+				// msaa
+				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric, near, far);
+				if (!this.CheckInTriangle(p, barycentric)) continue;
+
+				// 深度测试
 				if(this._useZTest && !this.CheckZ(x, y, barycentric, near, far)) continue;
 
 				// 校正透视差值
@@ -304,13 +298,17 @@ public class RenderPipeline {
 	}
 	
 	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far) {
-		var z = this.GetInterpolationZ(barycentric, near, far);
-		return this.frameBuffer.CheckZ(x, y, -z);
+		var z = -this.GetInterpolationZ(barycentric, near, far);
+		if (!this.depthBuffer.ZTest(x, y, z)) return false;
+		this.depthBuffer.SetZ(x, y, z);
+		return true;
 	}
 
 	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far, int level) {
-		var z = this.GetInterpolationZ(barycentric, near, far);
-		return this.frameBuffer.CheckZ(x, y, -z, level);
+		var z = -this.GetInterpolationZ(barycentric, near, far);
+		if (!this.depthBuffer.ZTest(x, y, z, level)) return false;
+		this.depthBuffer.SetZ(x, y, z, level);
+		return true;
 	}
 	
 	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, double near, double far) {
@@ -323,7 +321,7 @@ public class RenderPipeline {
 			// 深度通过
 			if(!this.CheckZ(x, y, barycentric, near, far, i)) continue;;
 			// 写入
-			this.frameBuffer.AddMsaaCount(x, y);
+			this.depthBuffer.AddMsaaCount(x, y);
 			msaa++;
 		}
 		Vector2.Return(pMsaa);

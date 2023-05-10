@@ -7,18 +7,12 @@ namespace HRenderer.Core {
         
         // 像素buffer  r_g_b_a格式
         private readonly byte[] _pixelBuffer;
-
-        private readonly DepthBuffer _depthBuffer;
-        private readonly StencilBuffer _stencilBuffer;
-
-        public FrameBuffer(int width, int height, bool msaa) {
+        
+        public FrameBuffer(int width, int height) {
             this.width = width;
             this.height = height;
 
             this._pixelBuffer = new byte[width * height * 4];
-
-            this._depthBuffer = new DepthBuffer(width, height, msaa);
-            this._stencilBuffer = new StencilBuffer(width, height);
         }
 
         /**
@@ -46,17 +40,14 @@ namespace HRenderer.Core {
             for (var i = 0; i < this._pixelBuffer.Length; i++) {
                 this._pixelBuffer[i] = 0;
             }
-            
-            this._depthBuffer.Clear();
-            this._stencilBuffer.Clear();
         }
         
-        public void DoMsaa() {
+        public void DoMsaa(byte[] coverages) {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var idx = (x + y * this.width) * 4;
                     
-                    var count = (double)this._depthBuffer.GetMsaaCount(x, y) / 4.0f;
+                    var count = (double)coverages[x + y * this.width] / 4.0f;
                     count = Math.Min(1, count);
                     
                     this._pixelBuffer[idx]   = (byte)Math.Floor(this._pixelBuffer[idx] * count);
@@ -65,22 +56,6 @@ namespace HRenderer.Core {
                     this._pixelBuffer[idx+3] = (byte)Math.Floor(this._pixelBuffer[idx+3] * count);
                 }
             }
-        }
-
-        public bool CheckZ(int x, int y, double z) {
-            if (!this._depthBuffer.ZTest(x, y, z)) return false;
-            this._depthBuffer.SetZ(x, y, z);
-            return true;
-        }
-        
-        public bool CheckZ(int x, int y, double z, int level) {
-            if (!this._depthBuffer.ZTest(x, y, z, level)) return false;
-            this._depthBuffer.SetZ(x, y, z, level);
-            return true;
-        }
-
-        public void AddMsaaCount(int x, int y) {
-            this._depthBuffer.AddMsaaCount(x, y);
         }
         
     }

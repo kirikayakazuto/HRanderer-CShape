@@ -11,3 +11,18 @@ public static class Const {
 		
     };
 }
+
+public enum RenderMode {
+    /**
+	 * 正常三角形光栅化
+	 */
+    Triangle,
+    /**
+	 * 线段模式
+	 */
+    Line,
+    /**
+	 * 点模式
+	 */
+    Point
+}

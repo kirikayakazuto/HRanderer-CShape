@@ -11,7 +11,7 @@ public class DepthBuffer {
 	private readonly double[,] _bufferMsaa;
 	// 计算msaa覆盖率
 	private readonly byte[] _pixelsMsaaCoverage;
-
+	
 	public DepthBuffer(int width, int height, bool msaa) {
 		this.width = width;
 		this.height = height;
@@ -30,6 +30,10 @@ public class DepthBuffer {
 			}    
 		}
 		this._pixelsMsaaCoverage = new byte[width * height];
+	}
+	
+	public byte[] GetCoverages() {
+		return this._pixelsMsaaCoverage;
 	}
 	
 	public double GetZ(int x, int y) {
