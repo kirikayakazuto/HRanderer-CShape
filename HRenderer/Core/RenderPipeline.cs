@@ -28,7 +28,7 @@ public class RenderPipeline {
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
 
-	// 开启深度测试
+	// 深度测试
 	private bool _useZTest = true;
 	// 模版测试
 	private bool _useStencil = false;
@@ -38,7 +38,7 @@ public class RenderPipeline {
 	// 渲染模式
 	private RenderMode _renderMode = RenderMode.Triangle;
 
-	public RenderPipeline(int width, int height, bool useMsaa = true) {
+	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
 		this._height = height;
 		this._viewPortMat4 = Utils.GetViewPortMatrix(width, height);
@@ -165,7 +165,8 @@ public class RenderPipeline {
 				if (!this.CheckInTriangle(p, barycentric)) continue;
 
 				// 深度测试
-				if(this._useZTest && !this.CheckZ(x, y, barycentric, near, far)) continue;
+				var z = this.GetInterpolationZ(barycentric, near, far);
+				if(this._useZTest && !this.depthBuffer.CheckZ(x, y, -z)) continue;
 
 				// 校正透视差值
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
@@ -297,20 +298,6 @@ public class RenderPipeline {
 		}
 	}
 	
-	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far) {
-		var z = -this.GetInterpolationZ(barycentric, near, far);
-		if (!this.depthBuffer.ZTest(x, y, z)) return false;
-		this.depthBuffer.SetZ(x, y, z);
-		return true;
-	}
-
-	private bool CheckZ(int x, int y, in Vector4 barycentric, double near, double far, int level) {
-		var z = -this.GetInterpolationZ(barycentric, near, far);
-		if (!this.depthBuffer.ZTest(x, y, z, level)) return false;
-		this.depthBuffer.SetZ(x, y, z, level);
-		return true;
-	}
-	
 	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, double near, double far) {
 		var pMsaa = Vector2.Create();
 		var msaa = 0;
@@ -319,7 +306,8 @@ public class RenderPipeline {
 			// 是否在三角形内
 			if(!this.CheckInTriangle(pMsaa, barycentric)) continue;
 			// 深度通过
-			if(!this.CheckZ(x, y, barycentric, near, far, i)) continue;;
+			var z = -this.GetInterpolationZ(barycentric, near, far);
+			if(!this.depthBuffer.CheckZ(x, y, z, i)) continue;;
 			// 写入
 			this.depthBuffer.AddMsaaCount(x, y);
 			msaa++;

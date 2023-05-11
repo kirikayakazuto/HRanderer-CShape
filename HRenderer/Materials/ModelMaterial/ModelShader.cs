@@ -38,5 +38,7 @@ public class ModelShader: Shader {
         var diffuse = this.Texture2D(this.uniformData.Textures["mainTexture"], uv).Mul(lightColor).Mul(diff);
 
         return ambient.AddSelf(diffuse);
+        // var z = this.varyingDict.Vec4s["v_position"].z;
+        // return Vector4.Create(z, z, z, 1);
     }
 }

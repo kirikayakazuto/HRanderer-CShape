@@ -89,6 +89,17 @@ public class DepthBuffer {
 		var idx = x + y * this.width;
 		return this._pixelsMsaaCoverage[idx];
 	}
-	
 
+	public bool CheckZ(int x, int y, double z) {
+		if (!this.ZTest(x, y, z)) return false;
+		this.SetZ(x, y, z);
+		return true;
+	}
+
+	public bool CheckZ(int x, int y, double z, int level) {
+		if (!this.ZTest(x, y, z, level)) return false;
+		this.SetZ(x, y, z, level);
+		return true;
+	}
+	
 }
