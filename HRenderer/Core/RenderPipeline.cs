@@ -155,11 +155,6 @@ public class RenderPipeline {
 			for (var x = bound.minX; x < bound.maxX; x++) {
 				p.x = x + 0.5f;
 				
-				// 模版测试
-				if (this._useStencil) {
-					
-				}
-					
 				// msaa
 				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric, near, far);
 				if (!this.CheckInTriangle(p, barycentric)) continue;
@@ -182,8 +177,6 @@ public class RenderPipeline {
 				Vector4.Return(color);
 			}
 		}
-		
-		
 	}
 
 	private void _rasterByLine(Material material) {

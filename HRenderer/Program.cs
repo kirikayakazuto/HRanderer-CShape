@@ -3,6 +3,7 @@ using HRenderer.Materials.CubeMaterial;
 using HRenderer.Materials.LightMaterial;
 using HRenderer.Materials.SpriteMaterial;
 using HRenderer.Materials.ModelMaterial;
+using HRenderer.Materials.TriangleMaterial;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -22,6 +23,10 @@ namespace HRenderer {
         public Program() {
             this._renderer = new Renderer(_width, _height);
             this.RunScene2();
+        }
+
+        public void RunScene0() {
+            this._renderer.AddMaterial(TriangleMaterial.GetMaterial());
         }
 
         public void RunScene4() {
