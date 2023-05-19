@@ -15,6 +15,21 @@ public class StencilBuffer {
 		this.height = height;
 
 		this._buffer = new byte[width * height];
+		this.Clear();
+	}
+
+	public void Set(int x, int y) {
+		var idx = x + y * this.width;
+		this._buffer[idx] = 1;
+	}
+
+	public byte Get(int x, int y) {
+		var idx = x + y * this.width;
+		return this._buffer[idx];
+	}
+
+	public bool Check(int x, int y) {
+		return this.Get(x, y) == 1;
 	}
 
 	public void Clear() {

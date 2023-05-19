@@ -31,7 +31,7 @@ public class RenderPipeline {
 	// 深度测试
 	private bool _useZTest = true;
 	// 模版测试
-	private bool _useStencil = false;
+	private bool _useStencil = true;
 	// 模版写入
 	private bool _writeStencil = false;
 
@@ -158,7 +158,9 @@ public class RenderPipeline {
 				// msaa
 				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric, near, far);
 				if (!this.CheckInTriangle(p, barycentric)) continue;
-
+				
+				// 模版测试
+				if(this._useStencil && !this.CheckStencli(material.writeStencil, x, y)) continue;;
 				// 深度测试
 				var z = this.GetInterpolationZ(barycentric, near, far);
 				if(this._useZTest && !this.depthBuffer.CheckZ(x, y, -z)) continue;
@@ -329,6 +331,15 @@ public class RenderPipeline {
 		var p2Hide = p2.x < 0 || p2.x >= this._width && p2.y < 0 || p2.y >= this._height;
 		var p3Hide = p3.x < 0 || p3.x >= this._width && p3.y < 0 || p3.y >= this._height;
 		return !(p1Hide && p2Hide && p3Hide);
+	}
+
+	/**
+	 * 模版测试
+	 */
+	private bool CheckStencli(bool write, int x, int y) {
+		if (!write) return !this.stencilBuffer.Check(x, y);
+		this.stencilBuffer.Set(x, y); 
+		return false;
 	}
 
 }

@@ -82,3 +82,4 @@
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/container2/container2_specular.png
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/container2/container2_diffuse.png
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/container2/container2_specular.png
+/Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/002.jpg

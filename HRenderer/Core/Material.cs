@@ -10,12 +10,12 @@ namespace HRenderer.Core {
         public readonly UniformData uniformData = new UniformData();
         
         public bool useFaceCulling = false;
+        public bool writeStencil = false;
 
         public Material(Texture texture, Mesh mesh, Shader shader) {
             this.mesh = mesh;
             this.shader = shader;
             this.uniformData.Textures["mainTexture"] = texture;
         }
-
     }
 }

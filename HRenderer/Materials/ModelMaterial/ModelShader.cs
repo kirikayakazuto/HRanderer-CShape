@@ -9,7 +9,7 @@ public class ModelShader: Shader {
         var r = Math.Sin(this.uniformData.Doubles["time"]) * Math.PI;
         // var r = Math.PI;
         position = position.Transform(Matrix4.GetRotationX(Math.PI));
-        position.TransformSelf(Matrix4.GetRotationY(Math.PI));
+        position.TransformSelf(Matrix4.GetRotationY(r));
         position.TransformSelf(Matrix4.GetScale(2, 2, 2));
         
         glData.varyingDict.Vec4s["v_position"] = position.Clone();

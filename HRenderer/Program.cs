@@ -22,7 +22,13 @@ namespace HRenderer {
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(_width, _height);
-            this.RunScene2();
+            this.RunScene5();
+        }
+
+        public void RunScene5() {
+            this._renderer.AddMaterial(SpriteMaterial.GetMaterial2());
+            this._renderer.AddMaterial(TriangleMaterial.GetMaterial());
+            this._renderer.AddMaterial(SpriteMaterial.GetMaterial());
         }
 
         public void RunScene0() {
@@ -39,7 +45,7 @@ namespace HRenderer {
         }
 
         public void RunScene2() {
-            this._renderer.AddMaterial(LightMaterial.GetMaterial());
+            // this._renderer.AddMaterial(LightMaterial.GetMaterial());
             this._renderer.AddMaterial(ModelMaterial.GetMaterial());
         }
 

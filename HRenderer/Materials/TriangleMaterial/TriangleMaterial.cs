@@ -8,6 +8,7 @@ public class TriangleMaterial {
 		var mesh = new TriangleMesh();
 		var shader = new TriangleShader();
 		var m = new Material(texture, mesh, shader);
+		m.writeStencil = true;
 		return m;
 	}
 }

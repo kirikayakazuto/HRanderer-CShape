@@ -21,9 +21,9 @@ namespace HRenderer.Materials.SpriteMaterial {
             var uv = this.varyingDict.Vec2s["uv"];
             var noiseColor = this.Texture2D(this.uniformData.Textures["noiseTexture"], uv);
             var color = this.Texture2D(this.uniformData.Textures["mainTexture"], uv);
-            if (noiseColor.x < (Math.Sin(this.uniformData.Doubles["time"]) + 1) / 2) {
-                color.Set(0, 0, 0, 0);
-            }
+            // if (noiseColor.x < (Math.Sin(this.uniformData.Doubles["time"]) + 1) / 2) {
+            //     color.Set(0, 0, 0, 0);
+            // }
             return color;
         }
     }
