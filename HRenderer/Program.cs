@@ -22,7 +22,13 @@ namespace HRenderer {
         private readonly Renderer _renderer;
         public Program() {
             this._renderer = new Renderer(_width, _height);
-            this.RunScene5();
+            this.RunScene6();
+        }
+
+        public void RunScene6() {
+            
+            this._renderer.AddMaterial(SpriteMaterial.GetMaterial());
+            this._renderer.AddMaterial(SpriteMaterial.GetMaterial3());
         }
 
         public void RunScene5() {

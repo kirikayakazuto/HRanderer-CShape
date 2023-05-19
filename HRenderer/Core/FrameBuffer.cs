@@ -25,11 +25,28 @@ namespace HRenderer.Core {
         public void SetColor(int x, int y, Vector4 color) {
             if(x<0 || x>=this.width) return;
             if(y<0 || y>=this.height) return;
+            // 透明的, 不处理
+            if(color.w <= 0) return;;
+            // 半透明
+            if (color.w < 1) {
+                var oldColor = this.GetColor(x, y);
+                color = oldColor.MulSelf(1 - color.w).AddSelf(color.MulSelf(color.w));
+            }
+            
             var idx = (x + y * this.width) * 4;
             this._pixelBuffer[idx] = (byte)(color.x * 255);
             this._pixelBuffer[idx+1] = (byte)(color.y * 255);
             this._pixelBuffer[idx+2] = (byte)(color.z * 255);
             this._pixelBuffer[idx+3] = (byte)(color.w * 255);
+        }
+
+        public Vector4 GetColor(int x, int y) {
+            var idx = (x + y * this.width) * 4;
+            var r = this._pixelBuffer[idx] / 255.0;
+            var g = this._pixelBuffer[idx+1] / 255.0;
+            var b = this._pixelBuffer[idx+2] / 255.0;
+            var a = this._pixelBuffer[idx+3] / 255.0;
+            return Vector4.Create(r, g, b, a);
         }
         
         public void SaveImageLocal(int frame) {
