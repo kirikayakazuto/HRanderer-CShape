@@ -20,7 +20,7 @@ public abstract class Shader {
     /**
      * 几何着色器
      */
-    public void GeometryShader(GlData glData) {
+    public  void GeometryShader(GlData glData) {
 	    
     }
     
