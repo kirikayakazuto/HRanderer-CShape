@@ -562,25 +562,26 @@
     ]
   },
   "packageFolders": {
-    "/Users/bytedance/.nuget/packages/": {}
+    "/Users/denglang/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/bytedance/workspace/HRanderer-CShape/HRenderer/HRenderer.csproj",
+      "projectUniqueName": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/HRenderer.csproj",
       "projectName": "HRenderer",
-      "projectPath": "/Users/bytedance/workspace/HRanderer-CShape/HRenderer/HRenderer.csproj",
-      "packagesPath": "/Users/bytedance/.nuget/packages/",
-      "outputPath": "/Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/",
+      "projectPath": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/HRenderer.csproj",
+      "packagesPath": "/Users/denglang/.nuget/packages/",
+      "outputPath": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/bytedance/.nuget/NuGet/NuGet.Config"
+        "/Users/denglang/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://contoso.com/packages/": {}
       },
       "frameworks": {
         "net7.0": {
@@ -627,7 +628,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/bytedance/.dotnet/sdk/7.0.200/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.201/RuntimeIdentifierGraph.json"
       }
     }
   }
