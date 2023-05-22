@@ -7,14 +7,51 @@ public class SphereShader: Shader {
         
     public override Vector4 VertexShading(GlData glData) {
         var position = glData.attributes.Vec4s["position"];;
-        var r = Math.PI;
-        position = position.Transform(Matrix4.GetRotationX(r).MulSelf(Matrix4.GetRotationY(r)));
+        var r = Math.PI * this.uniformData.Doubles["time"] * 0.1;
+
+        position = position.Transform(Matrix4.GetRotationX(Math.PI));
+        
+        glData.varyingDict.Vec2s["v_uv"] = glData.attributes.Vec2s["uv"];
+        glData.varyingDict.Vec4s["v_position"] = glData.attributes.Vec4s["position"];
+        
+        var normal = glData.attributes.Vec4s["normal"].Transform(Matrix4.GetRotationY(r));
+        glData.varyingDict.Vec4s["v_normal"] = normal;
+
+        // position = position.Transform(Matrix4.GetRotationX(Math.PI));
+        position = position.Transform(Matrix4.GetRotationY(r));
         var vpMat = this.projection.Mul(this.view);
         
         return position.TransformSelf(vpMat);
     }
 
     public override Vector4 FragShading() {
-        return Vector4.Create(1, 0, 0, 1);
+        
+        var lightColor = this.uniformData.Vec4s["Light.Color"];
+		
+        // var uv = this.varyingDict.Vec2s["v_uv"];
+
+        var pos = this.varyingDict.Vec4s["v_position"];
+        var uv = Vector2.Create(Math.Atan2(pos.x, pos.z) / (2.0f * Math.PI) + 0.5f, Math.Asin(pos.y) / Math.PI + 0.5f);
+            
+        var lightDir = this.uniformData.Vec4s["Light.Position"].Sub(this.varyingDict.Vec4s["v_position"]).NormalizeSelf();
+        var norm = this.varyingDict.Vec4s["v_normal"].Normalize();
+        var cameraPos = this.uniformData.Vec4s["Camera.Position"];
+        var viewDir = cameraPos.Sub(this.varyingDict.Vec4s["v_position"]).NormalizeSelf();
+        var reflectDir = Utils.Reflect(lightDir.Mul(-1), norm);
+		
+        // 环境光
+        const double ambientStrength = 0.6;
+        var ambient = lightColor.Mul(this.Texture2D(this.uniformData.Textures["mainTexture"], uv)).Mul(ambientStrength);
+        
+        // 漫反射
+        var diff = Math.Max(norm.Dot(lightDir), 0);
+        var diffuse = this.Texture2D(this.uniformData.Textures["mainTexture"], uv).Mul(lightColor).Mul(diff);
+        
+        // 镜面反射
+        var spec = Math.Pow(Math.Max(viewDir.Dot(reflectDir), 0.0), 32);
+        const double specularStrength = 0.9;
+        var specular = lightColor.Mul(spec * specularStrength);
+        
+        return ambient.AddSelf(diffuse).Clamp();
     }
 }

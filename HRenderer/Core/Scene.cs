@@ -26,7 +26,7 @@ public abstract class Scene {
 		this._width = width;
 		this._height = height;
 		this._camera = new Camera(width, height);
-		this._directionLight =  new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
+		this._directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
 	}
 
 	protected void AddMaterial(Material material) {
