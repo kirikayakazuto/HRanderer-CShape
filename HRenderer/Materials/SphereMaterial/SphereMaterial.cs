@@ -8,6 +8,7 @@ public class SphereMaterial {
         var mesh = new SphereMesh();
         var shader = new SphereShader();
         var m = new Material(texture, mesh, shader);
+        m.useFaceCulling = true;
         return m;
     }
 }
