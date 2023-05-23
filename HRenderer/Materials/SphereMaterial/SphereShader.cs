@@ -9,18 +9,20 @@ public class SphereShader: Shader {
         var position = glData.attributes.Vec4s["position"];;
         var r = Math.PI * this.uniformData.Doubles["time"] * 0.1;
 
-        position = position.Transform(Matrix4.GetRotationX(Math.PI));
-        
-        glData.varyingDict.Vec2s["v_uv"] = glData.attributes.Vec2s["uv"];
-        glData.varyingDict.Vec4s["v_position"] = glData.attributes.Vec4s["position"];
+        // position = position.Transform(Matrix4.GetRotationX(Math.PI));
+        position = position.Transform(Matrix4.GetRotationY(r));
+        position.TransformSelf(Matrix4.GetScale(4, 4, 4));
         
         var normal = glData.attributes.Vec4s["normal"].Transform(Matrix4.GetRotationY(r));
         glData.varyingDict.Vec4s["v_normal"] = normal;
-
-        // position = position.Transform(Matrix4.GetRotationX(Math.PI));
-        position = position.Transform(Matrix4.GetRotationY(r));
-        var vpMat = this.projection.Mul(this.view);
         
+        glData.varyingDict.Vec2s["v_uv"] = glData.attributes.Vec2s["uv"].Clone();
+        glData.varyingDict.Vec4s["v_position"] = glData.attributes.Vec4s["position"].Clone();
+        
+        
+        // position = position.Transform(Matrix4.GetRotationX(Math.PI));
+        
+        var vpMat = this.projection.Mul(this.view);
         return position.TransformSelf(vpMat);
     }
 
@@ -40,7 +42,7 @@ public class SphereShader: Shader {
         var reflectDir = Utils.Reflect(lightDir.Mul(-1), norm);
 		
         // 环境光
-        const double ambientStrength = 0.6;
+        const double ambientStrength = 0.4;
         var ambient = lightColor.Mul(this.Texture2D(this.uniformData.Textures["mainTexture"], uv)).Mul(ambientStrength);
         
         // 漫反射
@@ -49,9 +51,9 @@ public class SphereShader: Shader {
         
         // 镜面反射
         var spec = Math.Pow(Math.Max(viewDir.Dot(reflectDir), 0.0), 32);
-        const double specularStrength = 0.9;
+        const double specularStrength = 0.4;
         var specular = lightColor.Mul(spec * specularStrength);
         
-        return ambient.AddSelf(diffuse).Clamp();
+        return ambient.AddSelf(diffuse).AddSelf(specular).Clamp();
     }
 }

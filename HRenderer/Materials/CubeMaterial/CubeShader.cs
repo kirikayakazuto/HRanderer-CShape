@@ -10,10 +10,10 @@ public class CubeShader: Shader {
 		var r = Math.Sin(this.uniformData.Doubles["time"]) * Math.PI;
 		// var r = Math.PI / 4;
 		// position = position.Transform(Matrix4.GetRotationX(Math.PI));
-		position = position.Transform(Matrix4.GetRotationY((float)r));
+		position = position.Transform(Matrix4.GetRotationY(r));
 		position =	position.Transform(Matrix4.GetScale(3, 3, 3));
 		
-		var normal = glData.attributes.Vec4s["a_normal"].Transform(Matrix4.GetRotationY((float)r));
+		var normal = glData.attributes.Vec4s["a_normal"].Transform(Matrix4.GetRotationY(r));
 		glData.varyingDict.Vec4s["v_normal"] = normal;
 		var v_position = position.Clone();
 		glData.varyingDict.Vec4s["v_position"] = v_position;

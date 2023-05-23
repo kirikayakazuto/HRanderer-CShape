@@ -1,4 +1,6 @@
 using HRenderer.Core;
+using HRenderer.Materials.CubeMaterial;
+using HRenderer.Materials.LightMaterial;
 using HRenderer.Materials.SkyPanoramicMaterial;
 using HRenderer.Materials.SphereMaterial;
 using HRenderer.Materials.SpriteMaterial;
@@ -11,6 +13,8 @@ public class Scene1: Scene {
         // this.AddMaterial(SkyPanoramicMaterial.GetMaterial());
         // this.AddMaterial(SpriteMaterial.GetMaterial());
         this.AddMaterial(SphereMaterial.GetMaterial());
+        // this.AddMaterial(LightMaterial.GetMaterial());
+        // this.AddMaterial(CubeMaterial.GetMaterial());
     }
 
     protected override void OnUpdate(double dt) {

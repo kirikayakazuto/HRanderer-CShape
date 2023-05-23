@@ -88,3 +88,5 @@
 /Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/blending_transparent.png
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/earth.jpg
 /Users/bytedance/workspace/HRanderer-CShape/HRenderer/bin/Debug/net7.0/Assets/sky.png
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/earth.jpg
+/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/bin/Debug/net7.0/Assets/sky.png
