@@ -11,7 +11,7 @@ public class SphereMesh: Mesh {
 		new VertexFormat("normal", 4)
 	}) {
 		
-		this.CreateIcosohedron(3);
+		this.CreateIcosohedron(2);
 		
 		
 		this._vbo = new float[this.vertices.Count * 10];

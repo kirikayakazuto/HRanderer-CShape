@@ -18,6 +18,13 @@ public abstract class Shader {
     public abstract Vector4 VertexShading(GlData glData);
 
     /**
+     * 细分曲面着色器
+     */
+    public void TessellationShader(GlData glData) {
+	    
+    }
+
+    /**
      * 几何着色器
      */
     public  void GeometryShader(GlData glData) {

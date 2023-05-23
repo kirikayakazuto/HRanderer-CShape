@@ -160,10 +160,10 @@ public class RenderPipeline {
 				if (!this.CheckInTriangle(p, barycentric)) continue;
 				
 				// 模版测试
-				if(this._useStencil && !this.CheckStencli(material.writeStencil, x, y)) continue;;
+				if(this._useStencil && !this.CheckStencli(material.useStencilWrite, x, y)) continue;;
 				// 深度测试
 				var z = this.GetInterpolationZ(barycentric, near, far);
-				if(this._useZTest && !this.depthBuffer.CheckZ(x, y, -z)) continue;
+				if(this._useZTest && material.useDepthWrite && !this.depthBuffer.CheckZ(x, y, -z)) continue;
 
 				// 校正透视差值
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
@@ -340,6 +340,21 @@ public class RenderPipeline {
 		if (!write) return !this.stencilBuffer.Check(x, y);
 		this.stencilBuffer.Set(x, y); 
 		return false;
+	}
+
+	
+	/**
+	 * 光线追踪
+	 */
+	private void DoRayTracing() {
+		for (var x = 0; x < this._width; x++) {
+			for (var y = 0; y < this._height; y++) {
+				var u = x / this._width;
+				var v = y / this._height;
+				
+				
+			}
+		}
 	}
 
 }

@@ -14,7 +14,7 @@ namespace HRenderer.Core {
         
         public double aspect = 1;
         // fov 视角大小
-        public double fovY = 90 * (double)Math.PI / 180;
+        public double fovY = 120 * (double)Math.PI / 180;
         // 近平面
         public double near = 1f;
         // 远平面

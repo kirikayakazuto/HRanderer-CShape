@@ -9,13 +9,20 @@ namespace HRenderer.Core {
         public readonly Shader shader;
         public readonly UniformData uniformData = new UniformData();
         
+        // 开启深度写入
+        public bool useDepthWrite = true;
+        // 开启背面剔除
         public bool useFaceCulling = false;
-        public bool writeStencil = false;
+        // 开启模版写入
+        public bool useStencilWrite = false;
 
-        public Material(Texture texture, Mesh mesh, Shader shader) {
+        public Material(Mesh mesh, Shader shader, Texture? texture = null) {
             this.mesh = mesh;
             this.shader = shader;
-            this.uniformData.Textures["mainTexture"] = texture;
+            if (texture != null) {
+                this.uniformData.Textures["mainTexture"] = texture;    
+            }
+            
         }
     }
 }

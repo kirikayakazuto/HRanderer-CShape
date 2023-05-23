@@ -7,6 +7,6 @@ public class LightMaterial {
 		var texture = new Texture("./Assets/001.jpg");
 		var mesh = new LightMesh();
 		var shader = new LightShader();
-		return new Material(texture, mesh, shader);
+		return new Material(mesh, shader);
 	}
 }

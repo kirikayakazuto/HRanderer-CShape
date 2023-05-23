@@ -9,7 +9,7 @@ public class CubeMaterial {
 		var shader = new CubeShader();
 		
 		var specular = new Texture("./Assets/container2/container2_specular.png");
-		var m = new Material(texture, mesh, shader);
+		var m = new Material(mesh, shader, texture);
 		m.uniformData.Textures["specularTexture"] = specular;
 		return m;
 
