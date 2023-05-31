@@ -54,5 +54,9 @@ public class CubeShader: Shader {
 		// var objectColor = Vector4.Create(1, 0.5, 0.31, 1);
 
 		return ambient.AddSelf(diffuse).AddSelf(specular).Clamp();
+
+		// var p = this.varyingDict.Vec4s["v_position"].Clone();
+		// p.HomogenenizeInvertion();
+		// return Vector4.Create(p.z, p.z, p.z, 1);
 	}
 }

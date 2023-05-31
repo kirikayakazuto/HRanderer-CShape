@@ -2,6 +2,12 @@ using System;
 using HRenderer.Common;
 
 namespace HRenderer.Core {
+    public enum ProjectionMode {
+        // 透视
+        Perspective,
+        // 正交
+        Orthographic
+    }
     public class Camera {
         
         private int width;
@@ -14,7 +20,7 @@ namespace HRenderer.Core {
         
         public double aspect = 1;
         // fov 视角大小
-        public double fovY = 120 * (double)Math.PI / 180;
+        public double fovY = 90 * (double)Math.PI / 180;
         // 近平面
         public double near = 1f;
         // 远平面
@@ -26,35 +32,47 @@ namespace HRenderer.Core {
         // 视图矩阵 / 屏幕矩阵  将 -1 ~ 1 空间的点 变换到 0 ~ width 和 0 ~ height 空间中;
         public readonly Matrix4 viewPortMat = Matrix4.GetIdentify();
         
-        // 透视投影矩阵 
-        public readonly Matrix4 OrthographicProjection = Matrix4.GetIdentify();
+        // 透视矩阵
+        private readonly Matrix4 perspectiveMat = Matrix4.GetIdentify();
+        // 正交矩阵
+        private readonly Matrix4 orthographicMat = Matrix4.GetIdentify();
 
-        public readonly Matrix4 projectionMat = Matrix4.GetIdentify();
-        public readonly Matrix4 orthographicMat = Matrix4.GetIdentify();
+        private ProjectionMode projectionMode;
 
         public Camera(int width, int height) {
             this.width = width;
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 0, 6f, 1);
+            this._position = Vector4.Create(0, 0, 8f, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
+
+            this.projectionMode = ProjectionMode.Perspective;
             
             // 初始化矩阵
             this.ComputeViewPortMatrix();
+            // view矩阵
             this.ComputeViewMatrix();
-            this.ComputeOrthographicProjection();
+            
+            // 计算透视矩阵
+            this.ComputePerspective();
+            // 计算正交矩阵
+            this.ComputeOrthographic();
+        }
+
+        public void SetProjectionMode(ProjectionMode mode) {
+            this.projectionMode = mode;
         }
         
         public void SetPosition(double x, double y, double z) {
             this._position.Set(x, y, z, 1);
             this.ComputeViewMatrix();
-            this.ComputeOrthographicProjection();
+            this.ComputePerspective();
         }
 
         public Vector4 GetPosition() {
-            return this._position.Clone();
+            return this._position;
         }
         
         /**
@@ -64,7 +82,7 @@ namespace HRenderer.Core {
             this._toward.FromVec4(this._position.Sub(v));;
             this._toward.NormalizeSelf();
             this.ComputeViewMatrix();
-            this.ComputeOrthographicProjection();
+            this.ComputePerspective();
         }
         
         /**
@@ -101,35 +119,43 @@ namespace HRenderer.Core {
             return this.viewMat;
         }
 
+        public Matrix4 GetProjection() {
+            return this.projectionMode switch {
+                ProjectionMode.Orthographic => this.orthographicMat,
+                ProjectionMode.Perspective => this.perspectiveMat,
+                _ => orthographicMat
+            };
+        }
+
         /**
          * 透视投影矩阵
          */
-        public Matrix4 ComputeOrthographicProjection() {
-            var m = this.OrthographicProjection;
+        private Matrix4 ComputePerspective() {
             var n = near;
             var f = far;
 
-            var h_n = (double)Math.Tan(fovY / 2);
+            var h_n = Math.Tan(fovY / 2);
             var n_h = 1 / h_n;
             var n_w = n_h / aspect;
 
-            m.data[0] = n_w;
-            m.data[5] = n_h;
-            m.data[10] = (n+f) / (n-f);
-            m.data[11] = (2*f*n)/(f-n);
-            m.data[14] = -1;
-            return m;
+            this.perspectiveMat.data = new double[] {
+                n_w, 0,   0,             0,
+                0,   n_h, 0,             0,
+                0,   0,   (n+f) / (n-f), (2*f*n)/(f-n),
+                0,   0,   -1,            1,
+            };
+            return this.perspectiveMat;
         }
 
         /**
          * 计算正交矩阵
          * 将right-left, top-bottom, near-far 空间的点, 变换到 -1 ~ 1 的标准矩阵中
          */
-        public Matrix4 ComputeOrthographic() {
-            var t = (double)Math.Tan(this.fovY/2) * this.near;
+        private Matrix4 ComputeOrthographic() {
+            var t = Math.Tan(this.fovY/2) * this.near;
             var b = -t;
 
-            var r = (double)this.width / (double)this.height * t;
+            var r = this.width / (double)this.height * t;
             var l = -r;
 
             var n = this.near;
@@ -144,17 +170,7 @@ namespace HRenderer.Core {
             return this.orthographicMat;
         }
 
-        public Matrix4 ComputeProjection() {
-            var n = this.near;
-            var f = this.far;
-            this.projectionMat.data = new double[] {
-                n, 0, 0, 0,
-                0, n, 0, 0,
-                0, 0, n + f, -f * n,
-                0, 0, 1, 0,
-            };
-            return this.projectionMat;
-        }
+
 
         public Matrix4 ComputeViewPortMatrix() {
             var m = this.viewPortMat;

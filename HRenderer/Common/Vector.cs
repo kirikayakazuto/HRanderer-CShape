@@ -218,7 +218,17 @@ namespace HRenderer.Common {
             this.x /= this.w;
             this.y /= this.w;
             this.z /= this.w;
-            this.w = 1;
+            this.w = 1 / this.w;
+            return this;
+        }
+
+        public Vector4 HomogenenizeInvertion() {
+            if(this.w == 0) return this;
+            var r = 1 / this.w;
+            this.x *= r;
+            this.y *= r;
+            this.z *= r;
+            this.w = r;
             return this;
         }
 

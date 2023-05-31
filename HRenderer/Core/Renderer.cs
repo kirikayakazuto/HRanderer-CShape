@@ -12,8 +12,9 @@ namespace HRenderer.Core {
 		
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
-
-		public readonly Scene scene;
+		
+		// 材质
+		private readonly Scene scene;
 		
 		public Renderer(int width, int height) {
 			this._width = width;
@@ -22,11 +23,8 @@ namespace HRenderer.Core {
 			this.pipeline = new RenderPipeline(width, height);
 		}
 		
-		private double _time = 0;
 		public void Render(double dt) {
 			this.pipeline.ClearBuffer();
-
-			this._time += dt;
 			
 			this.scene.Update(dt);
 			

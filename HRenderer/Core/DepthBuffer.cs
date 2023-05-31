@@ -4,6 +4,7 @@ public class DepthBuffer {
 	private readonly int width;
 	private readonly int height;
 	
+	// 0 ~ 1, 距离摄像机越远, 越接近1
 	private readonly double[] _buffer;
 	
 	// msaa

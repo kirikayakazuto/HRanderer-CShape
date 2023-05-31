@@ -90,7 +90,8 @@ public class RenderPipeline {
 			this._triangle.z1 = this._triangle.position1.w;
 			this._triangle.z2 = this._triangle.position2.w;
 			this._triangle.z3 = this._triangle.position3.w;
-
+			
+			//
 			this._triangle.position1.Homogenenize();
 			this._triangle.position2.Homogenenize();
 			this._triangle.position3.Homogenenize();
@@ -176,6 +177,7 @@ public class RenderPipeline {
 				
 				// 输出颜色
 				this.frameBuffer.SetColor(x , y, color);
+				// this.frameBuffer.SetColor(x , y, Vector4.Create(z, z, z, 1));
 				Vector4.Return(color);
 			}
 		}

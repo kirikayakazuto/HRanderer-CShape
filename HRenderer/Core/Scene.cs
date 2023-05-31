@@ -12,10 +12,10 @@ public abstract class Scene {
 	private readonly int _width;
 	private readonly int _height;
 	// 灯光
-	private readonly DirectionLight _directionLight;
+	protected readonly DirectionLight directionLight;
 	
 	// 相机
-	private readonly Camera _camera;
+	protected readonly Camera camera;
 	// 材质
 	private readonly List<Material> _materials = new List<Material>();
 	
@@ -25,8 +25,8 @@ public abstract class Scene {
 	public Scene(int width, int height) {
 		this._width = width;
 		this._height = height;
-		this._camera = new Camera(width, height);
-		this._directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
+		this.camera = new Camera(width, height);
+		this.directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
 	}
 
 	protected void AddMaterial(Material material) {
@@ -49,26 +49,28 @@ public abstract class Scene {
 		this._passTime += dt;
 		foreach (var material in this._materials) {
 			var shader = material.shader;
+
+			var projectionMat = this.camera.GetProjection();
 			
-			shader.view = this._camera.viewMat;
-			shader.projection = this._camera.OrthographicProjection;
+			shader.view = this.camera.viewMat;
+			shader.projection = projectionMat;
                 
 			// 添加材质自带的uniforms
 			shader.AddUniforms(material.uniformData);
 				
 			shader.uniformData.Doubles["time"] = this._passTime;
 				
-			shader.uniformData.Doubles["Camera.Near"] = this._camera.near;
-			shader.uniformData.Doubles["Camera.Far"] = this._camera.far;
+			shader.uniformData.Doubles["Camera.Near"] = this.camera.near;
+			shader.uniformData.Doubles["Camera.Far"] = this.camera.far;
 				
-			shader.uniformData.Matrix4s["Camera.View"] = this._camera.viewMat;
-			shader.uniformData.Matrix4s["Camera.Projection"] = this._camera.OrthographicProjection;
+			shader.uniformData.Matrix4s["Camera.View"] = this.camera.viewMat;
+			shader.uniformData.Matrix4s["Camera.Projection"] = projectionMat;
 				
-			shader.uniformData.Vec4s["Camera.Position"] = this._camera.GetPosition();
+			shader.uniformData.Vec4s["Camera.Position"] = this.camera.GetPosition();
 
-			shader.uniformData.Vec4s["Light.Position"] = this._directionLight.position;
-			shader.uniformData.Vec4s["Light.Direction"] = this._directionLight.direction;
-			shader.uniformData.Vec4s["Light.Color"] = this._directionLight.color;
+			shader.uniformData.Vec4s["Light.Position"] = this.directionLight.position;
+			shader.uniformData.Vec4s["Light.Direction"] = this.directionLight.direction;
+			shader.uniformData.Vec4s["Light.Color"] = this.directionLight.color;
 		}
 	}
 	
