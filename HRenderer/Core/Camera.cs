@@ -22,15 +22,15 @@ namespace HRenderer.Core {
         // fov 视角大小
         public double fovY = 90 * (double)Math.PI / 180;
         // 近平面
-        public double near = 1f;
+        public double near = -1f;
         // 远平面
-        public double far = 500;
+        public double far = -500f;
         
         // 观察矩阵 / 摄像机矩阵  将摄像机放在0, 0, 0位置, 并看向-z方向
         public readonly Matrix4 viewMat = Matrix4.GetIdentify();
         
         // 视图矩阵 / 屏幕矩阵  将 -1 ~ 1 空间的点 变换到 0 ~ width 和 0 ~ height 空间中;
-        public readonly Matrix4 viewPortMat = Matrix4.GetIdentify();
+        private readonly Matrix4 viewPortMat = Matrix4.GetIdentify();
         
         // 透视矩阵
         private readonly Matrix4 perspectiveMat = Matrix4.GetIdentify();

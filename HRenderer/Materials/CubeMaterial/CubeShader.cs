@@ -7,7 +7,7 @@ namespace HRenderer.Materials.CubeMaterial;
 public class CubeShader: Shader {
 	public override Vector4 VertexShading(GlData glData) {
 		var position = glData.attributes.Vec4s["a_position"];
-		var r = Math.Sin(this.uniformData.Doubles["time"]) * Math.PI;
+		var r = Math.Sin(this.uniformData.Doubles["time"] * 0.1) * Math.PI;
 		// var r = Math.PI / 4;
 		// position = position.Transform(Matrix4.GetRotationX(Math.PI));
 		position = position.Transform(Matrix4.GetRotationY(r));
@@ -36,7 +36,7 @@ public class CubeShader: Shader {
 		var reflectDir = Utils.Reflect(lightDir.Mul(-1), norm);
 		
 		// 环境光
-		const double ambientStrength = 0.2;
+		const double ambientStrength = 0.6;
 		// var ambient = this.uniformVec4["Light.Color"].Mul(ambientStrength);
 		var ambient = lightColor.Mul(this.Texture2D(this.uniformData.Textures["mainTexture"], uv)).Mul(ambientStrength);
 		

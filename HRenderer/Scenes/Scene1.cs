@@ -23,7 +23,7 @@ public class Scene1: Scene {
     private double passTime = 0;
     protected override void OnUpdate(double dt) {
         // this.passTime += dt;
-        // var pos = this.camera.GetPosition();
+        // var pos = this.camera.GetPositicon();
         // pos.TransformSelf(Matrix4.GetRotationY(dt));
         // this.camera.ComputeViewMatrix();
         // this.camera.ComputeOrthographicProjection();

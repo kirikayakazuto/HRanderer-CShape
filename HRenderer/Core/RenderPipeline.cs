@@ -96,6 +96,8 @@ public class RenderPipeline {
 			this._triangle.position2.Homogenenize();
 			this._triangle.position3.Homogenenize();
 			
+			Console.WriteLine(this._triangle.position1.ToString());
+			
 			// 三角形在屏幕外
 			if(!this.CheckTriangleInScreen()) continue;
 			
@@ -164,7 +166,7 @@ public class RenderPipeline {
 				if(this._useStencil && !this.CheckStencli(material.useStencilWrite, x, y)) continue;;
 				// 深度测试
 				var z = this.GetInterpolationZ(barycentric, near, far);
-				if(this._useZTest && material.useDepthWrite && !this.depthBuffer.CheckZ(x, y, -z)) continue;
+				if(this._useZTest && material.useDepthWrite && !this.depthBuffer.CheckZ(x, y, z)) continue;
 
 				// 校正透视差值
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
@@ -270,7 +272,8 @@ public class RenderPipeline {
 		var z2 = this._triangle.position2.z;
 		var z3 = this._triangle.position3.z;
 		var z = Utils.GetInterpValue3(z1, z2, z3, barycentric.x, barycentric.y, barycentric.z);
-		return Utils.GetDepth(near, far, z);
+		// return Utils.GetDepth(near, far, z);
+		return z;
 	}
 	
 	/**
