@@ -60,9 +60,6 @@ public abstract class Scene {
 				
 			shader.uniformData.Doubles["time"] = this._passTime;
 				
-			shader.uniformData.Doubles["Camera.Near"] = this.camera.near;
-			shader.uniformData.Doubles["Camera.Far"] = this.camera.far;
-				
 			shader.uniformData.Matrix4s["Camera.View"] = this.camera.viewMat;
 			shader.uniformData.Matrix4s["Camera.Projection"] = projectionMat;
 				

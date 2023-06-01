@@ -68,9 +68,9 @@ public class RenderPipeline {
 			
 			// 顶点着色器
 			var position = shader.VertexShading(glData);
-
 			// 转换到屏幕坐标
 			position.TransformSelf(this._viewPortMat4);
+			glData.varyingDict.Vec4s["gl_FragCoord"] = position.Clone().Homogenenize();
 			
 			this._glDatas.Add(glData);
 			this._positions.Add(position);
@@ -82,7 +82,7 @@ public class RenderPipeline {
 			var v1 = this._triangle.v1 = indices[i];
 			var v2 = this._triangle.v2 = indices[i+1];
 			var v3 = this._triangle.v3 = indices[i+2];
-			
+
 			this._triangle.position1 = this._positions[(int)v1].Clone();
 			this._triangle.position2 = this._positions[(int)v2].Clone();
 			this._triangle.position3 = this._positions[(int)v3].Clone();
@@ -90,13 +90,11 @@ public class RenderPipeline {
 			this._triangle.z1 = this._triangle.position1.w;
 			this._triangle.z2 = this._triangle.position2.w;
 			this._triangle.z3 = this._triangle.position3.w;
-			
+
 			//
 			this._triangle.position1.Homogenenize();
 			this._triangle.position2.Homogenenize();
-			this._triangle.position3.Homogenenize();
-			
-			Console.WriteLine(this._triangle.position1.ToString());
+			this._triangle.position3.Homogenenize();			
 			
 			// 三角形在屏幕外
 			if(!this.CheckTriangleInScreen()) continue;
@@ -145,10 +143,7 @@ public class RenderPipeline {
 		var z1 = this._triangle.z1;
 		var z2 = this._triangle.z2;
 		var z3 = this._triangle.z3;
-		
-		var near = shader.uniformData.Doubles["Camera.Near"];
-		var far = shader.uniformData.Doubles["Camera.Far"];
-		
+				
 		// 光栅化
 		var bound = Utils.GetBoundingBox(position1, position2, position3, this._width, this._height);
 		var barycentric = Vector4.Create();
@@ -159,13 +154,14 @@ public class RenderPipeline {
 				p.x = x + 0.5f;
 				
 				// msaa
-				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric, near, far);
+				if(this._useMsaa) this.CheckMsaa(x, y, p, barycentric);
 				if (!this.CheckInTriangle(p, barycentric)) continue;
 				
 				// 模版测试
 				if(this._useStencil && !this.CheckStencli(material.useStencilWrite, x, y)) continue;;
+
 				// 深度测试
-				var z = this.GetInterpolationZ(barycentric, near, far);
+				var z = this.GetInterpolationZ(barycentric);
 				if(this._useZTest && material.useDepthWrite && !this.depthBuffer.CheckZ(x, y, z)) continue;
 
 				// 校正透视差值
@@ -179,7 +175,7 @@ public class RenderPipeline {
 				
 				// 输出颜色
 				this.frameBuffer.SetColor(x , y, color);
-				// this.frameBuffer.SetColor(x , y, Vector4.Create(z, z, z, 1));
+
 				Vector4.Return(color);
 			}
 		}
@@ -267,13 +263,12 @@ public class RenderPipeline {
 		return barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0;
 	}
 	
-	private double GetInterpolationZ(in Vector4 barycentric, double near, double far) {
+	private double GetInterpolationZ(in Vector4 barycentric) {
 		var z1 = this._triangle.position1.z;
 		var z2 = this._triangle.position2.z;
 		var z3 = this._triangle.position3.z;
 		var z = Utils.GetInterpValue3(z1, z2, z3, barycentric.x, barycentric.y, barycentric.z);
-		// return Utils.GetDepth(near, far, z);
-		return z;
+		return (z + 1) * 0.5;
 	}
 	
 	/**
@@ -298,7 +293,7 @@ public class RenderPipeline {
 		}
 	}
 	
-	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric, double near, double far) {
+	private bool CheckMsaa(int x, int y, in Vector2 p, in Vector4 barycentric) {
 		var pMsaa = Vector2.Create();
 		var msaa = 0;
 		for (var i = 0; i < 4; i++) {
@@ -306,7 +301,7 @@ public class RenderPipeline {
 			// 是否在三角形内
 			if(!this.CheckInTriangle(pMsaa, barycentric)) continue;
 			// 深度通过
-			var z = -this.GetInterpolationZ(barycentric, near, far);
+			var z = this.GetInterpolationZ(barycentric);
 			if(!this.depthBuffer.CheckZ(x, y, z, i)) continue;;
 			// 写入
 			this.depthBuffer.AddMsaaCount(x, y);

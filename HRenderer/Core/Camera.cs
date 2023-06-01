@@ -44,11 +44,11 @@ namespace HRenderer.Core {
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 0, 8f, 1);
+            this._position = Vector4.Create(0, 0, 6f, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
 
-            this.projectionMode = ProjectionMode.Perspective;
+            this.projectionMode = ProjectionMode.Orthographic;
             
             // 初始化矩阵
             this.ComputeViewPortMatrix();
@@ -149,7 +149,6 @@ namespace HRenderer.Core {
 
         /**
          * 计算正交矩阵
-         * 将right-left, top-bottom, near-far 空间的点, 变换到 -1 ~ 1 的标准矩阵中
          */
         private Matrix4 ComputeOrthographic() {
             var t = Math.Tan(this.fovY/2) * this.near;

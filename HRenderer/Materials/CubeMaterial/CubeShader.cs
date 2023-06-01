@@ -55,8 +55,9 @@ public class CubeShader: Shader {
 
 		return ambient.AddSelf(diffuse).AddSelf(specular).Clamp();
 
-		// var p = this.varyingDict.Vec4s["v_position"].Clone();
-		// p.HomogenenizeInvertion();
-		// return Vector4.Create(p.z, p.z, p.z, 1);
+		// var vpos = this.varyingDict.Vec4s["gl_FragCoord"];
+		// var z = vpos.z;
+		// z = (z + 1) * 0.5;
+		// return Vector4.Create(z, z, z, 1);
 	}
 }
