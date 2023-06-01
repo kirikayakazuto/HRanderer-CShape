@@ -20,7 +20,7 @@ namespace HRenderer.Core {
         
         public double aspect = 1;
         // fov 视角大小
-        public double fovY = 90 * (double)Math.PI / 180;
+        public double fovY = 120 * (double)Math.PI / 180;
         // 近平面
         public double near = -1f;
         // 远平面
@@ -44,13 +44,12 @@ namespace HRenderer.Core {
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 0, 6f, 1);
+            this._position = Vector4.Create(0, 0, 8f, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
 
-            this.projectionMode = ProjectionMode.Orthographic;
+            this.projectionMode = ProjectionMode.Perspective;
             
-            // 初始化矩阵
             this.ComputeViewPortMatrix();
             // view矩阵
             this.ComputeViewMatrix();
@@ -67,8 +66,11 @@ namespace HRenderer.Core {
         
         public void SetPosition(double x, double y, double z) {
             this._position.Set(x, y, z, 1);
+            
+            this.ComputeViewPortMatrix();
             this.ComputeViewMatrix();
             this.ComputePerspective();
+            this.ComputeOrthographic();
         }
 
         public Vector4 GetPosition() {
@@ -82,6 +84,7 @@ namespace HRenderer.Core {
             this._toward.FromVec4(this._position.Sub(v));;
             this._toward.NormalizeSelf();
             this.ComputeViewMatrix();
+            this.ComputeOrthographic();
             this.ComputePerspective();
         }
         
@@ -157,8 +160,8 @@ namespace HRenderer.Core {
             var r = this.width / (double)this.height * t;
             var l = -r;
 
-            var n = this.near;
-            var f = this.far;
+            var n = -this.near;
+            var f = -this.far;
             
             this.orthographicMat.data = new double[] {
                 2 / (r - l), 0,           0,           -(r + l) / (r - l),

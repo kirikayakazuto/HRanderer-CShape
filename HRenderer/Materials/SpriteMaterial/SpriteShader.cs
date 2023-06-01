@@ -8,13 +8,9 @@ namespace HRenderer.Materials.SpriteMaterial {
         
         public override Vector4 VertexShading(GlData glData) {
             var position = glData.attributes.Vec4s["position"].Clone();
-            var r = Math.PI;
+            var r = Math.PI * this.uniformData.Doubles["time"];
             // position = position.Transform(Matrix4.GetRotationX(r).MulSelf(Matrix4.GetRotationY(r)));
-            position.TransformSelf(Matrix4.GetScale(5, 5, 5));
-            position.z += 6;
-            position.x += 4;
-            position.y += 5;
-            position.TransformSelf(Matrix4.GetRotationX(Math.PI * 0.6));
+            position.TransformSelf(Matrix4.GetRotationY(r));
             var vpMat = this.projection.Mul(this.view);
             
             glData.varyingDict.Vec2s["uv"] = glData.attributes.Vec2s["uv"];

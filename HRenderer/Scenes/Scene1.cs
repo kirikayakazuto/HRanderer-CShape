@@ -13,10 +13,10 @@ public class Scene1: Scene {
     
     public Scene1(): base(600, 600) {
         // this.AddMaterial(SkyPanoramicMaterial.GetMaterial());
-        // this.AddMaterial(SpriteMaterial.GetMaterial());
+        this.AddMaterial(SpriteMaterial.GetMaterial());
         // this.AddMaterial(SphereMaterial.GetMaterial());
         // this.AddMaterial(LightMaterial.GetMaterial());
-        this.AddMaterial(CubeMaterial.GetMaterial());
+        // this.AddMaterial(CubeMaterial.GetMaterial());
         // this.AddMaterial(ModelMaterial.GetMaterial());
     }
 

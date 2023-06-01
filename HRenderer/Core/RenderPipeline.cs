@@ -14,6 +14,7 @@ public class RenderPipeline {
 	// gl缓存数据
 	private readonly List<GlData> _glDatas = new List<GlData>();
 	private readonly List<Vector4> _positions = new List<Vector4>();
+	private readonly List<double> _depths = new List<double>();
 	private readonly List<Vector4> gl_in = new List<Vector4>();
 	private readonly List<Vector4> gl_out = new List<Vector4>();
 	
@@ -57,6 +58,7 @@ public class RenderPipeline {
 		var indices = mesh.Ibo;
 		
 		this._glDatas.Clear();
+		this._depths.Clear();
 		this._positions.Clear();
 		
 		// 顶点着色器工作
@@ -70,10 +72,13 @@ public class RenderPipeline {
 			var position = shader.VertexShading(glData);
 			// 转换到屏幕坐标
 			position.TransformSelf(this._viewPortMat4);
-			glData.varyingDict.Vec4s["gl_FragCoord"] = position.Clone().Homogenenize();
+			
+			var w = position.w;
+			glData.varyingDict.Vec4s["gl_FragCoord"] = position.Homogenenize();
 			
 			this._glDatas.Add(glData);
 			this._positions.Add(position);
+			this._depths.Add(w);
 		}
 		
 		// 片元着色器工作
@@ -83,18 +88,13 @@ public class RenderPipeline {
 			var v2 = this._triangle.v2 = indices[i+1];
 			var v3 = this._triangle.v3 = indices[i+2];
 
-			this._triangle.position1 = this._positions[(int)v1].Clone();
-			this._triangle.position2 = this._positions[(int)v2].Clone();
-			this._triangle.position3 = this._positions[(int)v3].Clone();
+			this._triangle.position1 = this._positions[(int)v1];
+			this._triangle.position2 = this._positions[(int)v2];
+			this._triangle.position3 = this._positions[(int)v3];
 
-			this._triangle.z1 = this._triangle.position1.w;
-			this._triangle.z2 = this._triangle.position2.w;
-			this._triangle.z3 = this._triangle.position3.w;
-
-			//
-			this._triangle.position1.Homogenenize();
-			this._triangle.position2.Homogenenize();
-			this._triangle.position3.Homogenenize();			
+			this._triangle.z1 = this._depths[(int)v1];
+			this._triangle.z2 = this._depths[(int)v2];
+			this._triangle.z3 = this._depths[(int)v3];
 			
 			// 三角形在屏幕外
 			if(!this.CheckTriangleInScreen()) continue;

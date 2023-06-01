@@ -218,7 +218,7 @@ namespace HRenderer.Common {
             this.x /= this.w;
             this.y /= this.w;
             this.z /= this.w;
-            this.w = 1;
+            this.w = 1 / this.w;
             return this;
         }
 
