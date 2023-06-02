@@ -71,10 +71,10 @@ public class RenderPipeline {
 			// 顶点着色器
 			var position = shader.VertexShading(glData);
 			// 转换到屏幕坐标
-			position.TransformSelf(this._viewPortMat4).Homogenenize();
+			position.TransformSelf(this._viewPortMat4);
 			
 			var w = position.w;
-			glData.varyingDict.Vec4s["gl_FragCoord"] = position;
+			glData.varyingDict.Vec4s["gl_FragCoord"] = position.Homogenenize();
 			
 			this._glDatas.Add(glData);
 			this._positions.Add(position);
