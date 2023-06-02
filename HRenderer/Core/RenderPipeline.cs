@@ -71,10 +71,10 @@ public class RenderPipeline {
 			// 顶点着色器
 			var position = shader.VertexShading(glData);
 			// 转换到屏幕坐标
-			position.TransformSelf(this._viewPortMat4);
+			position.TransformSelf(this._viewPortMat4).Homogenenize();
 			
 			var w = position.w;
-			glData.varyingDict.Vec4s["gl_FragCoord"] = position.Homogenenize();
+			glData.varyingDict.Vec4s["gl_FragCoord"] = position;
 			
 			this._glDatas.Add(glData);
 			this._positions.Add(position);
@@ -166,7 +166,7 @@ public class RenderPipeline {
 
 				// 校正透视差值
 				barycentric = Utils.AdjustBarycentric(barycentric, z1, z2, z3);
-                    
+				
 				// 计算attribs差值
 				this.ComputeShaderVectorVarying(shader, barycentric, v1, v2, v3);
 

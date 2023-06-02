@@ -22,9 +22,9 @@ namespace HRenderer.Core {
         // fov 视角大小
         public double fovY = 120 * (double)Math.PI / 180;
         // 近平面
-        public double near = -1f;
+        public double near = 10;
         // 远平面
-        public double far = -500f;
+        public double far = -10;
         
         // 观察矩阵 / 摄像机矩阵  将摄像机放在0, 0, 0位置, 并看向-z方向
         public readonly Matrix4 viewMat = Matrix4.GetIdentify();
@@ -48,7 +48,7 @@ namespace HRenderer.Core {
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
 
-            this.projectionMode = ProjectionMode.Perspective;
+            this.projectionMode = ProjectionMode.Orthographic;
             
             this.ComputeViewPortMatrix();
             // view矩阵
@@ -126,7 +126,7 @@ namespace HRenderer.Core {
             return this.projectionMode switch {
                 ProjectionMode.Orthographic => this.orthographicMat,
                 ProjectionMode.Perspective => this.perspectiveMat,
-                _ => orthographicMat
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
 
@@ -152,6 +152,7 @@ namespace HRenderer.Core {
 
         /**
          * 计算正交矩阵
+         * 希望实现正确的正交投影效果, 需要将near和far设置为大小相等, 方向相反的值
          */
         private Matrix4 ComputeOrthographic() {
             var t = Math.Tan(this.fovY/2) * this.near;
