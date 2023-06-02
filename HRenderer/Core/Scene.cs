@@ -69,6 +69,7 @@ public abstract class Scene {
 			shader.uniformData.Vec4s["Light.Direction"] = this.directionLight.direction;
 			shader.uniformData.Vec4s["Light.Color"] = this.directionLight.color;
 		}
+		Renderer.instance.materials = this._materials;
 	}
 	
 }

@@ -18,10 +18,8 @@ namespace HRenderer {
         private const int _width = 600;
         private const int _height = 600;
         private const float _scale = 1f;
-
-        private readonly Renderer _renderer;
+        
         public Program() {
-            this._renderer = new Renderer(_width, _height);
         }
         
         public void OpenWindow() {
@@ -30,8 +28,8 @@ namespace HRenderer {
                 Title = "HRenderer",
                 Flags = ContextFlags.ForwardCompatible,
             };
-
-            var window = new Window(GameWindowSettings.Default, nativeWindowSettings, this._renderer);
+            
+            var window = new Window(GameWindowSettings.Default, nativeWindowSettings, Game.instance);
             window.Run();
         }
     }

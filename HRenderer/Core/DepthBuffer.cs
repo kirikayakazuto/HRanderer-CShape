@@ -102,5 +102,9 @@ public class DepthBuffer {
 		this.SetZ(x, y, z, level);
 		return true;
 	}
+
+	public double[] GetBuffer() {
+		return this._buffer;
+	}
 	
 }

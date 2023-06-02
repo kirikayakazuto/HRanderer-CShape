@@ -31,10 +31,10 @@ public class Window : GameWindow {
     // For documentation on this, check Texture.cs.
     private Texture _texture;
 
-    private readonly Renderer _renderer;
+    private readonly Game _game;
 
-    public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, Renderer renderer): base(gameWindowSettings, nativeWindowSettings) {
-        this._renderer = renderer;
+    public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, Game game): base(gameWindowSettings, nativeWindowSettings) {
+        this._game = game;
     }
     
     protected override void OnLoad() {
@@ -71,8 +71,8 @@ public class Window : GameWindow {
     protected override void OnRenderFrame(FrameEventArgs e) {
         base.OnRenderFrame(e);
         
-        this._renderer.Render(e.Time);
-        var frame = this._renderer.pipeline.frameBuffer;
+        this._game.MainLoop(e.Time);
+        var frame = Renderer.instance.pipeline.frameBuffer;
         this._texture.UpdateData(frame.width, frame.height, frame.GetPixels());
 
         GL.Clear(ClearBufferMask.ColorBufferBit);

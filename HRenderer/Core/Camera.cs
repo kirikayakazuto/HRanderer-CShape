@@ -24,7 +24,7 @@ namespace HRenderer.Core {
         // 近平面
         public double near = -1;
         // 远平面
-        public double far = -100;
+        public double far = -50;
         
         // 观察矩阵 / 摄像机矩阵  将摄像机放在0, 0, 0位置, 并看向-z方向
         public readonly Matrix4 viewMat = Matrix4.GetIdentify();

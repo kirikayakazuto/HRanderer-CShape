@@ -11,9 +11,9 @@ namespace HRenderer.Materials.SpriteMaterial {
             
             var r = Math.PI * this.uniformData.Doubles["time"] * 0.5;
             // position = position.Transform(Matrix4.GetRotationX(r).MulSelf(Matrix4.GetRotationY(r)));
+            // position.TransformSelf(Matrix4.GetScale(2.5, 1, 1));
             position.TransformSelf(Matrix4.GetRotationY(r));
 
-            // Console.WriteLine("======1: " + position.ToString());
             var vpMat = this.projection.Mul(this.view);            
             glData.varyingDict.Vec2s["uv"] = glData.attributes.Vec2s["uv"];
             
@@ -28,6 +28,11 @@ namespace HRenderer.Materials.SpriteMaterial {
             //     color.Set(0, 0, 0, 0);
             // }
             return color;
+
+            // var vpos = this.varyingDict.Vec4s["gl_FragCoord"];
+            // var z = vpos.z;
+            // z = (z + 1) * 0.5;
+            // return Vector4.Create(z, z, z, 1);
         }
     }
 }
