@@ -5,6 +5,7 @@ namespace HRenderer.Core {
      * 包含所有需要渲染的信息
      */
     public class Material {
+        public string name = "";
         public readonly Mesh mesh;
         public readonly Shader shader;
         public readonly UniformData uniformData = new UniformData();
@@ -16,7 +17,8 @@ namespace HRenderer.Core {
         // 开启模版写入
         public bool useStencilWrite = false;
 
-        public Material(Mesh mesh, Shader shader, Texture? texture = null) {
+        public Material(string name, Mesh mesh, Shader shader, Texture? texture = null) {
+            this.name = name;
             this.mesh = mesh;
             this.shader = shader;
             if (texture != null) {

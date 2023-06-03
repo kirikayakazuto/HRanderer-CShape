@@ -7,7 +7,7 @@ public class SphereMaterial {
         var texture = new Texture("./Assets/earth.jpg");
         var mesh = new SphereMesh();
         var shader = new SphereShader();
-        var m = new Material(mesh, shader, texture);
+        var m = new Material("Sphere", mesh, shader, texture);
         m.useFaceCulling = true;
         return m;
     }

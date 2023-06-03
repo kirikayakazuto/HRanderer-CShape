@@ -21,9 +21,8 @@ public class RenderPipeline {
 	
 	// 输出
 	public readonly FrameBuffer frameBuffer;
-	private readonly DepthBuffer depthBuffer;
-	private readonly StencilBuffer stencilBuffer;
-	private readonly ShadowTexture _shadowTexture;
+	public readonly DepthBuffer depthBuffer;
+	public readonly StencilBuffer stencilBuffer;
 
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
@@ -48,7 +47,6 @@ public class RenderPipeline {
 		this.frameBuffer = new FrameBuffer(width, height);
 		this.depthBuffer = new DepthBuffer(width, height, useMsaa);
 		this.stencilBuffer = new StencilBuffer(width, height);
-		this._shadowTexture = new ShadowTexture(width, height);
 	}
 
 	public void Draw(Material material) {

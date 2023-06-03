@@ -7,7 +7,7 @@ public class TriangleMaterial {
 		var texture = new Texture("./Assets/001.jpg");
 		var mesh = new TriangleMesh();
 		var shader = new TriangleShader();
-		var m = new Material(mesh, shader);
+		var m = new Material("triangle", mesh, shader);
 		m.useStencilWrite = true;
 		return m;
 	}

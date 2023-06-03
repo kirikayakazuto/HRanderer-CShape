@@ -7,15 +7,15 @@ namespace HRenderer.Core {
 		public static Renderer instance => Renderer._renderer;
 
 		// size
-		private readonly int _width = 0;
-		private readonly int _height = 0;
+		public readonly int width = 0;
+		public readonly int height = 0;
 		
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
 		
 		private Renderer(int width, int height) {
-			this._width = width;
-			this._height = height;
+			this.width = width;
+			this.height = height;
 			this.pipeline = new RenderPipeline(width, height);
 		}
 		

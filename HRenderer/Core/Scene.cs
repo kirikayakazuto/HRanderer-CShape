@@ -15,7 +15,7 @@ public abstract class Scene {
 	protected readonly DirectionLight directionLight;
 	
 	// 相机
-	protected readonly Camera camera;
+	public readonly Camera camera;
 	// 材质
 	private static readonly List<Material> _materials = new List<Material>();
 	public static List<Material> materials => Scene._materials;
@@ -38,16 +38,14 @@ public abstract class Scene {
 		return Scene._materials;
 	}
 
-	public void Update(double dt) {
-		this.OnUpdate(dt);
-		this.OnLateUpdate(dt);
+	public Material? GetMaterial(string name) {
+		foreach (var material in Scene._materials) {
+			if (material.name == name) return material;
+		}
+		return null;
 	}
 
-
-	protected abstract void OnUpdate(double dt);
-
-	private void OnLateUpdate(double dt) {
-		this._passTime += dt;
+	public void UpdateMaterialUniforms() {
 		foreach (var material in Scene._materials) {
 			var shader = material.shader;
 
@@ -71,5 +69,12 @@ public abstract class Scene {
 			shader.uniformData.Vec4s["Light.Color"] = this.directionLight.color;
 		}
 	}
+
+	public void Update(double dt) {
+		this.OnUpdate(dt);
+		this._passTime += dt;
+		this.UpdateMaterialUniforms();
+	}
 	
+	protected abstract void OnUpdate(double dt);
 }

@@ -8,7 +8,7 @@ namespace HRenderer.Core;
 
 public class UniformData {
 	public readonly Dictionary<string, Matrix4> Matrix4s = new Dictionary<string, Matrix4>();
-	public readonly Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
+	public readonly Dictionary<string, BaseTexture> Textures = new Dictionary<string, BaseTexture>();
 	public readonly Dictionary<string, Vector4> Vec4s = new Dictionary<string, Vector4>();
 	public readonly Dictionary<string, double> Doubles = new Dictionary<string, double>();
 }

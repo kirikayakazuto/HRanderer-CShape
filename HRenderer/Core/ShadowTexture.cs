@@ -12,14 +12,14 @@ public class ShadowTexture: BaseTexture {
     }
 
     public void From(double[] _buffer) {
-        this.buffer.CopyTo(_buffer, 0);
+        _buffer.CopyTo(this.buffer, 0);
     }
     
     public override Vector4 Nearest(double x, double y) {
         var cx = (int)Math.Floor(x);
         var cy = (int)Math.Floor(y);
         var idx = this.GetIndex(cx, cy);
-        return Vector4.Create(this.buffer[idx], this.buffer[idx], this.buffer[idx], this.buffer[idx]);
+        return Vector4.Create(this.buffer[idx], this.buffer[idx], this.buffer[idx], 1);
     }
 
     public override Vector4 Bilinear(double x, double y) {
@@ -45,12 +45,7 @@ public class ShadowTexture: BaseTexture {
         var w4 = dx * dy;
         
         var res = this.buffer[c1] * w1 + this.buffer[c2] * w2 + this.buffer[c3] * w3 + this.buffer[c4] * w4;
-        var r = (byte)Math.Round(res);
-        var g = (byte)Math.Round(res);
-        var b = (byte)Math.Round(res);
-        var a = (byte)Math.Round(res);
-
-        return Vector4.Create(r, g, b, a);
+        return Vector4.Create(res, res, res, 1);
     }
 
     public override int GetIndex(int x, int y) {

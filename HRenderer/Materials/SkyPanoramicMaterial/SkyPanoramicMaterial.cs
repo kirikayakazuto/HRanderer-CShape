@@ -7,7 +7,7 @@ public class SkyPanoramicMaterial {
 		var texture = new Texture("./Assets/sky.png");
 		var mesh = new SkyPanoramicMesh();
 		var shader = new SkyPanoramicShader();
-		var m = new Material(mesh, shader, texture);
+		var m = new Material("sky", mesh, shader, texture);
 		m.useFaceCulling = false;
 		m.useDepthWrite = false;
 		

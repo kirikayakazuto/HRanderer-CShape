@@ -11,7 +11,7 @@ public class CubeShader: Shader {
 		// var r = Math.PI / 4;
 		// position = position.Transform(Matrix4.GetRotationX(Math.PI));
 		position = position.Transform(Matrix4.GetRotationY(r));
-		position =	position.Transform(Matrix4.GetScale(3, 3, 3));
+		position = position.Transform(Matrix4.GetScale(3, 3, 3));
 		
 		var normal = glData.attributes.Vec4s["a_normal"].Transform(Matrix4.GetRotationY(r));
 		glData.varyingDict.Vec4s["v_normal"] = normal;
