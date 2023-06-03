@@ -17,8 +17,9 @@ public abstract class Scene {
 	// 相机
 	protected readonly Camera camera;
 	// 材质
-	private readonly List<Material> _materials = new List<Material>();
-	
+	private static readonly List<Material> _materials = new List<Material>();
+	public static List<Material> materials => Scene._materials;
+
 	// 游戏运行时间
 	private double _passTime = 0;
 
@@ -30,11 +31,11 @@ public abstract class Scene {
 	}
 
 	protected void AddMaterial(Material material) {
-		this._materials.Add(material);
+		Scene._materials.Add(material);
 	}
 
 	public List<Material> GetMaterials() {
-		return this._materials;
+		return Scene._materials;
 	}
 
 	public void Update(double dt) {
@@ -47,7 +48,7 @@ public abstract class Scene {
 
 	private void OnLateUpdate(double dt) {
 		this._passTime += dt;
-		foreach (var material in this._materials) {
+		foreach (var material in Scene._materials) {
 			var shader = material.shader;
 
 			var projectionMat = this.camera.GetProjection();
@@ -69,7 +70,6 @@ public abstract class Scene {
 			shader.uniformData.Vec4s["Light.Direction"] = this.directionLight.direction;
 			shader.uniformData.Vec4s["Light.Color"] = this.directionLight.color;
 		}
-		Renderer.instance.materials = this._materials;
 	}
 	
 }

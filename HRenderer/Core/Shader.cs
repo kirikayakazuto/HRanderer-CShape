@@ -39,11 +39,8 @@ public abstract class Shader {
     /**
      * 纹理采样
      */
-    protected Vector4 Texture2D(Texture t, Vector2 uv) {
-        var color = t.Sample(uv.x, uv.y);
-        var v = Vector4.Create(color.r / 256f, color.g / 256f, color.b / 256f, color.a / 256f);
-        Color.Return(color);
-        return v;
+    protected Vector4 Texture2D(BaseTexture t, Vector2 uv) {
+        return t.Sample(uv.x, uv.y);
     }
 
 

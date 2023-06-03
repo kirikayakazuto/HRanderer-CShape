@@ -1,6 +1,3 @@
-using HRenderer.Common;
-using HRenderer.Scenes;
-
 namespace HRenderer.Core {
 	/**
      * 渲染器
@@ -16,22 +13,17 @@ namespace HRenderer.Core {
 		// 渲染管线
 		public readonly RenderPipeline pipeline;
 		
-		// 材质
-		private readonly Scene scene;
-
-		public List<Material> materials = new List<Material>();
-
 		private Renderer(int width, int height) {
 			this._width = width;
 			this._height = height;
-			this.scene = new Scene1();
 			this.pipeline = new RenderPipeline(width, height);
 		}
 		
 		
 		public void Render() {
 			this.pipeline.ClearBuffer();
-			foreach (var material in this.materials) {
+			var materials = Scene.materials;
+			foreach (var material in materials) {
 				this.pipeline.Draw(material);	
 			}
 		}

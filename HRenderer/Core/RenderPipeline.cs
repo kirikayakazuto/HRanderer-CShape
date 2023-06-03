@@ -15,9 +15,7 @@ public class RenderPipeline {
 	private readonly List<GlData> _glDatas = new List<GlData>();
 	private readonly List<Vector4> _positions = new List<Vector4>();
 	private readonly List<double> _depths = new List<double>();
-	private readonly List<Vector4> gl_in = new List<Vector4>();
-	private readonly List<Vector4> gl_out = new List<Vector4>();
-	
+
 	// 当前处理的三角形
 	private readonly Triangle _triangle = new Triangle();
 	
@@ -25,8 +23,7 @@ public class RenderPipeline {
 	public readonly FrameBuffer frameBuffer;
 	private readonly DepthBuffer depthBuffer;
 	private readonly StencilBuffer stencilBuffer;
-
-	private readonly ShadowBuffer shadowBuffer;
+	private readonly ShadowTexture _shadowTexture;
 
 	// 抗锯齿
 	private readonly bool _useMsaa = false;
@@ -39,7 +36,7 @@ public class RenderPipeline {
 	private bool _writeStencil = false;
 
 	// 渲染模式
-	private RenderMode _renderMode = RenderMode.Triangle;
+	public RenderMode renderMode = RenderMode.Triangle;
 
 	public RenderPipeline(int width, int height, bool useMsaa = false) {
 		this._width = width;
@@ -51,7 +48,7 @@ public class RenderPipeline {
 		this.frameBuffer = new FrameBuffer(width, height);
 		this.depthBuffer = new DepthBuffer(width, height, useMsaa);
 		this.stencilBuffer = new StencilBuffer(width, height);
-		this.shadowBuffer = new ShadowBuffer(width, height);
+		this._shadowTexture = new ShadowTexture(width, height);
 	}
 
 	public void Draw(Material material) {
@@ -104,7 +101,7 @@ public class RenderPipeline {
 			
 			if(material.useFaceCulling && this.IsBackFace()) continue;
 
-			switch (this._renderMode) {
+			switch (this.renderMode) {
 				case RenderMode.Triangle:
 					this._rasterByTriangle(material); 
 					break;
@@ -178,7 +175,6 @@ public class RenderPipeline {
 				
 				// 输出颜色
 				this.frameBuffer.SetColor(x , y, color);
-
 				Vector4.Return(color);
 			}
 		}

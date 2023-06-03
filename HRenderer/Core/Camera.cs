@@ -20,7 +20,7 @@ namespace HRenderer.Core {
         
         public double aspect = 1;
         // fov 视角大小
-        public double fovY = 120 * (double)Math.PI / 180;
+        public double fovY = 90 * (double)Math.PI / 180;
         // 近平面
         public double near = -1;
         // 远平面
@@ -66,7 +66,10 @@ namespace HRenderer.Core {
         
         public void SetPosition(double x, double y, double z) {
             this._position.Set(x, y, z, 1);
-            
+            this.UpdateMatrix();
+        }
+
+        public void UpdateMatrix() {
             this.ComputeViewPortMatrix();
             this.ComputeViewMatrix();
             this.ComputePerspective();

@@ -60,7 +60,7 @@ namespace HRenderer.Common {
             return m;
         }
 
-        public static Matrix4 Translation(double x = 0, double y = 0, double z = 0) {
+        public static Matrix4 GetTranslation(double x = 0, double y = 0, double z = 0) {
             var m = Matrix4.GetIdentify();
             m.data[12] = x;
             m.data[13] = y;

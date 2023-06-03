@@ -13,19 +13,17 @@ public class Scene1: Scene {
     
     public Scene1(): base(600, 600) {
         // this.AddMaterial(SkyPanoramicMaterial.GetMaterial());
-        this.AddMaterial(SpriteMaterial.GetMaterial());
+        // this.AddMaterial(SpriteMaterial.GetMaterial());
         // this.AddMaterial(SphereMaterial.GetMaterial());
         // this.AddMaterial(LightMaterial.GetMaterial());
-        // this.AddMaterial(CubeMaterial.GetMaterial());
+        this.AddMaterial(CubeMaterial.GetMaterial());
         // this.AddMaterial(ModelMaterial.GetMaterial());
     }
-
-    private double passTime = 0;
+    
     protected override void OnUpdate(double dt) {
-        // this.passTime += dt;
-        // var pos = this.camera.GetPositicon();
-        // pos.TransformSelf(Matrix4.GetRotationY(dt));
-        // this.camera.ComputeViewMatrix();
-        // this.camera.ComputeOrthographicProjection();
+
+        // var pos = this.camera.GetPosition();
+        // pos.TransformSelf(Matrix4.GetTranslation(dt, 0, 0));
+        // this.camera.UpdateMatrix();
     }
 }

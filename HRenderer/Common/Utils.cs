@@ -130,5 +130,9 @@ namespace HRenderer.Common {
             m.data[13] = height / 2.0f;
             return m;
         }
+        
+        public static int Clamp(int min, int max, int value) {
+            return Math.Min(max, Math.Max(min, value));
+        }
     }
 }
