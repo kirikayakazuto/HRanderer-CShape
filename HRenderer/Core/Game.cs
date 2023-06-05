@@ -17,31 +17,8 @@ public class Game {
 	private Camera lightCamera;
 	private Game() {
 		this.scene = new Scene1();
-
-		var width = Renderer.instance.width;
-		var height = Renderer.instance.height;
-		this._shadowTexture = new ShadowTexture(width, height);
-
-		// this.lightCamera = new Camera(width, height);
-		// lightCamera.near = 20;
-		// lightCamera.far = -20;
-		// lightCamera.SetPosition(this.scene.directionLight.position);
-		// lightCamera.SetProjectionMode(ProjectionMode.Orthographic);
-		// lightCamera.UpdateMatrix();
 	}
 	
-	public void Test1() {
-		this.scene.UpdateMaterialUniforms(this.lightCamera);
-		Renderer.instance.Render();
-		var depthBuffer = Renderer.instance.pipeline.depthBuffer.GetBuffer();
-		this._shadowTexture.From(depthBuffer);
-		var material = this.scene.GetMaterial("sprite");
-		if (material != null) {
-			material.uniformData.Textures["mainTexture"] = this._shadowTexture;    
-		}
-        
-	}
-
 	private double _passTime = 0;
 
 	public void MainLoop(double dt) {
