@@ -12,7 +12,7 @@ public abstract class Scene {
 	private readonly int _width;
 	private readonly int _height;
 	// 灯光
-	protected readonly DirectionLight directionLight;
+	public readonly DirectionLight directionLight;
 	
 	// 相机
 	public readonly Camera camera;
@@ -27,7 +27,7 @@ public abstract class Scene {
 		this._width = width;
 		this._height = height;
 		this.camera = new Camera(width, height);
-		this.directionLight = new DirectionLight(Common.Vector4.Create(-2, -2, 2, 1), Common.Vector4.Create(2, 2, -2, 1).NormalizeSelf());
+		this.directionLight = new DirectionLight(Common.Vector4.Create(-5, -3, 0, 1), Common.Vector4.Create(5, 3, 0, 1).NormalizeSelf());
 	}
 
 	protected void AddMaterial(Material material) {
@@ -45,13 +45,13 @@ public abstract class Scene {
 		return null;
 	}
 
-	public void UpdateMaterialUniforms() {
+	public void UpdateMaterialUniforms(Camera _camera) {
 		foreach (var material in Scene._materials) {
 			var shader = material.shader;
 
-			var projectionMat = this.camera.GetProjection();
+			var projectionMat = _camera.GetProjection();
 			
-			shader.view = this.camera.viewMat;
+			shader.view = _camera.viewMat;
 			shader.projection = projectionMat;
                 
 			// 添加材质自带的uniforms
@@ -59,10 +59,10 @@ public abstract class Scene {
 				
 			shader.uniformData.Doubles["time"] = this._passTime;
 				
-			shader.uniformData.Matrix4s["Camera.View"] = this.camera.viewMat;
+			shader.uniformData.Matrix4s["Camera.View"] = _camera.viewMat;
 			shader.uniformData.Matrix4s["Camera.Projection"] = projectionMat;
 				
-			shader.uniformData.Vec4s["Camera.Position"] = this.camera.GetPosition();
+			shader.uniformData.Vec4s["Camera.Position"] = _camera.GetPosition();
 
 			shader.uniformData.Vec4s["Light.Position"] = this.directionLight.position;
 			shader.uniformData.Vec4s["Light.Direction"] = this.directionLight.direction;
@@ -73,7 +73,7 @@ public abstract class Scene {
 	public void Update(double dt) {
 		this.OnUpdate(dt);
 		this._passTime += dt;
-		this.UpdateMaterialUniforms();
+		this.UpdateMaterialUniforms(this.camera);
 	}
 	
 	protected abstract void OnUpdate(double dt);

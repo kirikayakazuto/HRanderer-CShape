@@ -30,4 +30,11 @@ public class SpriteMaterial {
 		m.uniformData.Textures["noiseTexture"] = new Texture("./Assets/noises/noise.png");
 		return m;
 	}
+
+	public static Material GetMaterial4() {
+		var mesh = new SpriteMesh();
+		var shader = new SpriteShader1();
+		var m = new Material("color-sprite", mesh, shader);
+		return m;
+	}
 }

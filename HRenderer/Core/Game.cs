@@ -14,16 +14,24 @@ public class Game {
 
 	private readonly Scene scene;
 	private ShadowTexture _shadowTexture;
+	private Camera lightCamera;
 	private Game() {
-		this.scene = new Scene1();
+		this.scene = new Scene2();
 
 		var width = Renderer.instance.width;
 		var height = Renderer.instance.height;
 		this._shadowTexture = new ShadowTexture(width, height);
-	}
 
-	private bool test1Runed = false;
+		this.lightCamera = new Camera(width, height);
+		lightCamera.near = 20;
+		lightCamera.far = -20;
+		lightCamera.SetPosition(this.scene.directionLight.position);
+		lightCamera.SetProjectionMode(ProjectionMode.Orthographic);
+		lightCamera.UpdateMatrix();
+	}
+	
 	public void Test1() {
+		this.scene.UpdateMaterialUniforms(this.lightCamera);
 		Renderer.instance.Render();
 		var depthBuffer = Renderer.instance.pipeline.depthBuffer.GetBuffer();
 		this._shadowTexture.From(depthBuffer);

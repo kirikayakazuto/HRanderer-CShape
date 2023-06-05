@@ -20,11 +20,11 @@ namespace HRenderer.Core {
         
         public double aspect = 1;
         // fov 视角大小
-        public double fovY = 90 * (double)Math.PI / 180;
+        public double fovY = 60 * (double)Math.PI / 180;
         // 近平面
         public double near = -1;
         // 远平面
-        public double far = -50;
+        public double far = -100;
         
         // 观察矩阵 / 摄像机矩阵  将摄像机放在0, 0, 0位置, 并看向-z方向
         public readonly Matrix4 viewMat = Matrix4.GetIdentify();
@@ -44,7 +44,7 @@ namespace HRenderer.Core {
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 0, 5f, 1);
+            this._position = Vector4.Create(0, 6f, 12f, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
 
@@ -66,6 +66,11 @@ namespace HRenderer.Core {
         
         public void SetPosition(double x, double y, double z) {
             this._position.Set(x, y, z, 1);
+            this.UpdateMatrix();
+        }
+        
+        public void SetPosition(Vector4 pos) {
+            this._position.Set(pos.x, pos.y, pos.z, 1);
             this.UpdateMatrix();
         }
 
