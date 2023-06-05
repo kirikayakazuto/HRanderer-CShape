@@ -16,18 +16,18 @@ public class Game {
 	private ShadowTexture _shadowTexture;
 	private Camera lightCamera;
 	private Game() {
-		this.scene = new Scene2();
+		this.scene = new Scene1();
 
 		var width = Renderer.instance.width;
 		var height = Renderer.instance.height;
 		this._shadowTexture = new ShadowTexture(width, height);
 
-		this.lightCamera = new Camera(width, height);
-		lightCamera.near = 20;
-		lightCamera.far = -20;
-		lightCamera.SetPosition(this.scene.directionLight.position);
-		lightCamera.SetProjectionMode(ProjectionMode.Orthographic);
-		lightCamera.UpdateMatrix();
+		// this.lightCamera = new Camera(width, height);
+		// lightCamera.near = 20;
+		// lightCamera.far = -20;
+		// lightCamera.SetPosition(this.scene.directionLight.position);
+		// lightCamera.SetProjectionMode(ProjectionMode.Orthographic);
+		// lightCamera.UpdateMatrix();
 	}
 	
 	public void Test1() {
@@ -46,9 +46,6 @@ public class Game {
 
 	public void MainLoop(double dt) {
 		this._passTime += dt;
-		if (this._passTime >= 1) {
-			this.Test1();
-		}
 		// 1, 场景更新
 		this.scene.Update(dt);
 		// 2, 开始渲染

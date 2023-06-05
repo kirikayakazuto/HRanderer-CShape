@@ -44,7 +44,8 @@ namespace HRenderer.Core {
             this.height = height;
             
             // 初始化
-            this._position = Vector4.Create(0, 6f, 12f, 1);
+            // this._position = Vector4.Create(0, 6f, 12f, 1);
+            this._position = Vector4.Create(0f, 0f, 12f, 1);
             this._up = Vector4.Create(0, 1, 0, 1);
             this._toward = Vector4.Create(0, 0, 1, 1);
 
@@ -163,7 +164,8 @@ namespace HRenderer.Core {
          * 希望实现正确的正交投影效果, 需要将near和far设置为大小相等, 方向相反的值
          */
         private Matrix4 ComputeOrthographic() {
-            var t = Math.Tan(this.fovY/2) * this.near;
+            // (this.near + this.far) / 2;
+            var t = Math.Tan(this.fovY/2) * this.far;
             var b = -t;
 
             var r = this.width / (double)this.height * t;
@@ -172,11 +174,17 @@ namespace HRenderer.Core {
             var n = -this.near;
             var f = -this.far;
             
+            // this.orthographicMat.data = new double[] {
+            //     2 / (r - l), 0,           0,           -(r + l) / (r - l),
+            //     0,           2 / (t - b), 0,           -(t + b) / (t - b),
+            //     0,           0,           2 / (n - f), -(n + f) / (n - f),
+            //     0,           0,           0,            1,
+            // };
             this.orthographicMat.data = new double[] {
-                2 / (r - l), 0,           0,           -(r + l) / (r - l),
-                0,           2 / (t - b), 0,           -(t + b) / (t - b),
-                0,           0,           2 / (n - f), -(n + f) / (n - f),
-                0,           0,           0,            1,
+                2 / (r - l), 0,           0,           0,
+                0,           2 / (t - b), 0,           0,
+                0,           0,           2 / (n - f), 0,
+                0,           0,           0,           1,
             };
             return this.orthographicMat;
         }

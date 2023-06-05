@@ -18,6 +18,7 @@ public class Scene1: Scene {
         // this.AddMaterial(LightMaterial.GetMaterial());
         this.AddMaterial(CubeMaterial.GetMaterial());
         // this.AddMaterial(ModelMaterial.GetMaterial());
+        this.camera.SetProjectionMode(ProjectionMode.Orthographic);
     }
     
     protected override void OnUpdate(double dt) {
