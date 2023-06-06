@@ -12,7 +12,7 @@ public class Camera {
     public Vector4 right => this._up.Cross(this._toward);
     
     // 宽高比
-    public double aspect = 1;
+    public double aspect = 2;
     // fov 视角大小
     public double fovY = 90 * (double)Math.PI / 180;
     // 近平面
@@ -25,7 +25,7 @@ public class Camera {
 
     public Camera() {
         // 初始化
-        this._position = Vector4.Create(0f, 0f, 10f, 1);
+        this._position = Vector4.Create(0f, 0f, 3f, 1);
         this._up = Vector4.Create(0, 1, 0, 1);
         this._toward = Vector4.Create(0, 0, 1, 1);
 

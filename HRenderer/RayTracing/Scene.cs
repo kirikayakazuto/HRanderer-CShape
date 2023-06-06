@@ -7,17 +7,16 @@ public class Scene {
 
     public Scene() {
         this.geometryList.Add(new Sphere(Vector4.Create(0, 0, 1, 0), 0.5));
-        this.geometryList.Add(new Sphere(Vector4.Create(0, -50.5, 0, 0), 50));
+        this.geometryList.Add(new Sphere(Vector4.Create(0, -100.5, 0, 0), 100));
     }
 
     public bool HitTest(Ray ray, double tMin, double tMax, ref HitInfo hitInfo) {
         var isHit = false;
         foreach (var geometry in this.geometryList) {
-			if(geometry.HitTest(ray, tMin, tMax, ref hitInfo)) {
-                isHit = true;
-                tMax = hitInfo.t;
-            }
-		}
+            if (!geometry.HitTest(ray, tMin, tMax, ref hitInfo)) continue;
+            isHit = true;
+            tMax = hitInfo.t;
+        }
 
         return isHit;
     }

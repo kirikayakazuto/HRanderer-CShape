@@ -6,6 +6,7 @@ public struct HitInfo {
     public Vector4 position;
     public Vector4 normal;
     public double t;
+    public Material material;
 
     // 是否是外表面
     public bool isFrontFace;

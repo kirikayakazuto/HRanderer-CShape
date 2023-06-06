@@ -6,10 +6,12 @@ public class Sphere: Geometry {
 
 	public readonly Vector4 center;
 	public readonly double radius;
+	public readonly Material material;
 
-	public Sphere(Vector4 center, double radius) {
+	public Sphere(Vector4 center, double radius, Material material) {
 		this.center = center;
 		this.radius = radius;
+		this.material = material;
 	}
 
     public override bool HitTest(Ray ray, double tMin, double tMax, ref HitInfo hitInfo) {
@@ -31,6 +33,7 @@ public class Sphere: Geometry {
 		hitInfo.position = ray.PointTo(root);
 		var outwardNormal = hitInfo.position.Sub(this.center).MulSelf(1 / radius).NormalizeSelf();
 		hitInfo.SetFaceNormal(ray, outwardNormal);
+		hitInfo.material = this.material;
 
 		return true;
 	}
