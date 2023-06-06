@@ -250,6 +250,10 @@ namespace HRenderer.Common {
             return (double)Math.Sqrt(x * x + y * y + z * z);
         }
 
+        public double GetLengthSquared() {
+            return x * x + y * y + z * z;
+        }
+
         public Vector4 Clone() {
             return new Vector4(this.x, this.y, this.z, this.w);
         }

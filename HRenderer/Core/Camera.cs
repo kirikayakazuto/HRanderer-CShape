@@ -1,4 +1,4 @@
-using System;
+using HRenderer.RayTracing;
 using HRenderer.Common;
 
 namespace HRenderer.Core {
@@ -17,10 +17,14 @@ namespace HRenderer.Core {
         private readonly Vector4 _position;
         private readonly Vector4 _up;
         private readonly Vector4 _toward;
+
+        public Vector4 up => this._up;
+        public Vector4 right => this._up.Cross(this._toward);
         
+        // 宽高比
         public double aspect = 1;
         // fov 视角大小
-        public double fovY = 60 * (double)Math.PI / 180;
+        public double fovY = 90 * (double)Math.PI / 180;
         // 近平面
         public double near = -1;
         // 远平面
@@ -198,6 +202,16 @@ namespace HRenderer.Core {
             m.data[12] = this.width / 2.0f;
             m.data[13] = this.height / 2.0f;
             return m;
+        }
+
+        public Ray GetRay(double u, double v) {
+
+            var h = Math.Tan(this.fovY / 2) * this.near * 2;
+            var w = h * this.aspect;
+            var n = this.near;
+
+            var screenPoint = Vector4.Create(u * w - w / 2, v * h - h / 2, n);
+            return new Ray(this._position, screenPoint.SubSelf(this._position));
         }
     }
 }

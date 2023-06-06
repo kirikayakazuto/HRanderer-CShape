@@ -10,7 +10,8 @@ using OpenTK.Windowing.Desktop;
 
 var program = new HRenderer.Program();
 
-program.OpenWindow();
+// program.OpenWindow();
+program.DoRayTracing();
 
 namespace HRenderer {
     public class Program {
@@ -31,6 +32,10 @@ namespace HRenderer {
             
             var window = new Window(GameWindowSettings.Default, nativeWindowSettings, Game.instance);
             window.Run();
+        }
+
+        public void DoRayTracing() {
+            RayTracing.Renderer.instance.Render();
         }
     }
 }

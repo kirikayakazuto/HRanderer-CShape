@@ -1,5 +1,4 @@
 using HRenderer.Scenes;
-using Timer = System.Timers.Timer;
 
 namespace HRenderer.Core; 
 
@@ -27,5 +26,6 @@ public class Game {
 		this.scene.Update(dt);
 		// 2, 开始渲染
 		Renderer.instance.Render();
+		// RayTracing.Renderer.instance.Render();
 	}
 }
