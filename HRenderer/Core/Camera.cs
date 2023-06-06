@@ -1,4 +1,3 @@
-using HRenderer.RayTracing;
 using HRenderer.Common;
 
 namespace HRenderer.Core {
@@ -202,16 +201,6 @@ namespace HRenderer.Core {
             m.data[12] = this.width / 2.0f;
             m.data[13] = this.height / 2.0f;
             return m;
-        }
-
-        public Ray GetRay(double u, double v) {
-
-            var h = Math.Tan(this.fovY / 2) * this.near * 2;
-            var w = h * this.aspect;
-            var n = this.near;
-
-            var screenPoint = Vector4.Create(u * w - w / 2, v * h - h / 2, n);
-            return new Ray(this._position, screenPoint.SubSelf(this._position));
         }
     }
 }

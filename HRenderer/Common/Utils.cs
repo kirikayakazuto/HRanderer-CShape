@@ -134,5 +134,20 @@ namespace HRenderer.Common {
         public static int Clamp(int min, int max, int value) {
             return Math.Min(max, Math.Max(min, value));
         }
+
+        public static double RandomZoreToOne() {
+            var seed = Guid.NewGuid().GetHashCode();  
+            Random r = new Random(seed);
+            int i = r.Next(0, 100000);
+            return (double)i / 100000;
+        }
+
+        public static double Random(double min, double max) {
+            return min + (max - min) * Utils.RandomZoreToOne();
+        }
+
+        public static Vector4 RandomVec4() {
+            return Vector4.Create(Utils.Random(-1, 1), Utils.Random(-1, 1), Utils.Random(-1, 1), 1);
+        }
     }
 }

@@ -14,4 +14,11 @@ public struct HitInfo {
         this.isFrontFace = ray.direction.Dot(outwardNormal) < 0;
         this.normal = this.isFrontFace ? outwardNormal : outwardNormal.MulSelf(-1);
     }
+
+    public void From(HitInfo hitInfo) {
+        this.position = hitInfo.position;
+        this.normal = hitInfo.normal;
+        this.t = hitInfo.t;
+        this.isFrontFace = hitInfo.isFrontFace;
+    }
 }
