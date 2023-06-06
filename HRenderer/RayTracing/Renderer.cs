@@ -32,8 +32,8 @@ public class Renderer {
 
         if(depth <= 0) return Vector4.Create(0, 0, 0, 1);
 
-        if(this.scene.HitTest(ray, 0, 100, ref hitInfo)) {
-            var target = hitInfo.position.Add(hitInfo.normal).AddSelf(this.RandomVec4());
+        if(this.scene.HitTest(ray, 0.001, 100, ref hitInfo)) {
+            var target = hitInfo.position.Add(hitInfo.normal).AddSelf(this.RandomVec4()).NormalizeSelf();
             // return hitInfo.normal.Add(Vector4.Create(1, 1, 1, 1)).MulSelf(0.5);
             return this.GetRayColor(new Ray(hitInfo.position, target.SubSelf(hitInfo.position)), depth-1);
         }
@@ -57,6 +57,7 @@ public class Renderer {
                 }
                 
                 color.MulSelf(1f / this.sampleLines);
+                color.SqrtSelf();
                 
                 var idx = (this.width * j + i) * 4;
                 this.data[idx] = (byte)(color.x * 255);

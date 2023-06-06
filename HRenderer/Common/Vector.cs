@@ -304,5 +304,12 @@ namespace HRenderer.Common {
             this.w = Math.Min(this.w, 1);
             return this;
         }
+
+        public Vector4 SqrtSelf() {
+            this.x = Math.Sqrt(this.x);
+            this.y = Math.Sqrt(this.y);
+            this.z = Math.Sqrt(this.z);
+            return this;
+        }
     }
 }
