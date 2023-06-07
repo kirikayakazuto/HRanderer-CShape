@@ -73,6 +73,13 @@ namespace HRenderer.Common {
             return i.Sub(n.Mul(n.Dot(i)).Mul(2.0));
         }
 
+        public static Vector4 Refract(Vector4 i, Vector4 n, double etaiOverEtat) {
+            var cosTheta = Math.Min(i.Mul(-1).Dot(n), 1);
+            var rOutPerp = i.Add(n.Mul(cosTheta)).MulSelf(etaiOverEtat);
+            var rOutParallel = n.Mul(-Math.Sqrt(1 - rOutPerp.GetLengthSquared()));
+            return rOutPerp.AddSelf(rOutParallel);
+        }
+
         /**
          * 校正重心差值
          */

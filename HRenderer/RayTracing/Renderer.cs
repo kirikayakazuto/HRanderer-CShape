@@ -7,7 +7,7 @@ namespace HRenderer.RayTracing;
  */
 public class Renderer {
 
-    public static readonly Renderer instance = new Renderer(400, 200);
+    public static readonly Renderer instance = new Renderer(500, 250);
 
     private readonly int width;
     private readonly int height;
@@ -33,8 +33,6 @@ public class Renderer {
         if(depth <= 0) return Vector4.Create(0, 0, 0, 0);
 
         if(this.scene.HitTest(ray, 0.001, int.MaxValue, ref hitInfo)) {
-            // var target = hitInfo.position.Add(hitInfo.normal).AddSelf(Utils.RandomUnitVec4().NormalizeSelf());
-            // return this.GetRayColor(new Ray(hitInfo.position, target.SubSelf(hitInfo.position)), depth-1).MulSelf(0.5);
             if (hitInfo.material.Scatter(ray, ref hitInfo, out var attenuation, out var rayOut)) {
                 return attenuation.MulSelf(this.GetRayColor(rayOut, depth - 1));
             }
