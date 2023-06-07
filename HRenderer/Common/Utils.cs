@@ -151,15 +151,23 @@ namespace HRenderer.Common {
             return min + (max - min) * Utils.RandomZoreToOne();
         }
 
-        public static Vector4 RandomVec4() {
-            return Vector4.Create(Utils.Random(-1, 1), Utils.Random(-1, 1), Utils.Random(-1, 1), 1);
+        public static Vector4 RandomVec4(double min, double max) {
+            return Vector4.Create(Utils.Random(min, max), Utils.Random(min, max), Utils.Random(min, max), 1);
         }
 
         public static Vector4 RandomInUnitSphere() {
             while(true) {
-                var vec = Utils.RandomVec4();
+                var vec = Utils.RandomVec4(-1, 1);
                 if(vec.GetLengthSquared() >= 1) continue;
                 return vec;
+            }
+        }
+
+        public static Vector4 RandomInUnitDisk() {
+            while(true) {
+                var p = Vector4.Create(Utils.Random(-1, 1), Utils.Random(-1, 1), 0, 1);
+                if(p.GetLengthSquared() >= 1) continue;
+                return p;
             }
         }
     }

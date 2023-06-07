@@ -7,7 +7,7 @@ namespace HRenderer.RayTracing;
  */
 public class Renderer {
 
-    public static readonly Renderer instance = new Renderer(500, 250);
+    public static readonly Renderer instance = new Renderer(1000, 1000);
 
     private readonly int width;
     private readonly int height;
@@ -15,7 +15,9 @@ public class Renderer {
     private readonly Camera camera;
     private readonly Scene scene;
 
-    private readonly int sampleLines = 20;
+    private readonly int sampleLines = 100;
+
+    private readonly int depth = 20;
 
     private readonly byte[] data;
 
@@ -23,7 +25,7 @@ public class Renderer {
         this.width = width;
         this.height = height;
         this.scene = new Scene();
-        this.camera = new Camera();
+        this.camera = new Camera(width / height);
         this.data = new byte[this.width * this.height * 4];
     }
 
@@ -53,7 +55,7 @@ public class Renderer {
                     var u = (i + Utils.RandomZoreToOne()) / (this.width - 1);
                     var v = (j + Utils.RandomZoreToOne()) / (this.height - 1);
                     var ray = this.camera.GetRay(u, v);
-                    var tmpColor = this.GetRayColor(ray, 20);
+                    var tmpColor = this.GetRayColor(ray, this.depth);
                     color.AddSelf(tmpColor);
                 }
                 
