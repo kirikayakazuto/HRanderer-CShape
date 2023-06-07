@@ -135,11 +135,9 @@ namespace HRenderer.Common {
             return Math.Min(max, Math.Max(min, value));
         }
 
+        private static Random _random = new Random();
         public static double RandomZoreToOne() {
-            var seed = Guid.NewGuid().GetHashCode();  
-            Random r = new Random(seed);
-            int i = r.Next(0, 100000);
-            return (double)i / 100000;
+            return Utils._random.NextDouble();
         }
 
         public static double Random(double min, double max) {
@@ -148,6 +146,14 @@ namespace HRenderer.Common {
 
         public static Vector4 RandomVec4() {
             return Vector4.Create(Utils.Random(-1, 1), Utils.Random(-1, 1), Utils.Random(-1, 1), 1);
+        }
+
+        public static Vector4 RandomInUnitSphere() {
+            while(true) {
+                var vec = Utils.RandomVec4();
+                if(vec.GetLengthSquared() >= 1) continue;
+                return vec;
+            }
         }
     }
 }

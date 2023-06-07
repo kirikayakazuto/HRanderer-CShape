@@ -25,7 +25,7 @@ public class Camera {
 
     public Camera() {
         // 初始化
-        this._position = Vector4.Create(0f, 0f, 3f, 1);
+        this._position = Vector4.Create(0f, 0f, 5f, 1);
         this._up = Vector4.Create(0, 1, 0, 1);
         this._toward = Vector4.Create(0, 0, 1, 1);
 

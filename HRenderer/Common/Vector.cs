@@ -1,11 +1,19 @@
-using System;
 
 namespace HRenderer.Common {
     public class Vector {
         public double[] data;
+
         public Vector(int length) {
             this.data = new double[length];
         }
+
+        public virtual bool EqualsZero() {
+            for(var i=0; i<this.data.Length; i++) {
+                if(Math.Abs(this.data[i]) > 0.001) return false;
+            }
+            return true;
+        }
+    
     }
     
     public class Vector2: Vector {
@@ -310,6 +318,13 @@ namespace HRenderer.Common {
             this.y = Math.Sqrt(this.y);
             this.z = Math.Sqrt(this.z);
             return this;
+        }
+
+        public override bool EqualsZero() {
+            for(var i=0; i<3; i++) {
+                if(Math.Abs(this.data[i]) > 0.001) return false;
+            }
+            return true;
         }
     }
 }

@@ -19,4 +19,6 @@ public class Ray {
 	    // o + td
 	    return this.position.Add(this.direction.Mul(t));
     } 
+
+    
 }
