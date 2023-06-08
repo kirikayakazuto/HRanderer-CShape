@@ -7,7 +7,7 @@ namespace HRenderer.RayTracing;
  */
 public class Renderer {
 
-    public static readonly Renderer instance = new Renderer(1000, 1000);
+    public static readonly Renderer instance = new Renderer(800, 600);
 
     private readonly int width;
     private readonly int height;
@@ -15,7 +15,7 @@ public class Renderer {
     private readonly Camera camera;
     private readonly Scene scene;
 
-    private readonly int sampleLines = 100;
+    private readonly int sampleLines = 500;
 
     private readonly int depth = 20;
 
@@ -25,11 +25,11 @@ public class Renderer {
         this.width = width;
         this.height = height;
         this.scene = new Scene();
-        this.camera = new Camera(width / height);
+        this.camera = new Camera((double)width / height);
         this.data = new byte[this.width * this.height * 4];
     }
 
-    Vector4 GetRayColor(Ray ray, int depth) {
+    private Vector4 GetRayColor(Ray ray, int depth) {
         var hitInfo = new HitInfo();
 
         if(depth <= 0) return Vector4.Create(0, 0, 0, 0);
@@ -57,6 +57,7 @@ public class Renderer {
                     var ray = this.camera.GetRay(u, v);
                     var tmpColor = this.GetRayColor(ray, this.depth);
                     color.AddSelf(tmpColor);
+                    Vector4.Return(tmpColor);
                 }
                 
                 color.MulSelf(1f / this.sampleLines).SqrtSelf();
@@ -66,6 +67,7 @@ public class Renderer {
                 this.data[idx+1] = (byte)(color.y * 255);
                 this.data[idx+2] = (byte)(color.z * 255);
                 this.data[idx+3] = (byte)(color.w * 255);
+                Vector4.Return(color);
             }
             Console.WriteLine("lines: " + j);
         }

@@ -126,7 +126,8 @@ namespace HRenderer.Common {
             if (!Directory.Exists("./output")) {
                 Directory.CreateDirectory("./output");
             }
-            image.SaveAsJpeg("./output/" + frame + ".jpg");
+            image.SaveAsBmp("./output/" + frame + ".bmp");
+            // image.SaveAsJpeg("./output/" + frame + ".jpg");
         }
         
         public static Matrix4 GetViewPortMatrix(int width, int height) {

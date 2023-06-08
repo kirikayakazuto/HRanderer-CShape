@@ -17,10 +17,10 @@ public class Scene {
         var material3 = new Metal(Vector4.Create(0.7, 0.6, 0.5), 0.0);
 
         this.geometryList.Add(new Sphere(Vector4.Create(0, 1, 0, 0), 1, material1));
-        this.geometryList.Add(new Sphere(Vector4.Create(-4, 1, 0, 0), 1, material2));
-        this.geometryList.Add(new Sphere(Vector4.Create(4, 1, 0, 0), 1, material3));
+        this.geometryList.Add(new Sphere(Vector4.Create(-3, 1, 0, 0), 1, material2));
+        this.geometryList.Add(new Sphere(Vector4.Create(3, 1, 0, 0), 1, material3));
 
-        var count = 5;
+        var count = 7;
 
         for(var a=-count; a<count; a++) {
             for(var b=-count; b<count; b++) {
