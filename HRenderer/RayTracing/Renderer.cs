@@ -7,7 +7,7 @@ namespace HRenderer.RayTracing;
  */
 public class Renderer {
 
-    public static readonly Renderer instance = new Renderer(800, 600);
+    public static readonly Renderer instance = new Renderer(400, 300);
 
     private readonly int width;
     private readonly int height;
@@ -15,7 +15,7 @@ public class Renderer {
     private readonly Camera camera;
     private readonly Scene scene;
 
-    private readonly int sampleLines = 500;
+    private readonly int sampleLines = 100;
 
     private readonly int depth = 20;
 
