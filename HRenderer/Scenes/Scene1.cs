@@ -16,8 +16,8 @@ public class Scene1: Scene {
         // this.AddMaterial(SpriteMaterial.GetMaterial());
         // this.AddMaterial(SphereMaterial.GetMaterial());
         // this.AddMaterial(LightMaterial.GetMaterial());
-        this.AddMaterial(CubeMaterial.GetMaterial());
-        // this.AddMaterial(ModelMaterial.GetMaterial());
+        // this.AddMaterial(CubeMaterial.GetMaterial());
+        this.AddMaterial(ModelMaterial.GetMaterial());
         
         // this.camera.SetProjectionMode(ProjectionMode.Orthographic);
     }

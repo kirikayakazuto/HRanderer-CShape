@@ -1,17 +1,12 @@
 ﻿using HRenderer.Core;
-using HRenderer.Materials.CubeMaterial;
-using HRenderer.Materials.LightMaterial;
-using HRenderer.Materials.SpriteMaterial;
-using HRenderer.Materials.ModelMaterial;
-using HRenderer.Materials.TriangleMaterial;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
 var program = new HRenderer.Program();
 
-// program.OpenWindow();
-program.DoRayTracing();
+program.OpenWindow();
+// program.DoRayTracing();
 
 namespace HRenderer {
     public class Program {

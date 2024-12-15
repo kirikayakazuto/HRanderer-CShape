@@ -562,19 +562,20 @@
     ]
   },
   "packageFolders": {
-    "/Users/bytedance/.nuget/packages/": {}
+    "/Users/denglang/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/bytedance/workspace/HRanderer-CShape/HRenderer/HRenderer.csproj",
+      "projectUniqueName": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/HRenderer.csproj",
       "projectName": "HRenderer",
-      "projectPath": "/Users/bytedance/workspace/HRanderer-CShape/HRenderer/HRenderer.csproj",
-      "packagesPath": "/Users/bytedance/.nuget/packages/",
-      "outputPath": "/Users/bytedance/workspace/HRanderer-CShape/HRenderer/obj/",
+      "projectPath": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/HRenderer.csproj",
+      "packagesPath": "/Users/denglang/.nuget/packages/",
+      "outputPath": "/Users/denglang/workspace/RiderProjects/HRenderer/HRenderer/obj/",
       "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
-        "/Users/bytedance/.nuget/NuGet/NuGet.Config"
+        "/Users/denglang/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -627,8 +628,60 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/Users/denglang/.dotnet/sdk/7.0.410/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-5x7m-6737-26cr",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-63p8-c4ww-9cg7",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-65x7-c272-7g7r",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g85r-6x2q-45w7",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qxrv-gp6x-rc23",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }
